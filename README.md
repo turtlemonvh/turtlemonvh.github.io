@@ -15,4 +15,4 @@ To build the output
     ./develop_server.sh start
 
     # Overwrite all content on the master branch
-    ghp-import -b master
+    ghp-import -b master output
