@@ -65,12 +65,21 @@ Done. Your new project is available at /Users/timothy/Projects/turtlemonvh.githu
 <p>After this you can preview your site at: <a href="http://localhost:8000/">http://localhost:8000/</a></p>
 <p>Then I created my first bit of content in the <code>content</code> directory.  See more docs on writing content <a href="http://docs.getpelican.com/en/latest/content.html">here</a>.  I used <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> since I'm familiar with it from a lot of other applications.  You may know it from <a href="https://help.github.com/articles/github-flavored-markdown/">github READMEs</a>.</p>
 <p>Lastly I needed to publish the generated content (in the <code>output</code> directory) to the <code>master</code> branch so the content would be found by github.</p>
-<div class="highlight"><pre>ghp-import -b master output
+<div class="highlight"><pre><span class="c"># Add a commit with new generated output</span>
+ghp-import -b master output
+
+<span class="c"># Switch branches and push</span>
 git checkout master
 git push origin master
+
+<span class="c"># OR</span>
+
+<span class="c"># Pushes for you automatically so you don&#39;t have to switch branches</span>
+ghp-import -b master -p output
 </pre></div>
 
 
+<p>See more options for the <code>ghp-import</code> command <a href="https://github.com/davisp/ghp-import">in the project' README</a>.</p>
 <p>After that I could see all my content at: <a href="http://turtlemonvh.github.io/">http://turtlemonvh.github.io/</a></p>
 <h2>Notes</h2>
 <h3>Github pages branch names</h3>
