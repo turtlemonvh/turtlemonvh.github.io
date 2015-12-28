@@ -38,7 +38,7 @@ SOCIAL = (('twitter', 'https://twitter.com/turtlemonvh'),
           ('about.me', 'https://about.me/turtlemonvh'),
           ('github', 'https://github.com/turtlemonvh'),
           ('linkedin', 'https://www.linkedin.com/in/vanheetm'),
-          ('bitbucket', 'https://bitbucket.org/'),
+          ('bitbucket', 'https://bitbucket.org/turtlemonvh/'),
           )
 
 TWITTER_USERNAME = 'turtlemonvh'
