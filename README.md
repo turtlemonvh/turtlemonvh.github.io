@@ -1,18 +1,6 @@
 # turtlemonvh.github.io
 
-Personal website
+Personal website for [@turtlemonvh](https://twitter.com/turtlemonvh)
 
-This branch contains the source code for the site.
+This branch contains the source code for the site.  For docs on how this was set up, see [this blog post](http://turtlemonvh.github.io/using-pelican-and-github-user-pages-to-setup-a-blog.html).
 
-
-To build the output
-
-    # Checkout the branch with the code
-    git checkout source
-
-    # Start up a development server on localhost:8000
-    # This will also watch for changes and rebuild into the `output` folder
-    ./develop_server.sh start
-
-    # Overwrite all content on the master branch
-    ghp-import -b master output

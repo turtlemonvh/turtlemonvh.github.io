@@ -49,10 +49,22 @@ Then I created my first bit of content in the `content` directory.  See more doc
 Lastly I needed to publish the generated content (in the `output` directory) to the `master` branch so the content would be found by github.
 
 ```bash
+
+# Add a commit with new generated output
 ghp-import -b master output
+
+# Switch branches and push
 git checkout master
 git push origin master
+
+# OR
+
+# Pushes for you automatically so you don't have to switch branches
+ghp-import -b master -p output
+
 ```
+
+See more options for the `ghp-import` command [in the project' README](https://github.com/davisp/ghp-import).
 
 After that I could see all my content at: [http://turtlemonvh.github.io/](http://turtlemonvh.github.io/)
 
