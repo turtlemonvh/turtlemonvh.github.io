@@ -74,13 +74,13 @@ Here are some things that I didn't do, but you may want to explore.
 
 #### Custom themes
 
-Cloned this repository into ~/pelican-themes: https://github.com/getpelican/pelican-themes
+Cloned this repository into `~/pelican-themes`: [https://github.com/getpelican/pelican-themes](https://github.com/getpelican/pelican-themes)
 
 #### Custom domain name
 
-You can follow these directions if you want a custom domain name (like myspecialblog.com): https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/)
+You can follow these directions if you want a custom domain name (like myspecialblog.com): [https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/](https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/))
 
 #### Disqus comments
 
-I don't think this is too hard, but I leave that for later.  For now if you have any questions, find me on twitter.
+I [don't think this is too hard](https://github.com/getpelican/pelican-plugins/tree/master/disqus_static), but I leave that for later.  For now if you have any questions, find me on twitter.
 
