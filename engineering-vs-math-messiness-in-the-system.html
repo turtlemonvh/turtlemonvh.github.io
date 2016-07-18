@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Systems Doing</title>
+        <title>Engineering vs Math: Messiness in the system</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,13 +14,19 @@
         <header id="banner" class="body">
                 <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
                 <nav><ul>
-                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/engineering-vs-math-messiness-in-the-system.html" rel="bookmark"
+           title="Permalink to Engineering vs Math: Messiness in the system">Engineering vs Math: Messiness in the system</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/engineering-vs-math-messiness-in-the-system.html">Engineering vs Math: Messiness in the system</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2016-07-18T09:30:00-04:00">
                 Published: Mon 18 July 2016
@@ -31,7 +37,7 @@
         </address>
 <p>In <a href="/category/misc.html">misc</a>.</p>
 <p>tags: <a href="/tag/engineering.html">engineering</a> <a href="/tag/optimization.html">optimization</a> <a href="/tag/constraints.html">constraints</a> <a href="/tag/robustness.html">robustness</a> </p>
-</footer><!-- /.post-info --><p>Yesterday I went to <a href="http://www.lowes.com/">Lowes</a> with my wife to get pieces for a <a href="http://www.rubbermaid.com/en-US/shop-products/closet---shelving">modular shelving unit</a> we were installing in our lanudry room.  Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit.  The store had several length options available for the main shelves: 12 foot, 6 foot, 4 foot, 3 foot.  I knew the length of each of the 6 pieces I needed, down to the quarter of an inch.  The store provided the service of cutting the stock shelve pieces to length for you for free.</p>
+</footer><!-- /.post-info -->      <p>Yesterday I went to <a href="http://www.lowes.com/">Lowes</a> with my wife to get pieces for a <a href="http://www.rubbermaid.com/en-US/shop-products/closet---shelving">modular shelving unit</a> we were installing in our lanudry room.  Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit.  The store had several length options available for the main shelves: 12 foot, 6 foot, 4 foot, 3 foot.  I knew the length of each of the 6 pieces I needed, down to the quarter of an inch.  The store provided the service of cutting the stock shelve pieces to length for you for free.</p>
 <p>At this point any readers who spent time in a linear optimization or operations research course may be starting to sweat a little bit.  If you're not sure why, it's because what I just mentioned is a version of something usually referred to as "the cutting stock problem", and this can be expressed as <a href="http://www4.ncsu.edu/~kksivara/ma505/handouts/gilmore-gomory2.pdf">a well formed mathematical problem</a> with a definite optimal solution.  Since you took the class, you <strong>should</strong> know <a href="https://en.wikipedia.org/wiki/Simplex_algorithm">how to solve it</a>, and if you don't, then well I guess you're not much of a mathematician after all right?</p>
 <p><img alt="No math" src="https://cdn.meme.am/instances/500x/66238928.jpg" /></p>
 <p>Hmmm.  Or at least that was the feeling that I had while I was standing in the aisle yesterday trying to figure this thing out.  Unfortunately, from my class in linear optimization I also remembered that:</p>
@@ -50,62 +56,11 @@
 </ol>
 <p>So really my focus on the math had caused me to ignore a lot of pretty obvious factors that were much more important setting up the exact arrangement of cuts to mimimize waste.</p>
 <p>There are parallels good practices in software here.  Something about <a href="http://www.catb.org/esr/writings/taoup/html/ch12s02.html">measuring before optimizing</a>.  There are parallels to good engineering here.  Something about <a href="https://en.wikipedia.org/wiki/Assumption-based_planning">being explicit about your assumptions</a>.  The funny thing is that these realatively easy to remember heuristics will often get you close to a globally optimal and robust solution than focusing on the parts of the system that are well behaved and expressible in clear mathematical terms.</p>
-<p>Hopefully this can be as good of a reminder for some of you as it was for me.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>Hopefully this can be as good of a reminder for some of you as it was for me.</p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/helpful-tips-for-testing-in-go.html" rel="bookmark"
-                           title="Permalink to Helpful tips for testing in go">Helpful tips for testing in go</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-04T11:00:00-04:00">
-                Published: Mon 04 April 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/misc.html">misc</a>.</p>
-<p>tags: <a href="/tag/go.html">go</a> <a href="/tag/testing.html">testing</a> </p>
-</footer><!-- /.post-info -->                <p>This post is a summary of some of the best resources I've found for explaining how to test <a href="https://golang.org/">golang</a> applications.</p>
-<p>The first section of the article is a list of resources and what I learned from each one. </p>
-<p>The second section is a high level summary of suggestions, as ...</p>
-                <a class="readmore" href="/helpful-tips-for-testing-in-go.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/using-pelican-and-github-user-pages-to-setup-a-blog.html" rel="bookmark"
-                           title="Permalink to Using pelican and github user pages to setup a blog">Using pelican and github user pages to setup a blog</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2015-12-27T17:00:00-05:00">
-                Published: Sun 27 December 2015
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/misc.html">misc</a>.</p>
-<p>tags: <a href="/tag/meta.html">meta</a> </p>
-</footer><!-- /.post-info -->                <p>This post explains how I set up this blog.</p>
-<p>I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister <a href="https://twitter.com/woah_caitlyn">@woah_caitlyn</a> so she could copy any useful parts to make sites for herself and for friends.</p>
-<h2>Create repository ...</h2>
-                <a class="readmore" href="/using-pelican-and-github-user-pages-to-setup-a-blog.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
