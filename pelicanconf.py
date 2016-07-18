@@ -15,8 +15,12 @@ SITEURL = ''
 THEME = 'notmyidea'
 
 DEFAULT_CATEGORY = 'misc'
+DEFAULT_METADATA = {
+    'status': 'draft',
+}
 
 PATH = 'content'
+STATIC_PATHS = ['images', 'pdfs']
 
 TIMEZONE = 'America/New_York'
 
@@ -34,12 +38,13 @@ LINKS = (('Ionic blog', 'https://www.ionic.com/blog/'),
          ('My old blog', 'http://turtle-philosophy.blogspot.com/'),)
 
 # Social widget
-SOCIAL = (('twitter', 'https://twitter.com/turtlemonvh'),
-          ('about.me', 'https://about.me/turtlemonvh'),
-          ('github', 'https://github.com/turtlemonvh'),
-          ('linkedin', 'https://www.linkedin.com/in/vanheetm'),
-          ('bitbucket', 'https://bitbucket.org/turtlemonvh/'),
-          )
+SOCIAL = (
+    ('twitter', 'https://twitter.com/turtlemonvh'),
+    ('about.me', 'https://about.me/turtlemonvh'),
+    ('github', 'https://github.com/turtlemonvh'),
+    ('linkedin', 'https://www.linkedin.com/in/vanheetm'),
+    ('bitbucket', 'https://bitbucket.org/turtlemonvh/'),
+)
 
 TWITTER_USERNAME = 'turtlemonvh'
 

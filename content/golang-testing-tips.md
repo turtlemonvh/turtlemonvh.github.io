@@ -1,6 +1,7 @@
 Title: Helpful tips for testing in go
 Date: 2016-04-04 11:00
-Tags: go
+Tags: go, testing
+Status: published
 
 This post is a summary of some of the best resources I've found for explaining how to test [golang](https://golang.org/) applications.
 
