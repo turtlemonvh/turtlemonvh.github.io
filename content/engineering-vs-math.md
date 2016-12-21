@@ -26,7 +26,7 @@ Having now been shaken out of my mathematical stupor, I realized a few other det
 
 So really my focus on the math had caused me to ignore a lot of pretty obvious factors that were much more important than setting up the exact arrangement of cuts to mimimize waste.
 
-There are parallels good practices in software here.  Something about [measuring before optimizing](http://www.catb.org/esr/writings/taoup/html/ch12s02.html).  There are parallels to good engineering here.  Something about [being explicit about your assumptions](https://en.wikipedia.org/wiki/Assumption-based_planning).  The funny thing is that these realatively easy to remember heuristics will often get you closer to a globally optimal and robust solution than focusing on the parts of the system that are well behaved and expressible in clear mathematical terms.
+There are parallels good practices in software here.  Something about [measuring before optimizing](http://www.catb.org/esr/writings/taoup/html/ch12s02.html).  There are parallels to good engineering here.  Something about [being explicit about your assumptions](https://en.wikipedia.org/wiki/Assumption-based_planning).  The funny thing is that these relatively easy to remember heuristics will often get you closer to a globally optimal and robust solution than focusing on the parts of the system that are well behaved and expressible in clear mathematical terms.
 
 Hopefully this can be as good of a reminder for some of you as it was for me.
 
