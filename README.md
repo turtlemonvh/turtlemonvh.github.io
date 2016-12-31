@@ -18,4 +18,4 @@ Publishing
     # Commit source
     git add .
     git commit -m "Added another blog post"
-    git push origin master
+    git push origin source
