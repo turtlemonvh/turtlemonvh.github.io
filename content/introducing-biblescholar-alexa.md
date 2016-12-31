@@ -1,4 +1,4 @@
-Title: Introducing the BibleScholar Alex application
+Title: Introducing the BibleScholar Alexa application
 Date: 2016-12-31 10:00
 Tags: alexa, elasticbeanstalk, aws, bible
 Status: published
