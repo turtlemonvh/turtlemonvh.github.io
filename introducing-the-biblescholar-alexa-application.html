@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Systems Doing - aws</title>
+        <title>Introducing the BibleScholar Alexa application</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,13 +14,19 @@
         <header id="banner" class="body">
                 <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
                 <nav><ul>
-                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/introducing-the-biblescholar-alexa-application.html" rel="bookmark"
+           title="Permalink to Introducing the BibleScholar Alexa application">Introducing the BibleScholar Alexa application</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/introducing-the-biblescholar-alexa-application.html">Introducing the BibleScholar Alexa application</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2016-12-31T10:00:00-05:00">
                 Published: Sat 31 December 2016
@@ -31,7 +37,7 @@
         </address>
 <p>In <a href="/category/misc.html">misc</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/bible.html">bible</a> </p>
-</footer><!-- /.post-info --><p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
+</footer><!-- /.post-info -->      <p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
 <p>Several of my long term side projects are in the area of <a href="http://nlp.stanford.edu/IR-book/">information retrieval</a>, so I thought that developing a simple search application would be a good way to get a little more experience in this area and develop something I would actually use.</p>
 <p>The idea of BibleScholar is that the user will be able to ask the application where in the Bible a certain phrase exists, and it will find that phrase and return the best matching verse.  I may add some more functionality later, but right now that's all it does.  To make that work, I had to follow theses steps.</p>
 <hr />
@@ -99,8 +105,11 @@
 <p>Right now I'm stuck on the last step because <a href="https://forums.developer.amazon.com/questions/51926/submit-for-certification-button-is-not-clickable-d.html">self signed certs are allowed for testing only</a> and <a href="https://www.1and1.com/">my DNS registrar</a> doesn't allow CNAMES for top level domain values (subdomains only) so I need to figure out how to attach an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IP</a> to my ElasticBeanstalk app's ELB so I have an address.  Then I can use the <a href="https://aws.amazon.com/certificate-manager/pricing/">free certificates provided by AWS ACM</a> to secure the application.</p>
 <p>When I get that working I'll come back and update this step.</p>
 <hr />
-<p>For now, I leave you with <a href="https://www.youtube.com/watch?v=Aq0IjjArOyo">a demo video</a> of the application working.</p>                </article>
-            </aside><!-- /#featured -->
+<p>For now, I leave you with <a href="https://www.youtube.com/watch?v=Aq0IjjArOyo">a demo video</a> of the application working.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
