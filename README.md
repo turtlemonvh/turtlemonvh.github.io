@@ -10,4 +10,12 @@ Run develop sever.  Visit site at: http://localhost:8000/
 
     bash develop_server.sh start
 
+Publishing
 
+    # Publish output
+    ghp-import -b master -p output
+
+    # Commit source
+    git add .
+    git commit -m "Added another blog post"
+    git push origin master
