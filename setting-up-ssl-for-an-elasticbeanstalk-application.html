@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Systems Doing - elasticbeanstalk</title>
+        <title>Setting up SSL for an ElasticBeanstalk Application</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,13 +14,19 @@
         <header id="banner" class="body">
                 <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
                 <nav><ul>
-                    <li><a href="/category/misc.html">misc</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html" rel="bookmark"
+           title="Permalink to Setting up SSL for an ElasticBeanstalk Application">Setting up SSL for an ElasticBeanstalk Application</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">Setting up SSL for an ElasticBeanstalk Application</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-01-01T18:00:00-05:00">
                 Published: Sun 01 January 2017
@@ -31,7 +37,7 @@
         </address>
 <p>In <a href="/category/misc.html">misc</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> <a href="/tag/ssl.html">ssl</a> </p>
-</footer><!-- /.post-info --><p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
+</footer><!-- /.post-info -->      <p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
 <p>In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.</p>
 <hr />
 <h2>Problem 1: Static IPs, elastic services, and DNS records</h2>
@@ -84,37 +90,11 @@
 <li>Include wildcard records in the certificate request.</li>
 <li>When registering, keep the domain name record public at first to make validating domain ownership easier.</li>
 </ol>
-<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/introducing-the-biblescholar-alexa-application.html" rel="bookmark"
-                           title="Permalink to Introducing the BibleScholar Alexa application">Introducing the BibleScholar Alexa application</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-12-31T10:00:00-05:00">
-                Published: Sat 31 December 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/misc.html">misc</a>.</p>
-<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
-</footer><!-- /.post-info -->                <p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
-<p>Several of my long ...</p>
-                <a class="readmore" href="/introducing-the-biblescholar-alexa-application.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>

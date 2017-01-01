@@ -36,7 +36,7 @@
                 By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
         </address>
 <p>In <a href="/category/misc.html">misc</a>.</p>
-<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/bible.html">bible</a> </p>
+<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
 </footer><!-- /.post-info -->      <p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
 <p>Several of my long term side projects are in the area of <a href="http://nlp.stanford.edu/IR-book/">information retrieval</a>, so I thought that developing a simple search application would be a good way to get a little more experience in this area and develop something I would actually use.</p>
 <p>The idea of BibleScholar is that the user will be able to ask the application where in the Bible a certain phrase exists, and it will find that phrase and return the best matching verse.  I may add some more functionality later, but right now that's all it does.  To make that work, I had to follow theses steps.</p>
@@ -48,7 +48,7 @@
 <h2>2. Index the text</h2>
 <p>I've been wanting to play around with the <a href="https://golang.org/">go</a> <a href="http://www.blevesearch.com/">bleve search</a> library for a while, so I chose to use that.  I wrote <a href="https://github.com/turtlemonvh/biblescholar/blob/master/search/index.go">my own code to do the indexing from tsv files</a>, but I found out later that there is a nice <a href="https://github.com/blevesearch/bleve/blob/master/cmd/bleve/cmd/index.go">indexing utility built into the <code>bleve</code> command line tool</a>.  Oh well.  I did find that indexing with bleve was very fast when using large batch sizes.</p>
 <p>Once I had it indexed, I could search on the command line using the <a href="https://github.com/blevesearch/bleve/blob/master/cmd/bleve/cmd/query.go"><code>bleve search</code></a> tool.  Here's what that looks like:</p>
-<div class="highlight"><pre><span class="nv">$ </span>bleve query verses.bleve/ <span class="s1">&#39;for God so loved the world&#39;</span>
+<div class="highlight"><pre><span></span>$ bleve query verses.bleve/ <span class="s1">&#39;for God so loved the world&#39;</span>
 <span class="m">11409</span> matches, showing <span class="m">1</span> through 10, took 74.698161ms
     1. John-3-16-KJV <span class="o">(</span>0.725904<span class="o">)</span>
         Text
@@ -106,6 +106,8 @@
 <p>When I get that working I'll come back and update this step.</p>
 <hr />
 <p>For now, I leave you with <a href="https://www.youtube.com/watch?v=Aq0IjjArOyo">a demo video</a> of the application working.</p>
+<hr />
+<p><strong>Update:</strong> I got the SSL stuff working, but it was kind of non-trivial, so I wrote about how I did that in <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">a new article</a>.</p>
     </div><!-- /.entry-content -->
 
   </article>

@@ -46,7 +46,7 @@
 <h2>Pelican setup</h2>
 <p>I followed the instructions <a href="http://docs.getpelican.com/en/stable/quickstart.html">in the quickstart</a> to set up pelican.  One change is that I ran <code>pip install pelican markdown ghp-import</code> to get the <code>ghp-import</code> package too.</p>
 <p>Next I ran <code>pelican-quickstart</code> to generate the initial content. Here are the values I used at the prompts.</p>
-<div class="highlight"><pre>&gt; Where do you want to create your new web site? [.]
+<div class="highlight"><pre><span></span>&gt; Where do you want to create your new web site? [.]
 &gt; What will be the title of this web site? Systems Doing
 &gt; Who will be the author of this web site? turtlemonvh
 &gt; What will be the default language of this web site? [en]
@@ -64,23 +64,23 @@ Done. Your new project is available at /Users/timothy/Projects/turtlemonvh.githu
 <p>I also edited the settings file (<code>pelicanconf.py</code>).  You can see my current settings <a href="https://github.com/turtlemonvh/turtlemonvh.github.io/blob/source/pelicanconf.py">on github</a>.  You can also see more docs on settings options <a href="http://docs.getpelican.com/en/latest/settings.html">in the pelican docs</a>.</p>
 <h2>Publishing</h2>
 <p>Next, I started the pelican development server to watch for changes and serve the site locally.</p>
-<div class="highlight"><pre>./develop_server.sh start
+<div class="highlight"><pre><span></span>./develop_server.sh start
 </pre></div>
 
 
 <p>After this you can preview your site at: <a href="http://localhost:8000/">http://localhost:8000/</a></p>
 <p>Then I created my first bit of content in the <code>content</code> directory.  See more docs on writing content <a href="http://docs.getpelican.com/en/latest/content.html">here</a>.  I used <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> since I'm familiar with it from a lot of other applications.  You may know it from <a href="https://help.github.com/articles/github-flavored-markdown/">github READMEs</a>.</p>
 <p>Lastly I needed to publish the generated content (in the <code>output</code> directory) to the <code>master</code> branch so the content would be found by github.</p>
-<div class="highlight"><pre><span class="c"># Add a commit with new generated output</span>
+<div class="highlight"><pre><span></span><span class="c1"># Add a commit with new generated output</span>
 ghp-import -b master output
 
-<span class="c"># Switch branches and push</span>
+<span class="c1"># Switch branches and push</span>
 git checkout master
 git push origin master
 
-<span class="c"># OR</span>
+<span class="c1"># OR</span>
 
-<span class="c"># Pushes for you automatically so you don&#39;t have to switch branches</span>
+<span class="c1"># Pushes for you automatically so you don&#39;t have to switch branches</span>
 ghp-import -b master -p output
 </pre></div>
 
