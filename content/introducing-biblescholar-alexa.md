@@ -1,6 +1,6 @@
 Title: Introducing the BibleScholar Alexa application
 Date: 2016-12-31 10:00
-Tags: alexa, elasticbeanstalk, aws, bible
+Tags: alexa, elasticbeanstalk, aws, biblescholar
 Status: published
 
 When I went to the [AWS Re:Invent conference](https://reinvent.awsevents.com/) this November, every attendee got an [Echo Dot](https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/).  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.
@@ -90,3 +90,8 @@ When I get that working I'll come back and update this step.
 -----
 
 For now, I leave you with [a demo video](https://www.youtube.com/watch?v=Aq0IjjArOyo) of the application working.
+
+-----
+
+**Update:** I got the SSL stuff working, but it was kind of non-trivial, so I wrote about how I did that in [a new article](/setting-up-ssl-for-an-elasticbeanstalk-application.html).
+

@@ -1,0 +1,74 @@
+Title: Setting up SSL for an ElasticBeanstalk Application
+Date: 2017-01-01 18:00
+Tags: alexa, elasticbeanstalk, aws, biblescholar, ssl
+Status: published
+
+In [my last article](/introducing-the-biblescholar-alexa-application.html) I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted [CA](https://en.wikipedia.org/wiki/Certificate_authority).
+
+In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.
+
+----
+
+## Problem 1: Static IPs, elastic services, and DNS records
+
+I had originally purchased a domain name from [1and1](https://www.1and1.com/), mostly since they offer domains at a very low price, esp. for the first year.  The `.info` domain I set up for the project cost less than $2 for the first year!  I had previously purchased a few domains through 1and1 for applications on [BlueHost](https://www.bluehost.com/) (a long time ago) and [Google App Engine](https://cloud.google.com/appengine/), and everything had worked fine.
+
+However, when I went to use my domain name from 1and1 with ElasticbeanStalk, I quickly ran into a problem.  The issues came because:
+
+* 1and1 [does not allow](https://help.1and1.com/domains-c36931/manage-domains-c79822/dns-c37586/enter-a-cname-for-your-subdomain-a643600.html) you to enter [CNAME records](https://en.wikipedia.org/wiki/CNAME_record) (which can point to another domain name) for top level domains.  They only allow you to point your domain to a static IP.
+* AWS ElasticBeanstalk applications (and anything that sits behind an [Elastic LoadBalancer](https://aws.amazon.com/elasticloadbalancing/)) do not have a static IP address.  Instead you are provided with a host name that is a subdomain in the form: `<appname>.<region>.elasticbeanstalk.com`.
+
+I was hoping I would be able to attach an [Elastic IPAddress](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) to the load balancer, but it appears [this is not possible](http://stackoverflow.com/questions/35313134/assigning-static-ip-address-to-aws-load-balancer).
+
+In the end, I didn't find a good solution for using my 1and1 domain that would still allow me to use SSL.  So I ended up buying a domain name from AWS.
+
+Once I did that and set up a [Hosted Zone on Route53](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html) for this domain, I was able to resolve [http://www.biblescholarsearch.net/](http://www.biblescholarsearch.net/) to my application.
+
+## Problem 2: Issuing SSL certificates requires domain name validation
+
+The [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/) service is pretty awesome.  I described in [my last article](/introducing-the-biblescholar-alexa-application.html) how easy it was to attach a self signed certificate to my ElasticBeanstalk Application, and it is really cool that [Amazon provides auto-updating SSL certificates for free](https://aws.amazon.com/blogs/aws/new-aws-certificate-manager-deploy-ssltls-based-apps-on-aws/) now.  However, if you want to use one of these "real" certficates for a domain, Amazon needs to take an additional step to verify ownership of that domain.
+
+The way Amazon validates ownership of a domain when issuing a SSL cert is by [sending an email to the registered owner of a domain](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate.html).  They lookup the email address of this user using data in the [icann whois database](https://whois.icann.org/en).  However, if you take [the approach recommended by Amazon](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-privacy-protection.html) and opt for whois privacy when registering your domain, that contact information is private.  So Amazon will instead fallback to trying to validate ownership of your domain by sending an email to the following addresses:
+
+* administrator@your_domain
+* hostmaster@your_domain
+* postmaster@your_domain
+* webmaster@your_domain
+* admin@your_domain
+
+If you haven't set up email for your site yet, which is probably the case, this is going to cause a problem.  Once I figured this out, I was able to set up email for my domain by following a few more steps.
+
+1. [Set up an email receipt rule for my domain on SES](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rules.html).  I set mine up to send my emails to the [SNS topic](https://aws.amazon.com/sns/) for my Elastic Beanstalk application.  That topic is automatically created for you when you create your Elastic Beanstalk application.  Note that setting up the receipt run on SES also creates MX records in the Route53 Hosted Zone for your domain, so you don't have to create those yourself.
+
+2. [Add a SNS subscription to send email notifications](http://docs.aws.amazon.com/sns/latest/dg/SubscribeTopic.html) to my gmail address.
+
+After that, emails to `anybody@biblescholarsearch.net` were forwarded to my gmail.  After that, I just had to resend the certificate validation request via the ACM dashboard, click a link in the email that was routed to my gmail, and my certificate was approved.
+
+## Problem 3: You have to actually change out the SSL cert used inside the Elastic Beanstalk control panel
+
+This is kind of a "duh" but after I saw the SSL cert was validated I excitedly went to the browser and typed in my https domain name, hit enter, and got a "untrusted connection" page.  I was thinking that maybe it takes time for this information to propagte, but then I remembered that, no, that's how DNS works, not SSL.
+
+After thinking for another 10 seconds I realized the application was still using the self signed certificate I has created for my `*.elasticbeanstalk.com` domain name.  I went into `Configuration > Load Balancing` on the Elastic Beanstalk control panel and changed to the new SSL certificate.  After a few minutes of updating, I could hit [http://biblescholarsearch.net/](http://biblescholarsearch.net/) and get validated SSL.  Hooray!
+
+## Problem 4: Wildcard subdomains
+
+About 10 seconds into celebrating I realized that while [http://biblescholarsearch.net/](http://biblescholarsearch.net/) worked, [http://www.biblescholarsearch.net/](http://www.biblescholarsearch.net/) did not.  I read a little more [on the certificate manager docs](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request.html) and saw that you can add multiple domains to a certificate, including wildcards.
+
+This required some changes both to Route53 (so the top level domain and the www subdomain were both routed correctly) and the certificate (so that both the top level domain and the subdomain were understood to be part of the same certificate).  This took a couple steps because, while the Route53 hosted zone is editable, the SSL certificate is not.
+
+1. Add an A Alias record (pointing back to my ELB app) for my `www.` prefixed address in my Route53 hosted zone.
+2. Create a new SSL Cert including the wildcard entry (so both `biblescholarsearch.net` and `*.biblescholarsearch.net`).
+3. Remove the old SSL cert from my ELB app, because AWS won't let you delete a certificate that is actively in use.  This required an update.
+4. Assign the new SSL cert to the ELB app.  Another update.
+
+After that, both [http://biblescholarsearch.net/](http://biblescholarsearch.net/) and [http://www.biblescholarsearch.net/](http://www.biblescholarsearch.net/) has validating SSL credentials.
+
+----
+
+So it was a little more involved than I planned, and I had to throw away a domain name while I was setting things up.  If I had to do things again, this is what I would change.
+
+1. Do domain registration through AWS (or at least via a provider that allows top level CNAME records).
+2. Include wildcard records in the certificate request.
+3. When registering, keep the domain name record public at first to make validating domain ownership easier.
+
+I hope this was helpful!  Feel free to reach out to me on twitter ([@turtlemonvh](https://twitter.com/turtlemonvh)) with any questions.
