@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Projects</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
+                <nav><ul>
+                    <li><a href="/pages/home.html">Home</a></li>
+                    <li class="active"><a href="/pages/projects.html">Projects</a></li>
+                    <li><a href="/category/articles.html">Articles</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+    <h1 class="entry-title">Projects</h1>
+    
+    <p>A list of open-sourced things I have worked on recently.</p>
+<h1>Large projects</h1>
+<p>These are projects that are either very long term and complex or just provide useful end-to-end functionality.</p>
+<h2><a href="https://github.com/turtlemonvh/biblescholar">BibleScholar</a> (started 2016)</h2>
+<p>A tool for providing search of the Bible via an <a href="https://developer.amazon.com/alexa">Alexa</a> compatible api.</p>
+<p>I have some articles about building that under the <a href="/tag/biblescholar.html"><code>biblescholar</code> tag</a>.</p>
+<h2><a href="https://github.com/turtlemonvh/blanket-api">Blanket</a> (started 2015)</h2>
+<p>A tool for wrapping long running processes in a REST API (blanket = RESTy wrapper, get it?).  I use this every day at work, but it's still a bit too raw for general use.  There is a UI component that isn't bundled into the main application yet.</p>
+<p><img src="/images/blanket-ui-screenshot.png" alt="Blanket UI" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<h2><a href="https://github.com/turtlemonvh/traffic-monitor">traffic-monitor</a> (started 2014)</h2>
+<p>A python application for scraping traffic information off Google maps on a schedule. You enter a route for going and coming, and the tool starts to collect Google's estimates on how long it will take to travel that route.  I used it when looking for houses to find a place in Atlanta where traffic wouldn't be terrible.  I also put together <a href="http://turtlemonvh.github.io/traffic-monitor/">a companion visualization tool</a>.</p>
+<p><img src="/images/traffic-timer-plots.png" alt="Traffic Timer Plots" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<h1>Smaller Utilities</h1>
+<p>These are smaller components that are generally used to meet a very specific need for library code.  I also add a lot of <a href="https://gist.github.com/turtlemonvh">gists on github</a> that fill this same purpose.</p>
+<h2><a href="https://github.com/turtlemonvh/gin-wraphh">gin-wraphh</a> (started 2016)</h2>
+<p>A small utility for wrapping some types of middlewares for use in the go gin web framework.</p>
+<h2><a href="https://github.com/turtlemonvh/prometheus_python_roller">prometheus_python_roller</a> (started 2016)</h2>
+<p>A python tool for rolling <a href="https://prometheus.io/">prometheus</a> metrics into time-windowed moving averages.  Makes it easy to use the <a href="https://github.com/prometheus/client_python">prometheus python library</a> to collect metrics for monitoring an application but still provide those metrics to a system like Nagio's <a href="http://mathias-kettner.com/check_mk.html">checkmk</a> that doesn't deal with infinitely growing metrics so well.</p>
+<h2><a href="https://github.com/turtlemonvh/altscanner">altscanner</a> (started 2016)</h2>
+<p>A not very efficient but very easy to use alternative to go's <a href="https://golang.org/pkg/bufio/#Scanner">bufio.Scanner</a> that works for lines of any length.</p>
+<h2><a href="https://github.com/turtlemonvh/dns-zero-ttl">dns-zero-ttl</a> (started 2016)</h2>
+<p>A series of experiments testing how various languages and systems behave when you run DNS with a time to live of 0, which is common when using something like consul for service discovery.</p>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
+                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
+                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
+                            <li><a href="https://github.com/turtlemonvh">github</a></li>
+                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
+                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
+                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

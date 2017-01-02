@@ -14,7 +14,9 @@
         <header id="banner" class="body">
                 <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
                 <nav><ul>
-                    <li><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/pages/home.html">Home</a></li>
+                    <li><a href="/pages/projects.html">Projects</a></li>
+                    <li><a href="/category/articles.html">Articles</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -29,7 +31,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
         </address>
-<p>In <a href="/category/misc.html">misc</a>.</p>
+<p>In <a href="/category/articles.html">Articles</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> <a href="/tag/ssl.html">ssl</a> </p>
 </footer><!-- /.post-info --><p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
 <p>In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.</p>
@@ -84,7 +86,7 @@
 <li>Include wildcard records in the certificate request.</li>
 <li>When registering, keep the domain name record public at first to make validating domain ownership easier.</li>
 </ol>
-<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p>                </article>
+<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p><p>There are <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html#disqus_thread">comments</a>.</p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
@@ -103,6 +105,7 @@
                             <li><a href="https://github.com/turtlemonvh">github</a></li>
                             <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
                             <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
+                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
                         </ul>
                 </div><!-- /.social -->
         </section><!-- /#extras -->
@@ -115,5 +118,14 @@
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
 </body>
 </html>
