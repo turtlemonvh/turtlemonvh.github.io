@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Glide for projects with nested command directories</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
+                <nav><ul>
+                    <li><a href="/pages/home.html">Home</a></li>
+                    <li><a href="/pages/projects.html">Projects</a></li>
+                    <li class="active"><a href="/category/articles.html">Articles</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/drafts/glide-for-projects-with-nested-command-directories.html" rel="bookmark"
+           title="Permalink to Glide for projects with nested command directories">Glide for projects with nested command directories</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-01-15T17:00:00-05:00">
+                Published: Sun 15 January 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
+        </address>
+<p>In <a href="/category/articles.html">Articles</a>.</p>
+<p>tags: <a href="/tag/golang.html">golang</a> <a href="/tag/git.html">git</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
+</footer><!-- /.post-info -->      <p>Followed the advice of Ben Johnson here: 
+- https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1
+- see #4
+https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091#.fe81lofj7
+- see "Library driven development"</p>
+<p>Need to run <code>rm -r vendor/github.com/turtlemonvh/</code> to clear vendored deps before recompile
+"glide get github.com/turtlemonvh/biblescholar"
+https://github.com/Masterminds/glide/issues/252
+just updating my own code is a PITA
+this directory structure seems, complicated to get right</p>
+<ul>
+<li>need to copy dir</li>
+</ul>
+<p>it looks like they aren't included if the paths are subpaths of your current dir, but they ARE included if its part of the parent path, or a sibling path, which makes sense
+https://glide.readthedocs.io/en/latest/glide.yaml/
+- maybe "repo" takes a local directory path
+- if you don't delete the biblescholar dir and link, it will look to main git path and resolve different paths, and break</p>
+<p>mkdir -p vendor/github.com/turtlemonvh
+ln -s $(pwd)/../.. vendor/github.com/turtlemonvh/biblescholar</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
+                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
+                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
+                            <li><a href="https://github.com/turtlemonvh">github</a></li>
+                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
+                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
+                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
