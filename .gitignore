@@ -1,5 +1,6 @@
 *.pyc
 *.pid
+.DS_Store
 output/
 credentials.json
 
