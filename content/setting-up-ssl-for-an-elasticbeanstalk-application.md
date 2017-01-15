@@ -96,5 +96,18 @@ Some of my earlier issues with self-signed certs came from selecting option 3, w
 
 Even though I submitted my application endpoint as [https://biblescholarsearch.net/alexa/search](https://biblescholarsearch.net/alexa/search), this apparently still qualifies as a subdomain under their terminology.  Switching this toggle button made the requests work for both "https://biblescholarsearch.net/alexa/search" and "https://www.biblescholarsearch.net/alexa/search" endpoints.
 
-My takeaway from all this is that Amazon could afford to spend a little more time to improve the usability of their skill submission form.  It would be esp. nice if there was an option to quickly scan an application and report issues in a nice format thta corresponds to their rules and policies for new apps.
+My takeaways from all this are:
 
+### 1. Amazon could afford to spend a little more time to improve the usability of their skill submission form.
+
+It would be especially nice if there was an option to quickly scan an application and report issues in a nice format that corresponds to their [rules and policies](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-submission-checklist#submission-checklist) for new apps.
+
+### 2. Amazon has a few "interesting" security concerns
+
+They seem to be particularly concerned about [man in the middle attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack), since they require
+
+* apps must use an Amazon-trusted SSL certificate
+* apps must [verify requests are from the Amazon Alexa service](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service#verifying-that-the-request-was-sent-by-alexa), including SSL cert checks and request timing checks
+* apps must [verify requests are intended for your application specifically](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/handling-requests-sent-by-alexa#verifying-that-the-request-is-intended-for-your-service)
+
+These concerns make sense for certain classes of applications, but for applications like mine (which doesn't store user state or have any concept of accounts) this does feel a little heavy handed.  In my case, thankfully, some golang community members have been working on these problems and there is [a nice reference application that I was able to "borrow" some of these checks from](https://github.com/mikeflynn/go-alexa).  Still, this takes a reasonable amount of time to get right.
