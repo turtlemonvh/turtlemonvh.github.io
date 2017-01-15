@@ -108,7 +108,17 @@
 <p>Some of my earlier issues with self-signed certs came from selecting option 3, which works fine for testing but does not allow you to submit the application.  My issues this time came from selecting option 1 instead of option 2.  The following is what my certificate looks like in the dashboard of <a href="https://aws.amazon.com/certificate-manager/">AWS Certificate Manager</a>:</p>
 <p><img src="/images/aws-cert-manager-alt-names.png" alt="In-App SSL Validation Failure Message" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>Even though I submitted my application endpoint as <a href="https://biblescholarsearch.net/alexa/search">https://biblescholarsearch.net/alexa/search</a>, this apparently still qualifies as a subdomain under their terminology.  Switching this toggle button made the requests work for both "https://biblescholarsearch.net/alexa/search" and "https://www.biblescholarsearch.net/alexa/search" endpoints.</p>
-<p>My takeaway from all this is that Amazon could afford to spend a little more time to improve the usability of their skill submission form.  It would be esp. nice if there was an option to quickly scan an application and report issues in a nice format thta corresponds to their rules and policies for new apps.</p>
+<p>My takeaways from all this are:</p>
+<h3>1. Amazon could afford to spend a little more time to improve the usability of their skill submission form.</h3>
+<p>It would be especially nice if there was an option to quickly scan an application and report issues in a nice format that corresponds to their <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-submission-checklist#submission-checklist">rules and policies</a> for new apps.</p>
+<h3>2. Amazon has a few "interesting" security concerns</h3>
+<p>They seem to be particularly concerned about <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">man in the middle attacks</a>, since they require</p>
+<ul>
+<li>apps must use an Amazon-trusted SSL certificate</li>
+<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service#verifying-that-the-request-was-sent-by-alexa">verify requests are from the Amazon Alexa service</a>, including SSL cert checks and request timing checks</li>
+<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/handling-requests-sent-by-alexa#verifying-that-the-request-is-intended-for-your-service">verify requests are intended for your application specifically</a></li>
+</ul>
+<p>These concerns make sense for certain classes of applications, but for applications like mine (which doesn't store user state or have any concept of accounts) this does feel a little heavy handed.  In my case, thankfully, some golang community members have been working on these problems and there is <a href="https://github.com/mikeflynn/go-alexa">a nice reference application that I was able to "borrow" some of these checks from</a>.  Still, this takes a reasonable amount of time to get right.</p>
     </div><!-- /.entry-content -->
 
   </article>
