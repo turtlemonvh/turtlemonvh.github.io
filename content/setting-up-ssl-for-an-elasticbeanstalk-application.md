@@ -72,3 +72,29 @@ So it was a little more involved than I planned, and I had to throw away a domai
 3. When registering, keep the domain name record public at first to make validating domain ownership easier.
 
 I hope this was helpful!  Feel free to reach out to me on twitter ([@turtlemonvh](https://twitter.com/turtlemonvh)) with any questions.
+
+# UPDATE: 2017-01-14
+
+So even with what I had set up, I still encountered another problem.  The application seemed to work for a few days after 12/31 then stopped working the evening of 1/3.  I started seeing the following image in my Alexa app when interacting with Bible Scholar:
+
+<img src="/images/alexa-ssl-handshake-failure-inapp.png" alt="In-App SSL Validation Failure Message" style="width: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+Early on 1/4 I got a notification email that the application had failed certification.  Since my application was validating SSL in a browser, via curl, and every other method I tried, I assumed it must be some type of temporary error on their end.  I [asked about this on the developer message boards](https://developer.amazon.com/edw/home.html#/skill/amzn1.ask.skill.30c203ed-c0f7-432e-bcdb-23ee1ece38ab/en_US/info) and also sent a inquiry through [the contact form](https://developer.amazon.com/public/support/contact/contact-us?subjectCategory=ALEXA).
+
+A few days ago I got responses via both channels.  Similar to the issue with the self signed certificate, the solution ended up being changing a toggle option in the "SSL Certificate" page.  Here are the options you are usually presented with on that page.
+
+```
+Please select one of the three methods below for the web service:
+1. My development endpoint has a certificate from a trusted certificate authority
+2. My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority
+3. I will upload a self-signed certificate in X.509 format. Learn how to create a self signed certificate. 
+```
+
+Some of my earlier issues with self-signed certs came from selecting option 3, which works fine for testing but does not allow you to submit the application.  My issues this time came from selecting option 1 instead of option 2.  The following is what my certificate looks like in the dashboard of [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/):
+
+<img src="/images/aws-cert-manager-alt-names.png" alt="In-App SSL Validation Failure Message" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+Even though I submitted my application endpoint as [https://biblescholarsearch.net/alexa/search](https://biblescholarsearch.net/alexa/search), this apparently still qualifies as a subdomain under their terminology.  Switching this toggle button made the requests work for both "https://biblescholarsearch.net/alexa/search" and "https://www.biblescholarsearch.net/alexa/search" endpoints.
+
+My takeaway from all this is that Amazon could afford to spend a little more time to improve the usability of their skill submission form.  It would be esp. nice if there was an option to quickly scan an application and report issues in a nice format thta corresponds to their rules and policies for new apps.
+
