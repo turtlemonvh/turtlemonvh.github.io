@@ -179,7 +179,7 @@ Not too bad.
 
 To do this, all I had to do was make sure that `verses.bleve` was in [the `search` directory](https://github.com/turtlemonvh/biblescholar/tree/master/search) (the one with the Makefile) and run `make elbzip` to [create the application source bundle](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/applications-sourcebundle.html).  Then I went to my app's Elastic BeanStalk Dashboard page, clicked the "Upload and Deploy" button, and uploaded the zip file.  Once that was uploaded I just selected the new release package and clicked "Deploy" from the drop down menu.  A few minutes later, everything was deployed.
 
-<img src="/images/updating-biblescholar-elb-dashboard.png" alt="Traffic Timer Plots" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+<img src="/images/updating-biblescholar-elb-dashboard.png" alt="Updating BibleScholar ELB Dashboard" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
 
 Really, they make this stuff pretty simple.  I haven't even bothered using [the command line tools](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html) since the dashboard is so quick to work with.
 
