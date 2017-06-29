@@ -155,3 +155,21 @@ However, it is very fragile since it considers a large number of 4XX errors to b
 In addition to just be annoying, this means that every ELB application out there that uses "Enhanced Health Checks" may be prone to a trivial [availability attack](https://en.wikipedia.org/wiki/Denial-of-service_attack).  All you need to do is send a large number of requests to urls the application doesn't understand (i.e. that return 404s), and ELB will start marking app instances as unhealthy and quickly trying to cycle the pool of application instances to get into a healthy state.  I *think* that ELB will still keep a minimum number of application instances available while it does this (so the site won't go down), but it could get expensive and kind of annoying.
 
 So even though "Enhanced Health Checks" are cool, I don't think I'm ever going to use them again.  It's simpler and safer to set up a custom health check endpoint that accurately reflects the health o your application.
+
+> UPDDATE (10 am EST 2017/06/29)
+
+Unsurprisingly, it looks like I'm not the first one to run into this.
+
+* [https://forums.aws.amazon.com/thread.jspa?messageID=695637&#695637](https://forums.aws.amazon.com/thread.jspa?messageID=695637&#695637)
+    * Forum post pointing out the problem with marking app as sick when you get lots of 4XX responses
+    * One user points out that lots of 4XX can at the very least block a deployment from succeeding
+* [https://stackoverflow.com/questions/36398456/elastic-beanstalk-disable-health-state-change-based-on-4xx-responses](https://stackoverflow.com/questions/36398456/elastic-beanstalk-disable-health-state-change-based-on-4xx-responses)
+    * stackoverflow post asking for information about the configurability of "Enhanced Health Checks"
+    * contains an "interesting" hack to rewrite a monitoring script used by AWS to monitor the logs and determine health state
+
+Also, the comments on the blog don't seem to be working right now and I don't have time to fix that right now, so until those are back, I recommend commenting on one of those posts or reaching out to me on twitter by responding to the following tweet.
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">This behavior was surprising enough that I took time to write about it:<a href="https://t.co/bvKkf3kOaK">https://t.co/bvKkf3kOaK</a><br>tldr: beware <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> &quot;enhanced health checks&quot;</p>&mdash; Timothy Van Heest (@turtlemonvh) <a href="https://twitter.com/turtlemonvh/status/880419389224484864">June 29, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
