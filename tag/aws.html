@@ -22,7 +22,164 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">Setting up SSL for an ElasticBeanstalk Application</a></h1>
+                    <h1 class="entry-title"><a href="/basic-vs-enhanced-health-checks-on-aws-elb.html">Basic vs Enhanced Health Checks on AWS ELB</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-06-29T09:00:00-04:00">
+                Published: Thu 29 June 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
+        </address>
+<p>In <a href="/category/articles.html">Articles</a>.</p>
+<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
+</footer><!-- /.post-info --><h1>The Problem</h1>
+<p>Yesterday I started getting a lot of emails from Amazon saying that there were issues with the ELB application that runs my Alexa App.</p>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Something fishy with <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> on <a href="https://twitter.com/awscloud">@awscloud</a> over the last 24 hours... (no changes to application and load is stable and low) <a href="https://t.co/1wo2GupypW">pic.twitter.com/1wo2GupypW</a></p>&mdash; Timothy Van Heest (@turtlemonvh) <a href="https://twitter.com/turtlemonvh/status/880210227316088833">June 28, 2017</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h1>Investigation</h1>
+<p>I dug into this a bit more this morning.  Assuming you deploy your ELB application in a pretty standard configuration AWS allows you to download application logs.  This is what it looks like on the ELB download page.</p>
+<p><img src="/images/20170628-elb-logs-download.png" alt="Downloading Logs from ELB Dashboard" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>Because I wanted to check the logs over the course of a few days, I opted for "Full Logs".  What you get from this is a zip file of logs.  When you extract the contents, it will look something like this:</p>
+<div class="highlight"><pre><span></span>is-mbp-timothy:tmp timothy$ tree var/
+var/
+└── log
+    ├── cfn-hup.log
+    ├── cfn-hup.log.1
+    ├── cfn-hup.log.2
+    ├── cfn-init-cmd.log
+    ├── cfn-init.log
+    ├── cloud-init-output.log
+    ├── cloud-init.log
+    ├── cron
+    ├── docker
+    ├── docker-events.log
+    ├── docker-ps.log
+    ├── eb-activity.log
+    ├── eb-cfn-init-call.log
+    ├── eb-cfn-init.log
+    ├── eb-commandprocessor.log
+    ├── eb-docker
+    │   └── containers
+    │       └── eb-current-app
+    │           ├── 2402dd479388-stdouterr.log
+    │           └── rotated
+    │               ├── 2402dd479388-stdouterr.log1497387661.gz
+    │               ├── 2402dd479388-stdouterr.log1497690061.gz
+    │               ├── 2402dd479388-stdouterr.log1497992461.gz
+    │               ├── 2402dd479388-stdouterr.log1498298461.gz
+    │               └── 2402dd479388-stdouterr.log1498597261.gz
+    ├── eb-publish-logs.log
+    ├── eb-tools.log
+    ├── healthd
+    │   └── daemon.log
+    ├── messages
+    ├── nginx
+    │   ├── access.log
+    │   ├── access.log-20170620
+    │   ├── access.log-20170621
+    │   ├── access.log-20170622
+    │   ├── access.log-20170623
+    │   ├── access.log-20170624
+    │   ├── access.log-20170625
+    │   ├── access.log-20170626
+    │   ├── access.log-20170627
+    │   ├── access.log-20170627.err
+    │   ├── access.log-20170628
+    │   ├── access.log-20170629
+    │   ├── error.log
+    │   ├── error.log-20170620.gz
+    │   ├── error.log-20170621.gz
+    │   ├── error.log-20170622.gz
+    │   ├── error.log-20170623.gz
+    │   ├── error.log-20170624.gz
+    │   ├── error.log-20170625.gz
+    │   ├── error.log-20170626.gz
+    │   ├── error.log-20170627.gz
+    │   ├── error.log-20170628.gz
+    │   └── error.log-20170629.gz
+    └── yum.log
+
+<span class="m">7</span> directories, <span class="m">49</span> files
+</pre></div>
+
+
+<p>Because ELB was saying that my application was sick because of a lot of 4XX return codes, the first thing I checked was the access logs.  Here's what that looked like on the command line.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Go into nginx log directory</span>
+<span class="nb">cd</span> var/log/nginx/
+
+<span class="c1"># Extract extract logs for each day</span>
+<span class="k">for</span> f in <span class="sb">`</span>ls access*.gz<span class="sb">`</span><span class="p">;</span> <span class="k">do</span> gunzip <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span>
+
+<span class="c1"># NOTE: It&#39;s not shown here, but the first thing I did was open the file in vim and poke around to get a feel for the structure of the log lines</span>
+
+<span class="c1"># Check 1 day where there were a lot of issues (transitions from OK to SEVERE) for non-200 responses from the health check</span>
+<span class="c1"># Didn&#39;t get anything</span>
+cat access.log-20170627 <span class="p">|</span> grep <span class="s2">&quot;ELB-HealthChecker&quot;</span> <span class="p">|</span> grep -v 200
+
+<span class="c1"># Get anything that is not explicitly a 200</span>
+<span class="c1"># This showed me just 404s</span>
+<span class="c1"># Note that if the string &quot;200&quot; showed up somewhere else in the log line aside from the status code slot this could be misleading, but this is unlikely to be common enough to be a big deal</span>
+cat access.log-20170627 <span class="p">|</span> grep -v 200
+</pre></div>
+
+
+<p>Here is a sample of some log lines that were resulting in 404s.</p>
+<div class="highlight"><pre><span></span><span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">35</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /a2billing/customer/templates/default/footer.tpl HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;python-requests/2.6.0 CPython/2.6.6 Linux/2.6.32-696.3.1.el6.x86_64&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">03</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /mysqladmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;the beast&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">06</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">20</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /manager/html HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)&quot;</span>
+<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">36</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;HEAD / HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">0</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;python-requests/2.8.1&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">20</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /manager/html HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)&quot;</span>
+<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mi">04</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 6.0.1; HTC Desire 826 dual sim Build/MMB29M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
+<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">02</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 5.1; A1601 Build/LMY47I; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
+<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">49</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /testproxy.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 5.1; rv:32.0) Gecko/20100101 Firefox/31.0&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">04</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /testproxy.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 5.1; rv:32.0) Gecko/20100101 Firefox/31.0&quot;</span>
+<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">12</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 6.0.1; SM-G935F Build/MMB29K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /muieblackcat HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /phpMyAdmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /phpmyadmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
+<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /pma/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
+</pre></div>
+
+
+<p>If you've run a public facing internet application before (or even an internal application at a company that does regular vulnerability scans) you will recognize this type of output.  These are automated tools probing the website for common vulnerabilities.  Those blog requests are likely to be due to an old site that was hosted at the same public ip as my application.  So the application is doing exactly what it is supposed to be doing when it returns a 404 for these requests.  The problem is that ELB is categorizing <em>any</em> 4XX response as a possible failure in the application.</p>
+<p>This is burried a little bit in the documentation, but if you check out <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html#health-enhanced-factors">the docs on enhanced health checks</a> that section does state the following about how it uses HTTP requests to determine health.</p>
+<blockquote>
+<p>When no operation is in progress on an environment, the primary source of information about instance and environment health is the web server logs for each instance. To determine the health of an instance and the overall health of the environment, Elastic Beanstalk considers the number of requests, the result of each request, and the speed at which each request was resolved.</p>
+</blockquote>
+<h1>Solution</h1>
+<p>To fix this, I went to the "Configuration &gt; Health" page on the ELB dashboard and changed the section on "Health Reporting" to use "Basic" health checks instead of "Enhanced".  This triggered a restart of the ELB application.</p>
+<p>Once that restart finished, I ran this simple curl script for a few minutes to send a bunch of requests to the application that would trigger 404s.</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> true<span class="p">;</span> <span class="k">do</span>
+    curl -X GET <span class="s1">&#39;https://www.biblescholarsearch.net/index.action&#39;</span><span class="p">;</span>
+    sleep 1<span class="p">;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="k">done</span>
+</pre></div>
+
+
+<p>Then I checked the ELB dashboard to confirm that even with all these requests coming in, the application health was still reporting as 'OK'.  Everything looked fine.</p>
+<p>With that updated, hopefully I'll be getting less monitoring emails!</p>
+<h1>Summary</h1>
+<p>The enhanced health feature of ELB is pretty neat.  It provides a lot of nice metrics, and can detect some pretty common failure conditions.</p>
+<p>However, it is very fragile since it considers a large number of 4XX errors to be an indicator of problems in the application.  Since <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors">4XX errors are supposed to indicate client errors</a> (not server errors), this is not a great default configuration.  Ideally, the application would be considered unhealthy when lots of 5XX errors are returned, but still healthy when 4XX errors are returned.</p>
+<p>In addition to just be annoying, this means that every ELB application out there that uses "Enhanced Health Checks" may be prone to a trivial <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">availability attack</a>.  All you need to do is send a large number of requests to urls the application doesn't understand (i.e. that return 404s), and ELB will start marking app instances as unhealthy and quickly trying to cycle the pool of application instances to get into a healthy state.  I <em>think</em> that ELB will still keep a minimum number of application instances available while it does this (so the site won't go down), but it could get expensive and kind of annoying.</p>
+<p>So even though "Enhanced Health Checks" are cool, I don't think I'm ever going to use them again.  It's simpler and safer to set up a custom health check endpoint that accurately reflects the health o your application.</p><p>There are <a href="/basic-vs-enhanced-health-checks-on-aws-elb.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html" rel="bookmark"
+                           title="Permalink to Setting up SSL for an ElasticBeanstalk Application">Setting up SSL for an ElasticBeanstalk Application</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-01-01T18:00:00-05:00">
                 Published: Sun 01 January 2017
@@ -33,91 +190,11 @@
         </address>
 <p>In <a href="/category/articles.html">Articles</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> <a href="/tag/ssl.html">ssl</a> </p>
-</footer><!-- /.post-info --><p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
-<p>In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.</p>
-<hr />
-<h2>Problem 1: Static IPs, elastic services, and DNS records</h2>
-<p>I had originally purchased a domain name from <a href="https://www.1and1.com/">1and1</a>, mostly since they offer domains at a very low price, esp. for the first year.  The <code>.info</code> domain I set up for the project cost less than $2 for the first year!  I had previously purchased a few domains through 1and1 for applications on <a href="https://www.bluehost.com/">BlueHost</a> (a long time ago) and <a href="https://cloud.google.com/appengine/">Google App Engine</a>, and everything had worked fine.</p>
-<p>However, when I went to use my domain name from 1and1 with ElasticbeanStalk, I quickly ran into a problem.  The issues came because:</p>
-<ul>
-<li>1and1 <a href="https://help.1and1.com/domains-c36931/manage-domains-c79822/dns-c37586/enter-a-cname-for-your-subdomain-a643600.html">does not allow</a> you to enter <a href="https://en.wikipedia.org/wiki/CNAME_record">CNAME records</a> (which can point to another domain name) for top level domains.  They only allow you to point your domain to a static IP.</li>
-<li>AWS ElasticBeanstalk applications (and anything that sits behind an <a href="https://aws.amazon.com/elasticloadbalancing/">Elastic LoadBalancer</a>) do not have a static IP address.  Instead you are provided with a host name that is a subdomain in the form: <code>&lt;appname&gt;.&lt;region&gt;.elasticbeanstalk.com</code>.</li>
-</ul>
-<p>I was hoping I would be able to attach an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IPAddress</a> to the load balancer, but it appears <a href="http://stackoverflow.com/questions/35313134/assigning-static-ip-address-to-aws-load-balancer">this is not possible</a>.</p>
-<p>In the end, I didn't find a good solution for using my 1and1 domain that would still allow me to use SSL.  So I ended up buying a domain name from AWS.</p>
-<p>Once I did that and set up a <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html">Hosted Zone on Route53</a> for this domain, I was able to resolve <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> to my application.</p>
-<h2>Problem 2: Issuing SSL certificates requires domain name validation</h2>
-<p>The <a href="https://aws.amazon.com/certificate-manager/">AWS Certificate Manager</a> service is pretty awesome.  I described in <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> how easy it was to attach a self signed certificate to my ElasticBeanstalk Application, and it is really cool that <a href="https://aws.amazon.com/blogs/aws/new-aws-certificate-manager-deploy-ssltls-based-apps-on-aws/">Amazon provides auto-updating SSL certificates for free</a> now.  However, if you want to use one of these "real" certficates for a domain, Amazon needs to take an additional step to verify ownership of that domain.</p>
-<p>The way Amazon validates ownership of a domain when issuing a SSL cert is by <a href="https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate.html">sending an email to the registered owner of a domain</a>.  They lookup the email address of this user using data in the <a href="https://whois.icann.org/en">icann whois database</a>.  However, if you take <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-privacy-protection.html">the approach recommended by Amazon</a> and opt for whois privacy when registering your domain, that contact information is private.  So Amazon will instead fallback to trying to validate ownership of your domain by sending an email to the following addresses:</p>
-<ul>
-<li>administrator@your_domain</li>
-<li>hostmaster@your_domain</li>
-<li>postmaster@your_domain</li>
-<li>webmaster@your_domain</li>
-<li>admin@your_domain</li>
-</ul>
-<p>If you haven't set up email for your site yet, which is probably the case, this is going to cause a problem.  Once I figured this out, I was able to set up email for my domain by following a few more steps.</p>
-<ol>
-<li>
-<p><a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rules.html">Set up an email receipt rule for my domain on SES</a>.  I set mine up to send my emails to the <a href="https://aws.amazon.com/sns/">SNS topic</a> for my Elastic Beanstalk application.  That topic is automatically created for you when you create your Elastic Beanstalk application.  Note that setting up the receipt run on SES also creates MX records in the Route53 Hosted Zone for your domain, so you don't have to create those yourself.</p>
-</li>
-<li>
-<p><a href="http://docs.aws.amazon.com/sns/latest/dg/SubscribeTopic.html">Add a SNS subscription to send email notifications</a> to my gmail address.</p>
-</li>
-</ol>
-<p>After that, emails to <code>anybody@biblescholarsearch.net</code> were forwarded to my gmail.  After that, I just had to resend the certificate validation request via the ACM dashboard, click a link in the email that was routed to my gmail, and my certificate was approved.</p>
-<h2>Problem 3: You have to actually change out the SSL cert used inside the Elastic Beanstalk control panel</h2>
-<p>This is kind of a "duh" but after I saw the SSL cert was validated I excitedly went to the browser and typed in my https domain name, hit enter, and got a "untrusted connection" page.  I was thinking that maybe it takes time for this information to propagte, but then I remembered that, no, that's how DNS works, not SSL.</p>
-<p>After thinking for another 10 seconds I realized the application was still using the self signed certificate I has created for my <code>*.elasticbeanstalk.com</code> domain name.  I went into <code>Configuration &gt; Load Balancing</code> on the Elastic Beanstalk control panel and changed to the new SSL certificate.  After a few minutes of updating, I could hit <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> and get validated SSL.  Hooray!</p>
-<h2>Problem 4: Wildcard subdomains</h2>
-<p>About 10 seconds into celebrating I realized that while <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> worked, <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> did not.  I read a little more <a href="https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request.html">on the certificate manager docs</a> and saw that you can add multiple domains to a certificate, including wildcards.</p>
-<p>This required some changes both to Route53 (so the top level domain and the www subdomain were both routed correctly) and the certificate (so that both the top level domain and the subdomain were understood to be part of the same certificate).  This took a couple steps because, while the Route53 hosted zone is editable, the SSL certificate is not.</p>
-<ol>
-<li>Add an A Alias record (pointing back to my ELB app) for my <code>www.</code> prefixed address in my Route53 hosted zone.</li>
-<li>Create a new SSL Cert including the wildcard entry (so both <code>biblescholarsearch.net</code> and <code>*.biblescholarsearch.net</code>).</li>
-<li>Remove the old SSL cert from my ELB app, because AWS won't let you delete a certificate that is actively in use.  This required an update.</li>
-<li>Assign the new SSL cert to the ELB app.  Another update.</li>
-</ol>
-<p>After that, both <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> and <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> has validating SSL credentials.</p>
-<hr />
-<p>So it was a little more involved than I planned, and I had to throw away a domain name while I was setting things up.  If I had to do things again, this is what I would change.</p>
-<ol>
-<li>Do domain registration through AWS (or at least via a provider that allows top level CNAME records).</li>
-<li>Include wildcard records in the certificate request.</li>
-<li>When registering, keep the domain name record public at first to make validating domain ownership easier.</li>
-</ol>
-<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p>
-<h1>UPDATE: 2017-01-14</h1>
-<p>So even with what I had set up, I still encountered another problem.  The application seemed to work for a few days after 12/31 then stopped working the evening of 1/3.  I started seeing the following image in my Alexa app when interacting with Bible Scholar:</p>
-<p><img src="/images/alexa-ssl-handshake-failure-inapp.png" alt="In-App SSL Validation Failure Message" style="width: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
-<p>Early on 1/4 I got a notification email that the application had failed certification.  Since my application was validating SSL in a browser, via curl, and every other method I tried, I assumed it must be some type of temporary error on their end.  I <a href="https://developer.amazon.com/edw/home.html#/skill/amzn1.ask.skill.30c203ed-c0f7-432e-bcdb-23ee1ece38ab/en_US/info">asked about this on the developer message boards</a> and also sent a inquiry through <a href="https://developer.amazon.com/public/support/contact/contact-us?subjectCategory=ALEXA">the contact form</a>.</p>
-<p>A few days ago I got responses via both channels.  Similar to the issue with the self signed certificate, the solution ended up being changing a toggle option in the "SSL Certificate" page.  Here are the options you are usually presented with on that page.</p>
-<div class="highlight"><pre><span></span>Please select one of the three methods below for the web service:
-1. My development endpoint has a certificate from a trusted certificate authority
-2. My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority
-3. I will upload a self-signed certificate in X.509 format. Learn how to create a self signed certificate. 
-</pre></div>
-
-
-<p>Some of my earlier issues with self-signed certs came from selecting option 3, which works fine for testing but does not allow you to submit the application.  My issues this time came from selecting option 1 instead of option 2.  The following is what my certificate looks like in the dashboard of <a href="https://aws.amazon.com/certificate-manager/">AWS Certificate Manager</a>:</p>
-<p><img src="/images/aws-cert-manager-alt-names.png" alt="In-App SSL Validation Failure Message" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
-<p>Even though I submitted my application endpoint as <a href="https://biblescholarsearch.net/alexa/search">https://biblescholarsearch.net/alexa/search</a>, this apparently still qualifies as a subdomain under their terminology.  Switching this toggle button made the requests work for both "https://biblescholarsearch.net/alexa/search" and "https://www.biblescholarsearch.net/alexa/search" endpoints.</p>
-<p>My takeaways from all this are:</p>
-<h3>1. Amazon could afford to spend a little more time to improve the usability of their skill submission form.</h3>
-<p>It would be especially nice if there was an option to quickly scan an application and report issues in a nice format that corresponds to their <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-submission-checklist#submission-checklist">rules and policies</a> for new apps.</p>
-<h3>2. Amazon has a few "interesting" security concerns</h3>
-<p>They seem to be particularly concerned about <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">man in the middle attacks</a>, since they require</p>
-<ul>
-<li>apps must use an Amazon-trusted SSL certificate</li>
-<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service#verifying-that-the-request-was-sent-by-alexa">verify requests are from the Amazon Alexa service</a>, including SSL cert checks and request timing checks</li>
-<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/handling-requests-sent-by-alexa#verifying-that-the-request-is-intended-for-your-service">verify requests are intended for your application specifically</a></li>
-</ul>
-<p>These concerns make sense for certain classes of applications, but for applications like mine (which doesn't store user state or have any concept of accounts) this does feel a little heavy handed.  In my case, thankfully, some golang community members have been working on these problems and there is <a href="https://github.com/mikeflynn/go-alexa">a nice reference application that I was able to "borrow" some of these checks from</a>.  Still, this takes a reasonable amount of time to get right.</p><p>There are <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
+<p>In general AWS makes the process of setting up SSL for a site ...</p>
+                <a class="readmore" href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">read more</a>
+<p>There are <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>

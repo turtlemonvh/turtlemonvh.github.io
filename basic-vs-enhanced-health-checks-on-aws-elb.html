@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Systems Doing - elasticbeanstalk</title>
+        <title>Basic vs Enhanced Health Checks on AWS ELB</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -16,13 +16,19 @@
                 <nav><ul>
                     <li><a href="/pages/home.html">Home</a></li>
                     <li><a href="/pages/projects.html">Projects</a></li>
-                    <li><a href="/category/articles.html">Articles</a></li>
+                    <li class="active"><a href="/category/articles.html">Articles</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/basic-vs-enhanced-health-checks-on-aws-elb.html" rel="bookmark"
+           title="Permalink to Basic vs Enhanced Health Checks on AWS ELB">Basic vs Enhanced Health Checks on AWS ELB</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/basic-vs-enhanced-health-checks-on-aws-elb.html">Basic vs Enhanced Health Checks on AWS ELB</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-29T09:00:00-04:00">
                 Published: Thu 29 June 2017
@@ -33,7 +39,7 @@
         </address>
 <p>In <a href="/category/articles.html">Articles</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
-</footer><!-- /.post-info --><h1>The Problem</h1>
+</footer><!-- /.post-info -->      <h1>The Problem</h1>
 <p>Yesterday I started getting a lot of emails from Amazon saying that there were issues with the ELB application that runs my Alexa App.</p>
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Something fishy with <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> on <a href="https://twitter.com/awscloud">@awscloud</a> over the last 24 hours... (no changes to application and load is stable and low) <a href="https://t.co/1wo2GupypW">pic.twitter.com/1wo2GupypW</a></p>&mdash; Timothy Van Heest (@turtlemonvh) <a href="https://twitter.com/turtlemonvh/status/880210227316088833">June 28, 2017</a></blockquote>
 
@@ -166,60 +172,11 @@ cat access.log-20170627 <span class="p">|</span> grep -v 200
 <p>The enhanced health feature of ELB is pretty neat.  It provides a lot of nice metrics, and can detect some pretty common failure conditions.</p>
 <p>However, it is very fragile since it considers a large number of 4XX errors to be an indicator of problems in the application.  Since <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors">4XX errors are supposed to indicate client errors</a> (not server errors), this is not a great default configuration.  Ideally, the application would be considered unhealthy when lots of 5XX errors are returned, but still healthy when 4XX errors are returned.</p>
 <p>In addition to just be annoying, this means that every ELB application out there that uses "Enhanced Health Checks" may be prone to a trivial <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">availability attack</a>.  All you need to do is send a large number of requests to urls the application doesn't understand (i.e. that return 404s), and ELB will start marking app instances as unhealthy and quickly trying to cycle the pool of application instances to get into a healthy state.  I <em>think</em> that ELB will still keep a minimum number of application instances available while it does this (so the site won't go down), but it could get expensive and kind of annoying.</p>
-<p>So even though "Enhanced Health Checks" are cool, I don't think I'm ever going to use them again.  It's simpler and safer to set up a custom health check endpoint that accurately reflects the health o your application.</p><p>There are <a href="/basic-vs-enhanced-health-checks-on-aws-elb.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>So even though "Enhanced Health Checks" are cool, I don't think I'm ever going to use them again.  It's simpler and safer to set up a custom health check endpoint that accurately reflects the health o your application.</p>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html" rel="bookmark"
-                           title="Permalink to Setting up SSL for an ElasticBeanstalk Application">Setting up SSL for an ElasticBeanstalk Application</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-01-01T18:00:00-05:00">
-                Published: Sun 01 January 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> <a href="/tag/ssl.html">ssl</a> </p>
-</footer><!-- /.post-info -->                <p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
-<p>In general AWS makes the process of setting up SSL for a site ...</p>
-                <a class="readmore" href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">read more</a>
-<p>There are <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/introducing-the-biblescholar-alexa-application.html" rel="bookmark"
-                           title="Permalink to Introducing the BibleScholar Alexa application">Introducing the BibleScholar Alexa application</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-12-31T10:00:00-05:00">
-                Published: Sat 31 December 2016
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
-</footer><!-- /.post-info -->                <p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
-<p>Several of my long ...</p>
-                <a class="readmore" href="/introducing-the-biblescholar-alexa-application.html">read more</a>
-<p>There are <a href="/introducing-the-biblescholar-alexa-application.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
