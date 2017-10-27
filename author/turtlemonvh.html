@@ -22,7 +22,127 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/basic-vs-enhanced-health-checks-on-aws-elb.html">Basic vs Enhanced Health Checks on AWS ELB</a></h1>
+                    <h1 class="entry-title"><a href="/quick-and-dirty-kubernetes.html">Quick and dirty kubernetes</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-10-27T18:47:00-04:00">
+                Published: Fri 27 October 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
+        </address>
+<p>In <a href="/category/articles.html">Articles</a>.</p>
+<p>tags: <a href="/tag/kubernetes.html">kubernetes</a> <a href="/tag/docker.html">docker</a> <a href="/tag/sftp.html">sftp</a> </p>
+</footer><!-- /.post-info --><h1>The Problem</h1>
+<p>As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints.  We wanted to do a quick validation that pushed to a server outside our network was working.</p>
+<p>We already had a test environment running locally with <a href="https://github.com/atmoz/sftp">an sftp docker image</a>, and since I didn't already have a public server sitting around to setup an sftp on, I decided this was a great opportunity to play around with Google Cloud's Container service and kubernetes to spin up a quick helper service.</p>
+<p>I started here: <a href="https://cloud.google.com/sdk/docs/quickstart-linux">https://cloud.google.com/sdk/docs/quickstart-linux</a>.  I installed all this into a Centos 7 vagrant box that my team uses for most of our development.</p>
+<div class="highlight"><pre><span></span><span class="err">#</span><span class="x"> Download, extract, install, init</span>
+<span class="x">wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-177.0.0-linux-x86_64.tar.gz</span>
+<span class="x">tar xzvf google-cloud-sdk-177.0.0-linux-x86_64.tar.gz</span>
+<span class="x">./google-cloud-sdk/install.sh</span>
+
+<span class="err">#</span><span class="x"> Move it to a better place than `/tmp` since I&#39;m going to be sticking this on my path</span>
+<span class="x">sudo mv google-cloud-sdk /opt/</span>
+<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">:/opt/google-cloud-sdk/bin</span>
+
+<span class="err">#</span><span class="x"> Init</span>
+<span class="x">gcloud init</span>
+
+<span class="err">#</span><span class="x"> Get credentials for the cluster</span>
+<span class="err">#</span><span class="x"> This is pretty cool - it gives you a url to visit in your browser, redirects you to an Oauth authorization page, and finally gives you a token to paste back into your console.</span>
+<span class="err">#</span><span class="x"> I replaced by project id with XXXX.</span>
+<span class="x">gcloud container clusters get-credentials sftp --zone us-central1-a --project ionictest-XXXX</span>
+</pre></div>
+
+
+<h1>The first hiccup: install path</h1>
+<p>This was all working pretty well, but then I ran into issues when I ran <code>gcloud components install kubectl</code>.  There were permission issues because <code>gcloud</code> tries to write a scratch directory at the same level as its installation directory (i.e. in <code>/opt</code> instead of in <code>/opt/google-cloud-sdk</code>.)  This was a strange choice, since it meant that I had to nest the installation another level deeper.</p>
+<div class="highlight"><pre><span></span><span class="err">#</span><span class="x"> Nesting nesting</span>
+<span class="x">sudo mkdir -p /opt/google</span>
+<span class="x">sudo chown -R vagrant:vagrant /opt/google</span>
+<span class="x">sudo mv /opt/google-cloud-sdk /opt/google</span>
+
+<span class="err">#</span><span class="x"> Fix path</span>
+<span class="err">#</span><span class="x"> Really this was more manual since I removed the old bin path and also updated ~/.bashrc</span>
+<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">:/opt/google/google-cloud-sdk/bin</span>
+
+<span class="err">#</span><span class="x"> Now installation works</span>
+<span class="x">gcloud components install kubectl</span>
+</pre></div>
+
+
+<p>At this point the path was bjorked.  When I tried to run <code>kubectl run</code> I got this mysterious error</p>
+<div class="highlight"><pre><span></span><span class="n">error</span><span class="o">:</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">discover</span> <span class="n">supported</span> <span class="n">resources</span><span class="o">:</span> <span class="n">Get</span> <span class="n">https</span><span class="o">://</span><span class="n">XX</span><span class="o">.</span><span class="na">XX</span><span class="o">.</span><span class="na">XX</span><span class="o">.</span><span class="na">XX</span><span class="sr">/api: error executing access token command &quot;/opt/google-cloud-sdk/bin/gcloud config config-helper --format=json&quot;: err=fork/exec /opt/google-cloud-sdk/bin/g</span><span class="n">cloud</span><span class="o">:</span> <span class="n">no</span> <span class="n">such</span> <span class="n">file</span> <span class="n">or</span> <span class="n">directory</span> <span class="n">output</span><span class="o">=</span>
+</pre></div>
+
+
+<p>Notice the path is pointing to the old installation location.  I reset my PATH, logged out of the vm and logged back in, and re-ran <code>gcloud components install kubectl</code>, none of which worked.  Then I re-ran the <code>gcloud container clusters get-credentials</code>, which worked.  So I guess the path to the binary is stored somewhere in the credentials config?  I'm not sure.  This article is called "quick and dirty" for a reason.</p>
+<p>Now to launch containers.</p>
+<div class="highlight"><pre><span></span>kubectl run sftp --image=atmoz/sftp --port 22
+kubectl expose deployment sftp --type=LoadBalancer --port 22 --target-port 22
+</pre></div>
+
+
+<p>Alright - we're running!</p>
+<h1>The second hiccup: container arguments</h1>
+<p>Well, almost.  When I checked the Google Container Engine dashboard I saw the the containers has the status <code>CrashLoopBackoff</code>, which didn't sound good.  I dug into the kubectl cli a bit more and found some useful commands.</p>
+<div class="highlight"><pre><span></span># List items
+kubectl get pods
+kubectl get services
+kubectl get deployments
+
+# Clear out items (very helpful when testing)
+kubectl delete pod sftp-2557270963-pc8q8
+kubectl delete service sftp
+kubectl delete deployment sftp
+</pre></div>
+
+
+<p>I leave it to the kubernetes docs to define what the things are in depth, but in brief the pods are containers and services and deployments are higher level management concepts to work with containers.  For the point of this article the most important take aways are this</p>
+<ul>
+<li>If you delete a pod, it will come back.</li>
+<li>If you want to stop something from running and start over, delete the service and the deployment. The pods will go away with those.</li>
+</ul>
+<p>So - now we have pods deployed, but crashing.  The missing link here was the difference between kubernetes commands and docker entrypoints.</p>
+<div class="highlight"><pre><span></span># What our docker compose looks like for running locally
+# Use the default entrypoint, override the command
+version: &#39;2&#39;
+services:
+  sftp:
+    image: atmoz/sftp
+    command: username:password:::export
+
+# What we had to do in kubectl
+# Use the default command, send an argument
+kubectl run sftp --image=atmoz/sftp --port=22 -- &quot;ionic:pass:::export&quot;
+</pre></div>
+
+
+<h1>Final steps and success</h1>
+<p>Once that was updated, I just had to expose the services again (<code>kubectl expose deployment sftp --type=LoadBalancer --port 22 --target-port 22</code>).  I also had to wait for the service to come up.  You can check this via <code>kubectl get services</code> and waiting until the <code>EXTERNAL-IP</code> field changes from "pending" to a real ip.  Once that was ready, and I could sftp in!</p>
+<div class="highlight"><pre><span></span>[vagrant@localhost ~]$ sftp username@XX.XX.XX.XX
+username@XX.XX.XX.XX&#39;s password:
+Connected to XX.XX.XX.XX.
+sftp&gt; ls export/
+export/testfile.json
+</pre></div>
+
+
+<p>I hope that was helpful.  I have been using docker daily for a few years now, but this is my first time playing with kubernetes.  If I did something stupid, let me know!  You can find me on twitter (<code>@turtlemonvh</code>).</p><p>There are <a href="/quick-and-dirty-kubernetes.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/basic-vs-enhanced-health-checks-on-aws-elb.html" rel="bookmark"
+                           title="Permalink to Basic vs Enhanced Health Checks on AWS ELB">Basic vs Enhanced Health Checks on AWS ELB</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-06-29T09:00:00-04:00">
                 Published: Thu 29 June 2017
@@ -33,165 +153,12 @@
         </address>
 <p>In <a href="/category/articles.html">Articles</a>.</p>
 <p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> </p>
-</footer><!-- /.post-info --><h1>The Problem</h1>
+</footer><!-- /.post-info -->                <h1>The Problem</h1>
 <p>Yesterday I started getting a lot of emails from Amazon saying that there were issues with the ELB application that runs my Alexa App.</p>
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Something fishy with <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> on <a href="https://twitter.com/awscloud">@awscloud</a> over the last 24 hours... (no changes to application and load is stable and low) <a href="https://t.co/1wo2GupypW">pic.twitter.com/1wo2GupypW</a></p>&mdash; Timothy Van Heest (@turtlemonvh) <a href="https://twitter.com/turtlemonvh/status/880210227316088833">June 28, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<h1>Investigation</h1>
-<p>I dug into this a bit more this morning.  Assuming you deploy your ELB application in a pretty standard configuration AWS allows you to download application logs.  This is what it looks like on the ELB download page.</p>
-<p><img src="/images/20170628-elb-logs-download.png" alt="Downloading Logs from ELB Dashboard" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
-<p>Because I wanted to check the logs over the course of a few days, I opted for "Full Logs".  What you get from this is a zip file of logs.  When you extract the contents, it will look something like this:</p>
-<div class="highlight"><pre><span></span>is-mbp-timothy:tmp timothy$ tree var/
-var/
-└── log
-    ├── cfn-hup.log
-    ├── cfn-hup.log.1
-    ├── cfn-hup.log.2
-    ├── cfn-init-cmd.log
-    ├── cfn-init.log
-    ├── cloud-init-output.log
-    ├── cloud-init.log
-    ├── cron
-    ├── docker
-    ├── docker-events.log
-    ├── docker-ps.log
-    ├── eb-activity.log
-    ├── eb-cfn-init-call.log
-    ├── eb-cfn-init.log
-    ├── eb-commandprocessor.log
-    ├── eb-docker
-    │   └── containers
-    │       └── eb-current-app
-    │           ├── 2402dd479388-stdouterr.log
-    │           └── rotated
-    │               ├── 2402dd479388-stdouterr.log1497387661.gz
-    │               ├── 2402dd479388-stdouterr.log1497690061.gz
-    │               ├── 2402dd479388-stdouterr.log1497992461.gz
-    │               ├── 2402dd479388-stdouterr.log1498298461.gz
-    │               └── 2402dd479388-stdouterr.log1498597261.gz
-    ├── eb-publish-logs.log
-    ├── eb-tools.log
-    ├── healthd
-    │   └── daemon.log
-    ├── messages
-    ├── nginx
-    │   ├── access.log
-    │   ├── access.log-20170620
-    │   ├── access.log-20170621
-    │   ├── access.log-20170622
-    │   ├── access.log-20170623
-    │   ├── access.log-20170624
-    │   ├── access.log-20170625
-    │   ├── access.log-20170626
-    │   ├── access.log-20170627
-    │   ├── access.log-20170627.err
-    │   ├── access.log-20170628
-    │   ├── access.log-20170629
-    │   ├── error.log
-    │   ├── error.log-20170620.gz
-    │   ├── error.log-20170621.gz
-    │   ├── error.log-20170622.gz
-    │   ├── error.log-20170623.gz
-    │   ├── error.log-20170624.gz
-    │   ├── error.log-20170625.gz
-    │   ├── error.log-20170626.gz
-    │   ├── error.log-20170627.gz
-    │   ├── error.log-20170628.gz
-    │   └── error.log-20170629.gz
-    └── yum.log
-
-<span class="m">7</span> directories, <span class="m">49</span> files
-</pre></div>
-
-
-<p>Because ELB was saying that my application was sick because of a lot of 4XX return codes, the first thing I checked was the access logs.  Here's what that looked like on the command line.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Go into nginx log directory</span>
-<span class="nb">cd</span> var/log/nginx/
-
-<span class="c1"># Extract extract logs for each day</span>
-<span class="k">for</span> f in <span class="sb">`</span>ls access*.gz<span class="sb">`</span><span class="p">;</span> <span class="k">do</span> gunzip <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span>
-
-<span class="c1"># NOTE: It&#39;s not shown here, but the first thing I did was open the file in vim and poke around to get a feel for the structure of the log lines</span>
-
-<span class="c1"># Check 1 day where there were a lot of issues (transitions from OK to SEVERE) for non-200 responses from the health check</span>
-<span class="c1"># Didn&#39;t get anything</span>
-cat access.log-20170627 <span class="p">|</span> grep <span class="s2">&quot;ELB-HealthChecker&quot;</span> <span class="p">|</span> grep -v 200
-
-<span class="c1"># Get anything that is not explicitly a 200</span>
-<span class="c1"># This showed me just 404s</span>
-<span class="c1"># Note that if the string &quot;200&quot; showed up somewhere else in the log line aside from the status code slot this could be misleading, but this is unlikely to be common enough to be a big deal</span>
-cat access.log-20170627 <span class="p">|</span> grep -v 200
-</pre></div>
-
-
-<p>Here is a sample of some log lines that were resulting in 404s.</p>
-<div class="highlight"><pre><span></span><span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">35</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /a2billing/customer/templates/default/footer.tpl HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;python-requests/2.6.0 CPython/2.6.6 Linux/2.6.32-696.3.1.el6.x86_64&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">03</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /mysqladmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;the beast&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">06</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">20</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /manager/html HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)&quot;</span>
-<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">36</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;HEAD / HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">0</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;python-requests/2.8.1&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">20</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /manager/html HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)&quot;</span>
-<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mi">04</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 6.0.1; HTC Desire 826 dual sim Build/MMB29M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
-<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">02</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 5.1; A1601 Build/LMY47I; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
-<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">49</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /testproxy.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 5.1; rv:32.0) Gecko/20100101 Firefox/31.0&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">04</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /testproxy.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 5.1; rv:32.0) Gecko/20100101 Firefox/31.0&quot;</span>
-<span class="nt">172</span><span class="nc">.31.22.184</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">12</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /blog/the-7-funniest-k-pop-covers-from-mnets-i-can-see-your-voice/2311 HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;http://m.facebook.com/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Linux; Android 6.0.1; SM-G935F Build/MMB29K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36 </span><span class="cp">[</span><span class="nx">FB_IAB</span><span class="p">/</span><span class="nx">FB4A</span><span class="p">;</span><span class="nx">FBAV</span><span class="p">/</span><span class="nx">129.0.0.29.67</span><span class="p">;</span><span class="cp">]</span><span class="s2">&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /muieblackcat HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /phpMyAdmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /phpmyadmin/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
-<span class="nt">172</span><span class="nc">.31.31.21</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">26</span><span class="p">/</span><span class="nx">Jun</span><span class="p">/</span><span class="nx">2017</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">06</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;GET /pma/scripts/setup.php HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">18</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;-&quot;</span>
-</pre></div>
-
-
-<p>If you've run a public facing internet application before (or even an internal application at a company that does regular vulnerability scans) you will recognize this type of output.  These are automated tools probing the website for common vulnerabilities.  Those blog requests are likely to be due to an old site that was hosted at the same public ip as my application.  So the application is doing exactly what it is supposed to be doing when it returns a 404 for these requests.  The problem is that ELB is categorizing <em>any</em> 4XX response as a possible failure in the application.</p>
-<p>This is burried a little bit in the documentation, but if you check out <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html#health-enhanced-factors">the docs on enhanced health checks</a> that section does state the following about how it uses HTTP requests to determine health.</p>
-<blockquote>
-<p>When no operation is in progress on an environment, the primary source of information about instance and environment health is the web server logs for each instance. To determine the health of an instance and the overall health of the environment, Elastic Beanstalk considers the number of requests, the result of each request, and the speed at which each request was resolved.</p>
-</blockquote>
-<h1>Solution</h1>
-<p>To fix this, I went to the "Configuration &gt; Health" page on the ELB dashboard and changed the section on "Health Reporting" to use "Basic" health checks instead of "Enhanced".  This triggered a restart of the ELB application.</p>
-<p>Once that restart finished, I ran this simple curl script for a few minutes to send a bunch of requests to the application that would trigger 404s.</p>
-<div class="highlight"><pre><span></span><span class="k">while</span> true<span class="p">;</span> <span class="k">do</span>
-    curl -X GET <span class="s1">&#39;https://www.biblescholarsearch.net/index.action&#39;</span><span class="p">;</span>
-    sleep 1<span class="p">;</span>
-    <span class="nb">echo</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
-<span class="k">done</span>
-</pre></div>
-
-
-<p>Then I checked the ELB dashboard to confirm that even with all these requests coming in, the application health was still reporting as 'OK'.  Everything looked fine.</p>
-<p>With that updated, hopefully I'll be getting less monitoring emails!</p>
-<h1>Summary</h1>
-<p>The enhanced health feature of ELB is pretty neat.  It provides a lot of nice metrics, and can detect some pretty common failure conditions.</p>
-<p>However, it is very fragile since it considers a large number of 4XX errors to be an indicator of problems in the application.  Since <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors">4XX errors are supposed to indicate client errors</a> (not server errors), this is not a great default configuration.  Ideally, the application would be considered unhealthy when lots of 5XX errors are returned, but still healthy when 4XX errors are returned.</p>
-<p>In addition to just be annoying, this means that every ELB application out there that uses "Enhanced Health Checks" may be prone to a trivial <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack">availability attack</a>.  All you need to do is send a large number of requests to urls the application doesn't understand (i.e. that return 404s), and ELB will start marking app instances as unhealthy and quickly trying to cycle the pool of application instances to get into a healthy state.  I <em>think</em> that ELB will still keep a minimum number of application instances available while it does this (so the site won't go down), but it could get expensive and kind of annoying.</p>
-<p>So even though "Enhanced Health Checks" are cool, I don't think I'm ever going to use them again.  It's simpler and safer to set up a custom health check endpoint that accurately reflects the health o your application.</p>
-<blockquote>
-<p>UPDDATE (10 am EST 2017/06/29)</p>
-</blockquote>
-<p>Unsurprisingly, it looks like I'm not the first one to run into this.</p>
-<ul>
-<li><a href="https://forums.aws.amazon.com/thread.jspa?messageID=695637&amp;#695637">https://forums.aws.amazon.com/thread.jspa?messageID=695637&amp;#695637</a><ul>
-<li>Forum post pointing out the problem with marking app as sick when you get lots of 4XX responses</li>
-<li>One user points out that lots of 4XX can at the very least block a deployment from succeeding</li>
-</ul>
-</li>
-<li><a href="https://stackoverflow.com/questions/36398456/elastic-beanstalk-disable-health-state-change-based-on-4xx-responses">https://stackoverflow.com/questions/36398456/elastic-beanstalk-disable-health-state-change-based-on-4xx-responses</a><ul>
-<li>stackoverflow post asking for information about the configurability of "Enhanced Health Checks"</li>
-<li>contains an "interesting" hack to rewrite a monitoring script used by AWS to monitor the logs and determine health state</li>
-</ul>
-</li>
-</ul>
-<p>Also, the comments on the blog don't seem to be working right now and I don't have time to fix that right now, so until those are back, I recommend commenting on one of those posts or reaching out to me on twitter by responding to the following tweet.</p>
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">This behavior was surprising enough that I took time to write about it:<a href="https://t.co/bvKkf3kOaK">https://t.co/bvKkf3kOaK</a><br>tldr: beware <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> &quot;enhanced health checks&quot;</p>&mdash; Timothy Van Heest (@turtlemonvh) <a href="https://twitter.com/turtlemonvh/status/880419389224484864">June 29, 2017</a></blockquote>
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script><p>There are <a href="/basic-vs-enhanced-health-checks-on-aws-elb.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Something fishy with <a href="https://twitter.com/hashtag/ELB?src=hash">#ELB</a> on <a href="https://twitter.com/awscloud">@awscloud</a> over the last 24 hours... (no changes to application and load is stable and low) <a href="https://t.co/1wo2GupypW">pic.twitter.com ...</a></p></blockquote>
+                <a class="readmore" href="/basic-vs-enhanced-health-checks-on-aws-elb.html">read more</a>
+<p>There are <a href="/basic-vs-enhanced-health-checks-on-aws-elb.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
