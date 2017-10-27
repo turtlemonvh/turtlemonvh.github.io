@@ -7,9 +7,13 @@ Status: published
 
 As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints.  We wanted to do a quick validation that pushed to a server outside our network was working.
 
-We already had a test environment running locally with [an sftp docker image](https://github.com/atmoz/sftp), and since I didn't already have a public server sitting around to setup an sftp on, I decided this was a great opportunity to play around with Google Cloud's Container service and kubernetes to spin up a quick helper service.
+We already had a test environment running locally with [an sftp docker image](https://github.com/atmoz/sftp), and since I didn't already have a public server sitting around for running an sftp server, I decided this was a great opportunity to play around with [Google Cloud's Container service](https://cloud.google.com/container-engine/) and [Kubernetes](https://kubernetes.io/) to spin up a quick and dirty sftp server to try to push data to.
 
-I started here: [https://cloud.google.com/sdk/docs/quickstart-linux](https://cloud.google.com/sdk/docs/quickstart-linux).  I installed all this into a Centos 7 vagrant box that my team uses for most of our development.
+# Web console to cli
+
+I started out trying to do everything through the web console.  I went to the Container Engine section of the test project I already had set up in GCP and created a test cluster named `sftp`.  I created it with size 1 (only 1 backing host) to keep the cost low, and because having a single sftp server is easier to reason about for testing purposes (i.e. there is only 1 place your data will be).  There are a lot of other options for a cluster, but I kept most of them set to their defaults.
+
+From there it wasn't very clear how to run a container from the web ui, so I had to dig into command line tools.  With those, I started here: [https://cloud.google.com/sdk/docs/quickstart-linux](https://cloud.google.com/sdk/docs/quickstart-linux).  I installed the sdk into a Centos 7 vagrant box that my team uses for most of our development.
 
 ```
 # Download, extract, install, init
@@ -115,4 +119,4 @@ sftp> ls export/
 export/testfile.json
 ```
 
-I hope that was helpful.  I have been using docker daily for a few years now, but this is my first time playing with kubernetes.  If I did something stupid, let me know!  You can find me on twitter (`@turtlemonvh`).
+I hope that was helpful.  I have been using docker daily for a few years now, but this is my first time playing with kubernetes.  If I did something stupid, let me know!  You can find me [on twitter](https://twitter.com/turtlemonvh).
