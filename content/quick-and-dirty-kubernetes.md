@@ -100,7 +100,7 @@ services:
 
 # What we had to do in kubectl
 # Use the default command, send an argument
-kubectl run sftp --image=atmoz/sftp --port=22 -- "ionic:pass:::export"
+kubectl run sftp --image=atmoz/sftp --port=22 -- "username:password:::export"
 ```
 
 # Final steps and success
