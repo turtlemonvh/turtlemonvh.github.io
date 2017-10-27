@@ -9,6 +9,7 @@ This branch contains the source code for the site.  For docs on how this was set
 Run develop sever.  Visit site at: http://localhost:8000/
 
     bash develop_server.sh start
+    bash develop_server.sh start 8081 # start on a different port
 
 Publishing
 
