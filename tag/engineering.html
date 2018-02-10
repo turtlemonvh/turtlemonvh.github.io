@@ -1,100 +1,122 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8" />
-        <title>Systems Doing - engineering</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+    <meta name="author" content="turtlemonvh" />
+    <meta name="description" content="Thoughts and writings" />
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Systems Doing"/>
+<meta property="og:description" content="Thoughts and writings"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash;     Tag engineering
+</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
-                <nav><ul>
-                    <li><a href="/pages/home.html">Home</a></li>
-                    <li><a href="/pages/projects.html">Projects</a></li>
-                    <li><a href="/category/articles.html">Articles</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/engineering-vs-math-messiness-in-the-system.html">Engineering vs Math: Messiness in the system</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2016-07-18T09:30:00-04:00">
-                Published: Mon 18 July 2016
-        </abbr>
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/engineering.html">engineering</a> <a href="/tag/optimization.html">optimization</a> <a href="/tag/constraints.html">constraints</a> <a href="/tag/robustness.html">robustness</a> </p>
-</footer><!-- /.post-info --><p>Yesterday I went to <a href="http://www.lowes.com/">Lowes</a> with my wife to get pieces for a <a href="http://www.rubbermaid.com/en-US/shop-products/closet---shelving">modular shelving unit</a> we were installing in our laundry room.  Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit.  The store had several length options available for the main shelves: 12 foot, 6 foot, 4 foot, 3 foot.  I knew the length of each of the 6 pieces I needed, down to the quarter of an inch.  The store provided the service of cutting the stock shelve pieces to length for free.</p>
-<p>At this point any readers who spent time in a linear optimization or operations research course may be starting to sweat a little bit.  If you're not sure why, it's because what I just mentioned is a version of something usually referred to as "the cutting stock problem", and this can be expressed as <a href="http://www4.ncsu.edu/~kksivara/ma505/handouts/gilmore-gomory2.pdf">a well formed mathematical problem</a> with a definite optimal solution.  Since you took the class, you <strong>should</strong> know <a href="https://en.wikipedia.org/wiki/Simplex_algorithm">how to solve it</a>, and if you don't, then well I guess math's not your thing after all right?</p>
-<p><img alt="No math" src="https://cdn.meme.am/instances/500x/66238928.jpg" /></p>
-<p>Hmmm.  Or at least that was the feeling that I had while I was standing in the aisle yesterday trying to figure this thing out.  Unfortunately, from my class in linear optimization I also remembered that:</p>
-<ol>
-<li>Actually expressing a real world problem as a system of linear equations can be pretty tough</li>
-<li>After that, you usually wanted a computer for solving anything with more than ~3 simultaneous equations</li>
-<li>You'd still need to program the computer for the algorithm, or find a package to do it for you</li>
-</ol>
-<p>At this point I realized the math side of my brain was failing me and I had to figure out a different approach to the problem.  That or my wife came by and asked why it was taking so long.  It's hard to keep track of those kinds of details.  So I just picked "the dumb solution" (use a couple of 12 foot long shelves) and asked to have someone paged over to cut the shelves for us.</p>
-<p>Having now been shaken out of my mathematical stupor, I realized a few other details that I had missed in my singular pursuit of a mathematically elegant solution to my problem:</p>
-<ol>
-<li>Several of the long shelve stock pieces were bent. So we were probably going to get them for a discount.  (We ended up getting them for half price.)</li>
-<li>For the pieces that were bent, I had to rearrange the cuts to work around the bent pieces of the shelve, so having a little waste (i.e. slack) was necessary.</li>
-<li>The shelve stock pieces were $20 each for 12 foot sections, but the mounting hardware packs were $12 and corner pieces were $18. So the price of straight shelve pieces was going to be only a small part of the total price. (It ended up being $20 of a $180 total.)</li>
-<li>The waste pieces weren't really waste, since I could use them as a <a href="https://www.youtube.com/watch?v=2YDe08UQop0">makeshift trellis</a> in our garden.</li>
-</ol>
-<p>So really my focus on the math had caused me to ignore a lot of pretty obvious factors that were much more important than setting up the exact arrangement of cuts to mimimize waste.</p>
-<p>There are parallels good practices in software here.  Something about <a href="http://www.catb.org/esr/writings/taoup/html/ch12s02.html">measuring before optimizing</a>.  There are parallels to good engineering here.  Something about <a href="https://en.wikipedia.org/wiki/Assumption-based_planning">being explicit about your assumptions</a>.  The funny thing is that these relatively easy to remember heuristics will often get you closer to a globally optimal and robust solution than focusing on the parts of the system that are well behaved and expressible in clear mathematical terms.</p>
-<p>Hopefully this can be as good of a reminder for some of you as it was for me.</p>
-<hr />
-<p>P.S. - 
-I had to go back and use my hacksaw to trim some of those cut pieces anyway. It turns out my measurements were good but the shelves were designed to have 1/4-1/2 inch of space between them.  That and the corners of the laundry room were not perfectly square.</p><p>There are <a href="/engineering-vs-math-messiness-in-the-system.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
-                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
 
-                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
-                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
-                            <li><a href="https://github.com/turtlemonvh">github</a></li>
-                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
-                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
-                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+  </aside>
+  <main>
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
 
-<script type="text/javascript">
-    var disqus_shortname = 'turtlemonvh-github-io';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
+
+
+<article>
+  <header>
+    <h2><a href="http://turtlemonvh.github.io/engineering-vs-math-messiness-in-the-system.html#engineering-vs-math-messiness-in-the-system">Engineering vs Math: Messiness in the system</a></h2>
+    <p>
+          Posted on Mon 18 July 2016 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+          &#8226;     Tagged with
+
+              <a href="http://turtlemonvh.github.io/tag/engineering.html">engineering</a>,              <a href="http://turtlemonvh.github.io/tag/optimization.html">optimization</a>,              <a href="http://turtlemonvh.github.io/tag/constraints.html">constraints</a>,              <a href="http://turtlemonvh.github.io/tag/robustness.html">robustness</a>
+    </p>
+  </header>
+  <div>
+      <p>Yesterday I went to <a href="http://www.lowes.com/">Lowes</a> with my wife to get pieces for a <a href="http://www.rubbermaid.com/en-US/shop-products/closet---shelving">modular shelving unit</a> we were installing in our laundry room.  Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit.  The store had several length options available ...</p>
+      <br>
+      <a class="btn" href="http://turtlemonvh.github.io/engineering-vs-math-messiness-in-the-system.html#engineering-vs-math-messiness-in-the-system">    Continue reading
+</a>
+  </div>
+</article>
+
+  <div class="pagination">
+  </div>
+
+
+
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
 </script>
 </body>
 </html>

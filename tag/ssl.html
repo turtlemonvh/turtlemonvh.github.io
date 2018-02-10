@@ -1,157 +1,123 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8" />
-        <title>Systems Doing - ssl</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+    <meta name="author" content="turtlemonvh" />
+    <meta name="description" content="Thoughts and writings" />
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Systems Doing"/>
+<meta property="og:description" content="Thoughts and writings"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash;     Tag ssl
+</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
-                <nav><ul>
-                    <li><a href="/pages/home.html">Home</a></li>
-                    <li><a href="/pages/projects.html">Projects</a></li>
-                    <li><a href="/category/articles.html">Articles</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">Setting up SSL for an ElasticBeanstalk Application</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2017-01-01T18:00:00-05:00">
-                Published: Sun 01 January 2017
-        </abbr>
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/alexa.html">alexa</a> <a href="/tag/elasticbeanstalk.html">elasticbeanstalk</a> <a href="/tag/aws.html">aws</a> <a href="/tag/biblescholar.html">biblescholar</a> <a href="/tag/ssl.html">ssl</a> </p>
-</footer><!-- /.post-info --><p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
-<p>In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.</p>
-<hr />
-<h2>Problem 1: Static IPs, elastic services, and DNS records</h2>
-<p>I had originally purchased a domain name from <a href="https://www.1and1.com/">1and1</a>, mostly since they offer domains at a very low price, esp. for the first year.  The <code>.info</code> domain I set up for the project cost less than $2 for the first year!  I had previously purchased a few domains through 1and1 for applications on <a href="https://www.bluehost.com/">BlueHost</a> (a long time ago) and <a href="https://cloud.google.com/appengine/">Google App Engine</a>, and everything had worked fine.</p>
-<p>However, when I went to use my domain name from 1and1 with ElasticbeanStalk, I quickly ran into a problem.  The issues came because:</p>
-<ul>
-<li>1and1 <a href="https://help.1and1.com/domains-c36931/manage-domains-c79822/dns-c37586/enter-a-cname-for-your-subdomain-a643600.html">does not allow</a> you to enter <a href="https://en.wikipedia.org/wiki/CNAME_record">CNAME records</a> (which can point to another domain name) for top level domains.  They only allow you to point your domain to a static IP.</li>
-<li>AWS ElasticBeanstalk applications (and anything that sits behind an <a href="https://aws.amazon.com/elasticloadbalancing/">Elastic LoadBalancer</a>) do not have a static IP address.  Instead you are provided with a host name that is a subdomain in the form: <code>&lt;appname&gt;.&lt;region&gt;.elasticbeanstalk.com</code>.</li>
-</ul>
-<p>I was hoping I would be able to attach an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IPAddress</a> to the load balancer, but it appears <a href="http://stackoverflow.com/questions/35313134/assigning-static-ip-address-to-aws-load-balancer">this is not possible</a>.</p>
-<p>In the end, I didn't find a good solution for using my 1and1 domain that would still allow me to use SSL.  So I ended up buying a domain name from AWS.</p>
-<p>Once I did that and set up a <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html">Hosted Zone on Route53</a> for this domain, I was able to resolve <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> to my application.</p>
-<h2>Problem 2: Issuing SSL certificates requires domain name validation</h2>
-<p>The <a href="https://aws.amazon.com/certificate-manager/">AWS Certificate Manager</a> service is pretty awesome.  I described in <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> how easy it was to attach a self signed certificate to my ElasticBeanstalk Application, and it is really cool that <a href="https://aws.amazon.com/blogs/aws/new-aws-certificate-manager-deploy-ssltls-based-apps-on-aws/">Amazon provides auto-updating SSL certificates for free</a> now.  However, if you want to use one of these "real" certficates for a domain, Amazon needs to take an additional step to verify ownership of that domain.</p>
-<p>The way Amazon validates ownership of a domain when issuing a SSL cert is by <a href="https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate.html">sending an email to the registered owner of a domain</a>.  They lookup the email address of this user using data in the <a href="https://whois.icann.org/en">icann whois database</a>.  However, if you take <a href="http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-privacy-protection.html">the approach recommended by Amazon</a> and opt for whois privacy when registering your domain, that contact information is private.  So Amazon will instead fallback to trying to validate ownership of your domain by sending an email to the following addresses:</p>
-<ul>
-<li>administrator@your_domain</li>
-<li>hostmaster@your_domain</li>
-<li>postmaster@your_domain</li>
-<li>webmaster@your_domain</li>
-<li>admin@your_domain</li>
-</ul>
-<p>If you haven't set up email for your site yet, which is probably the case, this is going to cause a problem.  Once I figured this out, I was able to set up email for my domain by following a few more steps.</p>
-<ol>
-<li>
-<p><a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-receipt-rules.html">Set up an email receipt rule for my domain on SES</a>.  I set mine up to send my emails to the <a href="https://aws.amazon.com/sns/">SNS topic</a> for my Elastic Beanstalk application.  That topic is automatically created for you when you create your Elastic Beanstalk application.  Note that setting up the receipt run on SES also creates MX records in the Route53 Hosted Zone for your domain, so you don't have to create those yourself.</p>
-</li>
-<li>
-<p><a href="http://docs.aws.amazon.com/sns/latest/dg/SubscribeTopic.html">Add a SNS subscription to send email notifications</a> to my gmail address.</p>
-</li>
-</ol>
-<p>After that, emails to <code>anybody@biblescholarsearch.net</code> were forwarded to my gmail.  After that, I just had to resend the certificate validation request via the ACM dashboard, click a link in the email that was routed to my gmail, and my certificate was approved.</p>
-<h2>Problem 3: You have to actually change out the SSL cert used inside the Elastic Beanstalk control panel</h2>
-<p>This is kind of a "duh" but after I saw the SSL cert was validated I excitedly went to the browser and typed in my https domain name, hit enter, and got a "untrusted connection" page.  I was thinking that maybe it takes time for this information to propagte, but then I remembered that, no, that's how DNS works, not SSL.</p>
-<p>After thinking for another 10 seconds I realized the application was still using the self signed certificate I has created for my <code>*.elasticbeanstalk.com</code> domain name.  I went into <code>Configuration &gt; Load Balancing</code> on the Elastic Beanstalk control panel and changed to the new SSL certificate.  After a few minutes of updating, I could hit <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> and get validated SSL.  Hooray!</p>
-<h2>Problem 4: Wildcard subdomains</h2>
-<p>About 10 seconds into celebrating I realized that while <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> worked, <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> did not.  I read a little more <a href="https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request.html">on the certificate manager docs</a> and saw that you can add multiple domains to a certificate, including wildcards.</p>
-<p>This required some changes both to Route53 (so the top level domain and the www subdomain were both routed correctly) and the certificate (so that both the top level domain and the subdomain were understood to be part of the same certificate).  This took a couple steps because, while the Route53 hosted zone is editable, the SSL certificate is not.</p>
-<ol>
-<li>Add an A Alias record (pointing back to my ELB app) for my <code>www.</code> prefixed address in my Route53 hosted zone.</li>
-<li>Create a new SSL Cert including the wildcard entry (so both <code>biblescholarsearch.net</code> and <code>*.biblescholarsearch.net</code>).</li>
-<li>Remove the old SSL cert from my ELB app, because AWS won't let you delete a certificate that is actively in use.  This required an update.</li>
-<li>Assign the new SSL cert to the ELB app.  Another update.</li>
-</ol>
-<p>After that, both <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> and <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> has validating SSL credentials.</p>
-<hr />
-<p>So it was a little more involved than I planned, and I had to throw away a domain name while I was setting things up.  If I had to do things again, this is what I would change.</p>
-<ol>
-<li>Do domain registration through AWS (or at least via a provider that allows top level CNAME records).</li>
-<li>Include wildcard records in the certificate request.</li>
-<li>When registering, keep the domain name record public at first to make validating domain ownership easier.</li>
-</ol>
-<p>I hope this was helpful!  Feel free to reach out to me on twitter (<a href="https://twitter.com/turtlemonvh">@turtlemonvh</a>) with any questions.</p>
-<h1>UPDATE: 2017-01-14</h1>
-<p>So even with what I had set up, I still encountered another problem.  The application seemed to work for a few days after 12/31 then stopped working the evening of 1/3.  I started seeing the following image in my Alexa app when interacting with Bible Scholar:</p>
-<p><img src="/images/alexa-ssl-handshake-failure-inapp.png" alt="In-App SSL Validation Failure Message" style="width: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
-<p>Early on 1/4 I got a notification email that the application had failed certification.  Since my application was validating SSL in a browser, via curl, and every other method I tried, I assumed it must be some type of temporary error on their end.  I <a href="https://developer.amazon.com/edw/home.html#/skill/amzn1.ask.skill.30c203ed-c0f7-432e-bcdb-23ee1ece38ab/en_US/info">asked about this on the developer message boards</a> and also sent a inquiry through <a href="https://developer.amazon.com/public/support/contact/contact-us?subjectCategory=ALEXA">the contact form</a>.</p>
-<p>A few days ago I got responses via both channels.  Similar to the issue with the self signed certificate, the solution ended up being changing a toggle option in the "SSL Certificate" page.  Here are the options you are usually presented with on that page.</p>
-<div class="highlight"><pre><span></span>Please select one of the three methods below for the web service:
-1. My development endpoint has a certificate from a trusted certificate authority
-2. My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority
-3. I will upload a self-signed certificate in X.509 format. Learn how to create a self signed certificate. 
-</pre></div>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
 
 
-<p>Some of my earlier issues with self-signed certs came from selecting option 3, which works fine for testing but does not allow you to submit the application.  My issues this time came from selecting option 1 instead of option 2.  The following is what my certificate looks like in the dashboard of <a href="https://aws.amazon.com/certificate-manager/">AWS Certificate Manager</a>:</p>
-<p><img src="/images/aws-cert-manager-alt-names.png" alt="In-App SSL Validation Failure Message" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
-<p>Even though I submitted my application endpoint as <a href="https://biblescholarsearch.net/alexa/search">https://biblescholarsearch.net/alexa/search</a>, this apparently still qualifies as a subdomain under their terminology.  Switching this toggle button made the requests work for both "https://biblescholarsearch.net/alexa/search" and "https://www.biblescholarsearch.net/alexa/search" endpoints.</p>
-<p>My takeaways from all this are:</p>
-<h3>1. Amazon could afford to spend a little more time to improve the usability of their skill submission form.</h3>
-<p>It would be especially nice if there was an option to quickly scan an application and report issues in a nice format that corresponds to their <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-submission-checklist#submission-checklist">rules and policies</a> for new apps.</p>
-<h3>2. Amazon has a few "interesting" security concerns</h3>
-<p>They seem to be particularly concerned about <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">man in the middle attacks</a>, since they require</p>
-<ul>
-<li>apps must use an Amazon-trusted SSL certificate</li>
-<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-web-service#verifying-that-the-request-was-sent-by-alexa">verify requests are from the Amazon Alexa service</a>, including SSL cert checks and request timing checks</li>
-<li>apps must <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/handling-requests-sent-by-alexa#verifying-that-the-request-is-intended-for-your-service">verify requests are intended for your application specifically</a></li>
-</ul>
-<p>These concerns make sense for certain classes of applications, but for applications like mine (which doesn't store user state or have any concept of accounts) this does feel a little heavy handed.  In my case, thankfully, some golang community members have been working on these problems and there is <a href="https://github.com/mikeflynn/go-alexa">a nice reference application that I was able to "borrow" some of these checks from</a>.  Still, this takes a reasonable amount of time to get right.</p><p>There are <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
-                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+  </aside>
+  <main>
 
-                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
-                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
-                            <li><a href="https://github.com/turtlemonvh">github</a></li>
-                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
-                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
-                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
 
-<script type="text/javascript">
-    var disqus_shortname = 'turtlemonvh-github-io';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
+<article>
+  <header>
+    <h2><a href="http://turtlemonvh.github.io/setting-up-ssl-for-an-elasticbeanstalk-application.html#setting-up-ssl-for-an-elasticbeanstalk-application">Setting up SSL for an ElasticBeanstalk Application</a></h2>
+    <p>
+          Posted on Sun 01 January 2017 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+          &#8226;     Tagged with
+
+              <a href="http://turtlemonvh.github.io/tag/alexa.html">alexa</a>,              <a href="http://turtlemonvh.github.io/tag/elasticbeanstalk.html">elasticbeanstalk</a>,              <a href="http://turtlemonvh.github.io/tag/aws.html">aws</a>,              <a href="http://turtlemonvh.github.io/tag/biblescholar.html">biblescholar</a>,              <a href="http://turtlemonvh.github.io/tag/ssl.html">ssl</a>
+    </p>
+  </header>
+  <div>
+      <p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
+<p>In general AWS makes the process of setting up SSL for a site ...</p>
+      <br>
+      <a class="btn" href="http://turtlemonvh.github.io/setting-up-ssl-for-an-elasticbeanstalk-application.html#setting-up-ssl-for-an-elasticbeanstalk-application">    Continue reading
+</a>
+  </div>
+</article>
+
+  <div class="pagination">
+  </div>
+
+
+
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
 </script>
 </body>
 </html>

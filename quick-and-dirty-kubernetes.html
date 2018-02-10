@@ -1,45 +1,95 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8" />
-        <title>Quick and dirty kubernetes</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with ..." />
+<meta name="keywords" content="kubernetes, docker, sftp">
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="Quick and dirty kubernetes"/>
+<meta property="og:description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/quick-and-dirty-kubernetes.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-10-27 18:47:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="kubernetes"/>
+<meta property="article:tag" content="docker"/>
+<meta property="article:tag" content="sftp"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; Quick and dirty kubernetes</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
-                <nav><ul>
-                    <li><a href="/pages/home.html">Home</a></li>
-                    <li><a href="/pages/projects.html">Projects</a></li>
-                    <li class="active"><a href="/category/articles.html">Articles</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/quick-and-dirty-kubernetes.html" rel="bookmark"
-           title="Permalink to Quick and dirty kubernetes">Quick and dirty kubernetes</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
 
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-10-27T18:47:00-04:00">
-                Published: Fri 27 October 2017
-        </abbr>
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/kubernetes.html">kubernetes</a> <a href="/tag/docker.html">docker</a> <a href="/tag/sftp.html">sftp</a> </p>
-</footer><!-- /.post-info -->      <h1>The Problem</h1>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+    <h1 id="quick-and-dirty-kubernetes">Quick and dirty kubernetes</h1>
+    <p>
+          Posted on Fri 27 October 2017 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h1>The Problem</h1>
 <p>As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints.  We wanted to do a quick validation that pushed to a server outside our network was working.</p>
 <p>We already had a test environment running locally with <a href="https://github.com/atmoz/sftp">an sftp docker image</a>, and since I didn't already have a public server sitting around for running an sftp server, I decided this was a great opportunity to play around with <a href="https://cloud.google.com/container-engine/">Google Cloud's Container service</a> and <a href="https://kubernetes.io/">Kubernetes</a> to spin up a quick and dirty sftp server to try to push data to.</p>
 <h1>Web console to cli</h1>
@@ -138,48 +188,52 @@ export/testfile.json
 
 
 <p>I hope that was helpful.  I have been using docker daily for a few years now, but this is my first time playing with kubernetes.  If I did something stupid, let me know!  You can find me <a href="https://twitter.com/turtlemonvh">on twitter</a>.</p>
-    </div><!-- /.entry-content -->
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/kubernetes.html">kubernetes</a>
+      <a href="http://turtlemonvh.github.io/tag/docker.html">docker</a>
+      <a href="http://turtlemonvh.github.io/tag/sftp.html">sftp</a>
+    </p>
+  </div>
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
-                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
 
-                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
-                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
-                            <li><a href="https://github.com/turtlemonvh">github</a></li>
-                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
-                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
-                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+<div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'turtlemonvh-github-io';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+</article>
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
 </script>
 </body>
 </html>

@@ -1,45 +1,93 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8" />
-        <title>Using pelican and github user pages to setup a blog</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository ..." />
+<meta name="keywords" content="meta">
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="Using pelican and github user pages to setup a blog"/>
+<meta property="og:description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/using-pelican-and-github-user-pages-to-setup-a-blog.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2015-12-27 17:00:00-05:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="meta"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; Using pelican and github user pages to setup a blog</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Systems Doing  <strong>Looking for beauty in the complex and the simple.</strong></a></h1>
-                <nav><ul>
-                    <li><a href="/pages/home.html">Home</a></li>
-                    <li><a href="/pages/projects.html">Projects</a></li>
-                    <li class="active"><a href="/category/articles.html">Articles</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/using-pelican-and-github-user-pages-to-setup-a-blog.html" rel="bookmark"
-           title="Permalink to Using pelican and github user pages to setup a blog">Using pelican and github user pages to setup a blog</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="turtlemonvh">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
 
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2015-12-27T17:00:00-05:00">
-                Published: Sun 27 December 2015
-        </abbr>
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/turtlemonvh.html">turtlemonvh</a>
-        </address>
-<p>In <a href="/category/articles.html">Articles</a>.</p>
-<p>tags: <a href="/tag/meta.html">meta</a> </p>
-</footer><!-- /.post-info -->      <p>This post explains how I set up this blog.</p>
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+    <h1 id="using-pelican-and-github-user-pages-to-setup-a-blog">Using pelican and github user pages to setup a blog</h1>
+    <p>
+          Posted on Sun 27 December 2015 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>This post explains how I set up this blog.</p>
 <p>I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister <a href="https://twitter.com/woah_caitlyn">@woah_caitlyn</a> so she could copy any useful parts to make sites for herself and for friends.</p>
 <h2>Create repository</h2>
 <p>First, I followed the instructions at: <a href="https://pages.github.com/">https://pages.github.com/</a> and created a new github repo to hold the blog code. </p>
@@ -103,48 +151,50 @@ ghp-import -b master -p output
 <p>You can follow these directions if you want a custom domain name (like myspecialblog.com): <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/</a>)</p>
 <h4>Disqus comments</h4>
 <p>I <a href="https://github.com/getpelican/pelican-plugins/tree/master/disqus_static">don't think this is too hard</a>, but I leave that for later.  For now if you have any questions, find me on twitter.</p>
-    </div><!-- /.entry-content -->
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/meta.html">meta</a>
+    </p>
+  </div>
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="https://www.ionic.com/blog/">Ionic blog</a></li>
-                            <li><a href="http://turtle-philosophy.blogspot.com/">My old blog</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
 
-                            <li><a href="https://twitter.com/turtlemonvh">twitter</a></li>
-                            <li><a href="https://about.me/turtlemonvh">about.me</a></li>
-                            <li><a href="https://github.com/turtlemonvh">github</a></li>
-                            <li><a href="https://www.linkedin.com/in/vanheetm">linkedin</a></li>
-                            <li><a href="https://bitbucket.org/turtlemonvh/">bitbucket</a></li>
-                            <li><a href="http://stackoverflow.com/users/790075/turtlemonvh">stackoverflow</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+<div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'turtlemonvh-github-io';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+</article>
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
 </script>
 </body>
 </html>
