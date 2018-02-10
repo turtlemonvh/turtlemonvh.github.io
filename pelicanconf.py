@@ -5,15 +5,17 @@ import json
 
 # See docs.getpelican.com/en/stable/settings.html
 
-SITESUBTITLE = 'Looking for beauty in the complex and the simple.'
-
 AUTHOR = u'turtlemonvh'
 SITENAME = u'Systems Doing'
-SITEURL = ''
+SITETITLE = SITENAME
+SITESUBTITLE = 'Looking for beauty in the complex and the simple.'
+SITEDESCRIPTION = 'Thoughts and writings'
+SITEURL = 'http://turtlemonvh.github.io/'
+SITELOGO = '//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120'
 
 # https://github.com/getpelican/pelican-themes
 # http://www.pelicanthemes.com/
-THEME = 'notmyidea'
+THEME = 'pelican-themes/Flex'
 
 DEFAULT_CATEGORY = 'Articles'
 DEFAULT_METADATA = {
@@ -73,15 +75,6 @@ PLUGINS = [u"disqus_static"]
 DISQUS_SITENAME = creds['disqus']['sitename']
 DISQUS_SECRET_KEY = creds['disqus']['secret_key']
 DISQUS_PUBLIC_KEY = creds['disqus']['public_key']
-
-"""
-# Not working...?
-IMAGE_PATH = "content/images"
-THUMBNAIL_DIR = "images/thumbs"
-THUMBNAIL_SIZES = {
-    "small": "?100h"
-}
-"""
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
