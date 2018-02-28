@@ -3,7 +3,7 @@ Date: 2018-02-27 17:00
 Tags: aws, apigateway, rest
 Status: published
 
-When I started working with API Gateway earlier today, this is not the title I expected the article would have.
+When I started working with Amazon's [API Gateway service](https://aws.amazon.com/api-gateway/) earlier today, this is not the title I expected the article would have.
 
 If you read through documentation and blog articles by Amazon, it sounds like API Gateway is an awesome solution for serverless integrations with [S3](https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html), [DynamoDB](https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-as-a-proxy-for-dynamodb/), [Kinesis](https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-kinesis.html), and even [SQS](https://medium.com/@gayanhewa/api-gateway-and-service-proxy-with-sqs-2699c6960690).
 
