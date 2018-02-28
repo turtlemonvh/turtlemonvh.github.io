@@ -18,90 +18,88 @@ I dug into this a bit more this morning.  Assuming you deploy your ELB applicati
 
 Because I wanted to check the logs over the course of a few days, I opted for "Full Logs".  What you get from this is a zip file of logs.  When you extract the contents, it will look something like this:
 
-```bash
-is-mbp-timothy:tmp timothy$ tree var/
-var/
-└── log
-    ├── cfn-hup.log
-    ├── cfn-hup.log.1
-    ├── cfn-hup.log.2
-    ├── cfn-init-cmd.log
-    ├── cfn-init.log
-    ├── cloud-init-output.log
-    ├── cloud-init.log
-    ├── cron
-    ├── docker
-    ├── docker-events.log
-    ├── docker-ps.log
-    ├── eb-activity.log
-    ├── eb-cfn-init-call.log
-    ├── eb-cfn-init.log
-    ├── eb-commandprocessor.log
-    ├── eb-docker
-    │   └── containers
-    │       └── eb-current-app
-    │           ├── 2402dd479388-stdouterr.log
-    │           └── rotated
-    │               ├── 2402dd479388-stdouterr.log1497387661.gz
-    │               ├── 2402dd479388-stdouterr.log1497690061.gz
-    │               ├── 2402dd479388-stdouterr.log1497992461.gz
-    │               ├── 2402dd479388-stdouterr.log1498298461.gz
-    │               └── 2402dd479388-stdouterr.log1498597261.gz
-    ├── eb-publish-logs.log
-    ├── eb-tools.log
-    ├── healthd
-    │   └── daemon.log
-    ├── messages
-    ├── nginx
-    │   ├── access.log
-    │   ├── access.log-20170620
-    │   ├── access.log-20170621
-    │   ├── access.log-20170622
-    │   ├── access.log-20170623
-    │   ├── access.log-20170624
-    │   ├── access.log-20170625
-    │   ├── access.log-20170626
-    │   ├── access.log-20170627
-    │   ├── access.log-20170627.err
-    │   ├── access.log-20170628
-    │   ├── access.log-20170629
-    │   ├── error.log
-    │   ├── error.log-20170620.gz
-    │   ├── error.log-20170621.gz
-    │   ├── error.log-20170622.gz
-    │   ├── error.log-20170623.gz
-    │   ├── error.log-20170624.gz
-    │   ├── error.log-20170625.gz
-    │   ├── error.log-20170626.gz
-    │   ├── error.log-20170627.gz
-    │   ├── error.log-20170628.gz
-    │   └── error.log-20170629.gz
-    └── yum.log
+    #!bash
+    is-mbp-timothy:tmp timothy$ tree var/
+    var/
+    └── log
+        ├── cfn-hup.log
+        ├── cfn-hup.log.1
+        ├── cfn-hup.log.2
+        ├── cfn-init-cmd.log
+        ├── cfn-init.log
+        ├── cloud-init-output.log
+        ├── cloud-init.log
+        ├── cron
+        ├── docker
+        ├── docker-events.log
+        ├── docker-ps.log
+        ├── eb-activity.log
+        ├── eb-cfn-init-call.log
+        ├── eb-cfn-init.log
+        ├── eb-commandprocessor.log
+        ├── eb-docker
+        │   └── containers
+        │       └── eb-current-app
+        │           ├── 2402dd479388-stdouterr.log
+        │           └── rotated
+        │               ├── 2402dd479388-stdouterr.log1497387661.gz
+        │               ├── 2402dd479388-stdouterr.log1497690061.gz
+        │               ├── 2402dd479388-stdouterr.log1497992461.gz
+        │               ├── 2402dd479388-stdouterr.log1498298461.gz
+        │               └── 2402dd479388-stdouterr.log1498597261.gz
+        ├── eb-publish-logs.log
+        ├── eb-tools.log
+        ├── healthd
+        │   └── daemon.log
+        ├── messages
+        ├── nginx
+        │   ├── access.log
+        │   ├── access.log-20170620
+        │   ├── access.log-20170621
+        │   ├── access.log-20170622
+        │   ├── access.log-20170623
+        │   ├── access.log-20170624
+        │   ├── access.log-20170625
+        │   ├── access.log-20170626
+        │   ├── access.log-20170627
+        │   ├── access.log-20170627.err
+        │   ├── access.log-20170628
+        │   ├── access.log-20170629
+        │   ├── error.log
+        │   ├── error.log-20170620.gz
+        │   ├── error.log-20170621.gz
+        │   ├── error.log-20170622.gz
+        │   ├── error.log-20170623.gz
+        │   ├── error.log-20170624.gz
+        │   ├── error.log-20170625.gz
+        │   ├── error.log-20170626.gz
+        │   ├── error.log-20170627.gz
+        │   ├── error.log-20170628.gz
+        │   └── error.log-20170629.gz
+        └── yum.log
 
-7 directories, 49 files
-```
+    7 directories, 49 files
 
 Because ELB was saying that my application was sick because of a lot of 4XX return codes, the first thing I checked was the access logs.  Here's what that looked like on the command line.
 
 
-```bash
-# Go into nginx log directory
-cd var/log/nginx/
+    #!bash
+    # Go into nginx log directory
+    cd var/log/nginx/
 
-# Extract extract logs for each day
-for f in `ls access*.gz`; do gunzip $f; done
+    # Extract extract logs for each day
+    for f in `ls access*.gz`; do gunzip $f; done
 
-# NOTE: It's not shown here, but the first thing I did was open the file in vim and poke around to get a feel for the structure of the log lines
+    # NOTE: It's not shown here, but the first thing I did was open the file in vim and poke around to get a feel for the structure of the log lines
 
-# Check 1 day where there were a lot of issues (transitions from OK to SEVERE) for non-200 responses from the health check
-# Didn't get anything
-cat access.log-20170627 | grep "ELB-HealthChecker" | grep -v 200
+    # Check 1 day where there were a lot of issues (transitions from OK to SEVERE) for non-200 responses from the health check
+    # Didn't get anything
+    cat access.log-20170627 | grep "ELB-HealthChecker" | grep -v 200
 
-# Get anything that is not explicitly a 200
-# This showed me just 404s
-# Note that if the string "200" showed up somewhere else in the log line aside from the status code slot this could be misleading, but this is unlikely to be common enough to be a big deal
-cat access.log-20170627 | grep -v 200
-```
+    # Get anything that is not explicitly a 200
+    # This showed me just 404s
+    # Note that if the string "200" showed up somewhere else in the log line aside from the status code slot this could be misleading, but this is unlikely to be common enough to be a big deal
+    cat access.log-20170627 | grep -v 200
 
 Here is a sample of some log lines that were resulting in 404s.
 
@@ -134,13 +132,12 @@ To fix this, I went to the "Configuration > Health" page on the ELB dashboard an
 
 Once that restart finished, I ran this simple curl script for a few minutes to send a bunch of requests to the application that would trigger 404s.
 
-```bash
-while true; do
-    curl -X GET 'https://www.biblescholarsearch.net/index.action';
-    sleep 1;
-    echo "";
-done
-```
+    #!bash
+    while true; do
+        curl -X GET 'https://www.biblescholarsearch.net/index.action';
+        sleep 1;
+        echo "";
+    done
 
 Then I checked the ELB dashboard to confirm that even with all these requests coming in, the application health was still reporting as 'OK'.  Everything looked fine.
 
