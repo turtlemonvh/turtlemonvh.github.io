@@ -12,8 +12,6 @@
 
 
 
-    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,11 +21,11 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with ..." />
+<meta name="description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with …" />
 <meta name="keywords" content="kubernetes, docker, sftp">
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Quick and dirty kubernetes"/>
-<meta property="og:description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with ..."/>
+<meta property="og:description" content="The Problem As part of our analytics solution at Ionic, my team was working on a system to push files to customer owned endpoints. We wanted to do a quick validation that pushed to a server outside our network was working. We already had a test environment running locally with …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://turtlemonvh.github.io/quick-and-dirty-kubernetes.html"/>
 <meta property="og:type" content="article"/>
@@ -95,38 +93,38 @@
 <h1>Web console to cli</h1>
 <p>I started out trying to do everything through the web console.  I went to the Container Engine section of the test project I already had set up in GCP and created a test cluster named <code>sftp</code>.  I created it with size 1 (only 1 backing host) to keep the cost low, and because having a single sftp server is easier to reason about for testing purposes (i.e. there is only 1 place your data will be).  There are a lot of other options for a cluster, but I kept most of them set to their defaults.</p>
 <p>From there it wasn't very clear how to run a container from the web ui, so I had to dig into command line tools.  With those, I started here: <a href="https://cloud.google.com/sdk/docs/quickstart-linux">https://cloud.google.com/sdk/docs/quickstart-linux</a>.  I installed the sdk into a Centos 7 vagrant box that my team uses for most of our development.</p>
-<div class="highlight"><pre><span></span><span class="err">#</span><span class="x"> Download, extract, install, init</span>
-<span class="x">wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-177.0.0-linux-x86_64.tar.gz</span>
-<span class="x">tar xzvf google-cloud-sdk-177.0.0-linux-x86_64.tar.gz</span>
-<span class="x">./google-cloud-sdk/install.sh</span>
+<div class="highlight"><pre><span></span># Download, extract, install, init
+wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-177.0.0-linux-x86_64.tar.gz
+tar xzvf google-cloud-sdk-177.0.0-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
 
-<span class="err">#</span><span class="x"> Move it to a better place than `/tmp` since I&#39;m going to be sticking this on my path</span>
-<span class="x">sudo mv google-cloud-sdk /opt/</span>
-<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">:/opt/google-cloud-sdk/bin</span>
+# Move it to a better place than `/tmp` since I&#39;m going to be sticking this on my path
+sudo mv google-cloud-sdk /opt/
+export PATH=$PATH:/opt/google-cloud-sdk/bin
 
-<span class="err">#</span><span class="x"> Init</span>
-<span class="x">gcloud init</span>
+# Init
+gcloud init
 
-<span class="err">#</span><span class="x"> Get credentials for the cluster</span>
-<span class="err">#</span><span class="x"> This is pretty cool - it gives you a url to visit in your browser, redirects you to an Oauth authorization page, and finally gives you a token to paste back into your console.</span>
-<span class="err">#</span><span class="x"> I replaced by project id with XXXX.</span>
-<span class="x">gcloud container clusters get-credentials sftp --zone us-central1-a --project ionictest-XXXX</span>
+# Get credentials for the cluster
+# This is pretty cool - it gives you a url to visit in your browser, redirects you to an Oauth authorization page, and finally gives you a token to paste back into your console.
+# I replaced by project id with XXXX.
+gcloud container clusters get-credentials sftp --zone us-central1-a --project ionictest-XXXX
 </pre></div>
 
 
 <h1>The first hiccup: install path</h1>
 <p>This was all working pretty well, but then I ran into issues when I ran <code>gcloud components install kubectl</code>.  There were permission issues because <code>gcloud</code> tries to write a scratch directory at the same level as its installation directory (i.e. in <code>/opt</code> instead of in <code>/opt/google-cloud-sdk</code>.)  This was a strange choice, since it meant that I had to nest the installation another level deeper.</p>
-<div class="highlight"><pre><span></span><span class="err">#</span><span class="x"> Nesting nesting</span>
-<span class="x">sudo mkdir -p /opt/google</span>
-<span class="x">sudo chown -R vagrant:vagrant /opt/google</span>
-<span class="x">sudo mv /opt/google-cloud-sdk /opt/google</span>
+<div class="highlight"><pre><span></span># Nesting nesting
+sudo mkdir -p /opt/google
+sudo chown -R vagrant:vagrant /opt/google
+sudo mv /opt/google-cloud-sdk /opt/google
 
-<span class="err">#</span><span class="x"> Fix path</span>
-<span class="err">#</span><span class="x"> Really this was more manual since I removed the old bin path and also updated ~/.bashrc</span>
-<span class="x">export PATH=</span><span class="p">$</span><span class="nv">PATH</span><span class="x">:/opt/google/google-cloud-sdk/bin</span>
+# Fix path
+# Really this was more manual since I removed the old bin path and also updated ~/.bashrc
+export PATH=$PATH:/opt/google/google-cloud-sdk/bin
 
-<span class="err">#</span><span class="x"> Now installation works</span>
-<span class="x">gcloud components install kubectl</span>
+# Now installation works
+gcloud components install kubectl
 </pre></div>
 
 

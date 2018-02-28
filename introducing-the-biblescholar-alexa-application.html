@@ -12,8 +12,6 @@
 
 
 
-    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,11 +21,11 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="When I went to the AWS Re:Invent conference this November, every attendee got an Echo Dot. Since then I've been looking for something useful to do with it. So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes. Several of my long ..." />
+<meta name="description" content="When I went to the AWS Re:Invent conference this November, every attendee got an Echo Dot. Since then I've been looking for something useful to do with it. So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes. Several of my long term side …" />
 <meta name="keywords" content="alexa, elasticbeanstalk, aws, biblescholar">
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Introducing the BibleScholar Alexa application"/>
-<meta property="og:description" content="When I went to the AWS Re:Invent conference this November, every attendee got an Echo Dot. Since then I've been looking for something useful to do with it. So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes. Several of my long ..."/>
+<meta property="og:description" content="When I went to the AWS Re:Invent conference this November, every attendee got an Echo Dot. Since then I've been looking for something useful to do with it. So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes. Several of my long term side …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://turtlemonvh.github.io/introducing-the-biblescholar-alexa-application.html"/>
 <meta property="og:type" content="article"/>
@@ -93,7 +91,7 @@
     <p>When I went to the <a href="https://reinvent.awsevents.com/">AWS Re:Invent conference</a> this November, every attendee got an <a href="https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/">Echo Dot</a>.  Since then I've been looking for something useful to do with it.  So far I've been just asking Alexa about the weather, traffic, and (very corny) jokes.</p>
 <p>Several of my long term side projects are in the area of <a href="http://nlp.stanford.edu/IR-book/">information retrieval</a>, so I thought that developing a simple search application would be a good way to get a little more experience in this area and develop something I would actually use.</p>
 <p>The idea of BibleScholar is that the user will be able to ask the application where in the Bible a certain phrase exists, and it will find that phrase and return the best matching verse.  I may add some more functionality later, but right now that's all it does.  To make that work, I had to follow theses steps.</p>
-<hr />
+<hr>
 <h2>1. Get the full text of a few Bible translations</h2>
 <p>I needed multiple translations because when you ask for a phrase you will often have heard that verse mentioned a specific way, but it may have come from 1 of many possible translations.</p>
 <p>On a more technical level, instead of <a href="https://en.wikipedia.org/wiki/Stemming">stemming</a> the input text or using a more complex method like <a href="https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">LDA</a> or <a href="https://en.wikipedia.org/wiki/Probabilistic_latent_semantic_analysis">PLSA</a> to model the search phrase and actual Bible content as a set of topics, I opted for a more straightforward phrase search over the input text.  This has the advantage of also usually mapping to a single translation, so when you search for a phrase you also find out what translation it came from.</p>
@@ -102,20 +100,20 @@
 <p>I've been wanting to play around with the <a href="https://golang.org/">go</a> <a href="http://www.blevesearch.com/">bleve search</a> library for a while, so I chose to use that.  I wrote <a href="https://github.com/turtlemonvh/biblescholar/blob/master/search/index.go">my own code to do the indexing from tsv files</a>, but I found out later that there is a nice <a href="https://github.com/blevesearch/bleve/blob/master/cmd/bleve/cmd/index.go">indexing utility built into the <code>bleve</code> command line tool</a>.  Oh well.  I did find that indexing with bleve was very fast when using large batch sizes.</p>
 <p>Once I had it indexed, I could search on the command line using the <a href="https://github.com/blevesearch/bleve/blob/master/cmd/bleve/cmd/query.go"><code>bleve search</code></a> tool.  Here's what that looks like:</p>
 <div class="highlight"><pre><span></span>$ bleve query verses.bleve/ <span class="s1">&#39;for God so loved the world&#39;</span>
-<span class="m">11409</span> matches, showing <span class="m">1</span> through 10, took 74.698161ms
-    1. John-3-16-KJV <span class="o">(</span>0.725904<span class="o">)</span>
+<span class="m">11409</span> matches, showing <span class="m">1</span> through <span class="m">10</span>, took <span class="m">74</span>.698161ms
+    <span class="m">1</span>. John-3-16-KJV <span class="o">(</span><span class="m">0</span>.725904<span class="o">)</span>
         Text
                 For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.
-    2. John-3-16-NIV <span class="o">(</span>0.717970<span class="o">)</span>
+    <span class="m">2</span>. John-3-16-NIV <span class="o">(</span><span class="m">0</span>.717970<span class="o">)</span>
         Text
                 For God so loved  the world that he gave  his one and only Son,  that whoever believes  in him shall not perish but have eternal life.
-    3. John-3-16-HCSB <span class="o">(</span>0.710291<span class="o">)</span>
+    <span class="m">3</span>. John-3-16-HCSB <span class="o">(</span><span class="m">0</span>.710291<span class="o">)</span>
         Text
                 “For God loved  the world in this way:  He gave His One and Only  Son,  so that everyone who believes in Him will not perish but have eternal life.
-    4. John-13-1-HCSB <span class="o">(</span>0.596986<span class="o">)</span>
+    <span class="m">4</span>. John-13-1-HCSB <span class="o">(</span><span class="m">0</span>.596986<span class="o">)</span>
         Text
                 Before the Passover Festival, Jesus knew that His hour had come to depart from this world to the Father.  Having loved His own who were in the world,  He loved them to the end.
-    5. John-13-1-NIV <span class="o">(</span>0.584676<span class="o">)</span>
+    <span class="m">5</span>. John-13-1-NIV <span class="o">(</span><span class="m">0</span>.584676<span class="o">)</span>
         Text
                 It was just before the Passover Festival.  Jesus knew that the hour had come  <span class="k">for</span> him to leave this world and go to the Father.  Having loved his own who were in the world, he loved them to the end.
 </pre></div>
@@ -157,9 +155,9 @@
 <p>I has already designed the voice API for the application earlier on <a href="https://developer.amazon.com/edw/home.html#/skills/list">the Alexa skills submission portal</a>.  Now I pointed my configuration back to the HTTPS endpoint of my application and uploaded my self-signed certificate file to the portal and I could test my application.  Hooray!</p>
 <p>Right now I'm stuck on the last step because <a href="https://forums.developer.amazon.com/questions/51926/submit-for-certification-button-is-not-clickable-d.html">self signed certs are allowed for testing only</a> and <a href="https://www.1and1.com/">my DNS registrar</a> doesn't allow CNAMES for top level domain values (subdomains only) so I need to figure out how to attach an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IP</a> to my ElasticBeanstalk app's ELB so I have an address.  Then I can use the <a href="https://aws.amazon.com/certificate-manager/pricing/">free certificates provided by AWS ACM</a> to secure the application.</p>
 <p>When I get that working I'll come back and update this step.</p>
-<hr />
+<hr>
 <p>For now, I leave you with <a href="https://www.youtube.com/watch?v=Aq0IjjArOyo">a demo video</a> of the application working.</p>
-<hr />
+<hr>
 <p><strong>Update:</strong> I got the SSL stuff working, but it was kind of non-trivial, so I wrote about how I did that in <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">a new article</a>.</p>
   </div>
   <div class="tag-cloud">

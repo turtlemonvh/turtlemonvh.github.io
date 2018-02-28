@@ -12,8 +12,6 @@
 
 
 
-    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,11 +21,11 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="As with any data scraping tool, verifying correctness in BibleScholar's verse scraping utilities was pretty important. After my first run through verses, here is what I was seeing between versions. Note that this is before I added the ESV translation, which as you'll see below is the version ..." />
+<meta name="description" content="As with any data scraping tool, verifying correctness in BibleScholar's verse scraping utilities was pretty important. After my first run through verses, here is what I was seeing between versions. Note that this is before I added the ESV translation, which as you'll see below is the version with the …" />
 <meta name="keywords" content="python, scraping, biblescholar">
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Validating BibleScholar Scraping"/>
-<meta property="og:description" content="As with any data scraping tool, verifying correctness in BibleScholar's verse scraping utilities was pretty important. After my first run through verses, here is what I was seeing between versions. Note that this is before I added the ESV translation, which as you'll see below is the version ..."/>
+<meta property="og:description" content="As with any data scraping tool, verifying correctness in BibleScholar's verse scraping utilities was pretty important. After my first run through verses, here is what I was seeing between versions. Note that this is before I added the ESV translation, which as you'll see below is the version with the …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://turtlemonvh.github.io/validating-biblescholar-scraping.html"/>
 <meta property="og:type" content="article"/>
@@ -99,7 +97,7 @@
 
 
 <p>Hmmm.  Something smells fishy here.  I know that some versions chose to leave out some verses or split verses in different places, but a difference of 250 verses between NIV and KJV (which I know to be similar translations) looked to be beyond a normal standard of error.  To fix this, I took the following steps.</p>
-<hr />
+<hr>
 <h2>Step 1: See where the differences are and fix bugs in the processing script</h2>
 <p>All the verses were stored in tsv format (<code>&lt;translation&gt; &lt;book&gt; &lt;chapter&gt; &lt;verse #&gt; &lt;text&gt;</code>).  To make the analysis quick, I just extracted the <code>&lt;book&gt; &lt;chapter&gt; &lt;verse #&gt;</code> parts of the line into a file I named <code>.verses</code> do I could use <a href="http://man7.org/linux/man-pages/man1/diff.1.html">diff</a> to check for differences between what verses were included.  The commands to create these files and produce the diffs were as follows.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Generate files like &quot;&lt;book&gt; &lt;chapter&gt; &lt;verse&gt;&quot;</span>
@@ -136,13 +134,13 @@ diff NIV.verses ESV.verses
 <h3>Version comparison: NIV vs ESV</h3>
 <div class="highlight"><pre><span></span>$ diff ESV.verses NIV.verses
 <span class="o">(</span>... a bunch of things complaining about naming of <span class="s2">&quot;Song of Solomon&quot;</span> book<span class="o">)</span>
-&gt; Matthew <span class="m">12</span> 47
+&gt; Matthew <span class="m">12</span> <span class="m">47</span>
 23720a23722
-&gt; Matthew <span class="m">17</span> 21
+&gt; Matthew <span class="m">17</span> <span class="m">21</span>
 23736a23739
-&gt; Matthew <span class="m">18</span> 11
+&gt; Matthew <span class="m">18</span> <span class="m">11</span>
 23929a23933
-&gt; Matthew <span class="m">23</span> 14
+&gt; Matthew <span class="m">23</span> <span class="m">14</span>
 24475a24480
 &gt; Mark <span class="m">7</span> <span class="m">16</span> 
 24577a24583
@@ -160,17 +158,17 @@ diff NIV.verses ESV.verses
 26203a26215
 &gt; John <span class="m">5</span> <span class="m">4</span> 
 27201a27214
-&gt; Acts <span class="m">8</span> 37
+&gt; Acts <span class="m">8</span> <span class="m">37</span>
 27463a27477
-&gt; Acts <span class="m">15</span> 34
+&gt; Acts <span class="m">15</span> <span class="m">34</span>
 27762a27777
-&gt; Acts <span class="m">24</span> 7
+&gt; Acts <span class="m">24</span> <span class="m">7</span>
 27913a27929
-&gt; Acts <span class="m">28</span> 29
+&gt; Acts <span class="m">28</span> <span class="m">29</span>
 28344a28361
-&gt; Romans <span class="m">16</span> 24
+&gt; Romans <span class="m">16</span> <span class="m">24</span>
 30657d30673
-&lt; <span class="m">3</span> John <span class="m">1</span> 15
+&lt; <span class="m">3</span> John <span class="m">1</span> <span class="m">15</span>
 </pre></div>
 
 
@@ -181,11 +179,11 @@ diff NIV.verses ESV.verses
 <h3>Version comparison: NIV vs HCSB</h3>
 <div class="highlight"><pre><span></span>$ diff NIV.verses HCSB.verses
 27477d27476
-&lt; Acts <span class="m">15</span> 34
+&lt; Acts <span class="m">15</span> <span class="m">34</span>
 29058d29056
-&lt; <span class="m">2</span> Corinthians <span class="m">13</span> 14
+&lt; <span class="m">2</span> Corinthians <span class="m">13</span> <span class="m">14</span>
 30909a30908
-&gt; Revelation <span class="m">12</span> 18
+&gt; Revelation <span class="m">12</span> <span class="m">18</span>
 </pre></div>
 
 
@@ -244,7 +242,7 @@ $ bleve query verses.bleve &quot;peace I give to you&quot; -l 4
 <p>To do this, all I had to do was make sure that <code>verses.bleve</code> was in <a href="https://github.com/turtlemonvh/biblescholar/tree/master/search">the <code>search</code> directory</a> (the one with the Makefile) and run <code>make elbzip</code> to <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/applications-sourcebundle.html">create the application source bundle</a>.  Then I went to my app's Elastic BeanStalk Dashboard page, clicked the "Upload and Deploy" button, and uploaded the zip file.  Once that was uploaded I just selected the new release package and clicked "Deploy" from the drop down menu.  A few minutes later, everything was deployed.</p>
 <p><img src="/images/updating-biblescholar-elb-dashboard.png" alt="Updating BibleScholar ELB Dashboard" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>Really, they make this stuff pretty simple.  I haven't even bothered using <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html">the command line tools</a> since the dashboard is so quick to work with.</p>
-<hr />
+<hr>
 <p>And with that BibleScholar is now running with a more accurate record of scripture.  I hope this description of the processes was helpful - let me know in the comments below or find me <a href="https://twitter.com/turtlemonvh">on twitter</a>.</p>
   </div>
   <div class="tag-cloud">

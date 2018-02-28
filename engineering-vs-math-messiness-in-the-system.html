@@ -12,8 +12,6 @@
 
 
 
-    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,11 +21,11 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available ..." />
+<meta name="description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available …" />
 <meta name="keywords" content="engineering, optimization, constraints, robustness">
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Engineering vs Math: Messiness in the system"/>
-<meta property="og:description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available ..."/>
+<meta property="og:description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://turtlemonvh.github.io/engineering-vs-math-messiness-in-the-system.html"/>
 <meta property="og:type" content="article"/>
@@ -92,7 +90,7 @@
   <div>
     <p>Yesterday I went to <a href="http://www.lowes.com/">Lowes</a> with my wife to get pieces for a <a href="http://www.rubbermaid.com/en-US/shop-products/closet---shelving">modular shelving unit</a> we were installing in our laundry room.  Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit.  The store had several length options available for the main shelves: 12 foot, 6 foot, 4 foot, 3 foot.  I knew the length of each of the 6 pieces I needed, down to the quarter of an inch.  The store provided the service of cutting the stock shelve pieces to length for free.</p>
 <p>At this point any readers who spent time in a linear optimization or operations research course may be starting to sweat a little bit.  If you're not sure why, it's because what I just mentioned is a version of something usually referred to as "the cutting stock problem", and this can be expressed as <a href="http://www4.ncsu.edu/~kksivara/ma505/handouts/gilmore-gomory2.pdf">a well formed mathematical problem</a> with a definite optimal solution.  Since you took the class, you <strong>should</strong> know <a href="https://en.wikipedia.org/wiki/Simplex_algorithm">how to solve it</a>, and if you don't, then well I guess math's not your thing after all right?</p>
-<p><img alt="No math" src="https://cdn.meme.am/instances/500x/66238928.jpg" /></p>
+<p><img alt="No math" src="https://cdn.meme.am/instances/500x/66238928.jpg"></p>
 <p>Hmmm.  Or at least that was the feeling that I had while I was standing in the aisle yesterday trying to figure this thing out.  Unfortunately, from my class in linear optimization I also remembered that:</p>
 <ol>
 <li>Actually expressing a real world problem as a system of linear equations can be pretty tough</li>
@@ -110,7 +108,7 @@
 <p>So really my focus on the math had caused me to ignore a lot of pretty obvious factors that were much more important than setting up the exact arrangement of cuts to mimimize waste.</p>
 <p>There are parallels good practices in software here.  Something about <a href="http://www.catb.org/esr/writings/taoup/html/ch12s02.html">measuring before optimizing</a>.  There are parallels to good engineering here.  Something about <a href="https://en.wikipedia.org/wiki/Assumption-based_planning">being explicit about your assumptions</a>.  The funny thing is that these relatively easy to remember heuristics will often get you closer to a globally optimal and robust solution than focusing on the parts of the system that are well behaved and expressible in clear mathematical terms.</p>
 <p>Hopefully this can be as good of a reminder for some of you as it was for me.</p>
-<hr />
+<hr>
 <p>P.S. - 
 I had to go back and use my hacksaw to trim some of those cut pieces anyway. It turns out my measurements were good but the shelves were designed to have 1/4-1/2 inch of space between them.  That and the corners of the laundry room were not perfectly square.</p>
   </div>

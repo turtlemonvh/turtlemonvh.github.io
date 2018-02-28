@@ -12,8 +12,6 @@
 
 
 
-    <link rel="shortcut icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="http://yoursite.com/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,11 +21,11 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="In my last article I discussed how I created an Alexa application using AWS ElasticBeanstalk. I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted CA. In general AWS makes the process of setting up SSL for a site ..." />
+<meta name="description" content="In my last article I discussed how I created an Alexa application using AWS ElasticBeanstalk. I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted CA. In general AWS makes the process of setting up SSL for a site …" />
 <meta name="keywords" content="alexa, elasticbeanstalk, aws, biblescholar, ssl">
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Setting up SSL for an ElasticBeanstalk Application"/>
-<meta property="og:description" content="In my last article I discussed how I created an Alexa application using AWS ElasticBeanstalk. I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted CA. In general AWS makes the process of setting up SSL for a site ..."/>
+<meta property="og:description" content="In my last article I discussed how I created an Alexa application using AWS ElasticBeanstalk. I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted CA. In general AWS makes the process of setting up SSL for a site …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://turtlemonvh.github.io/setting-up-ssl-for-an-elasticbeanstalk-application.html"/>
 <meta property="og:type" content="article"/>
@@ -93,7 +91,7 @@
   <div>
     <p>In <a href="/introducing-the-biblescholar-alexa-application.html">my last article</a> I discussed how I created an Alexa application using AWS ElasticBeanstalk.  I left off stuck in the last step of getting the site set up with a SSL certificate from a trusted <a href="https://en.wikipedia.org/wiki/Certificate_authority">CA</a>.</p>
 <p>In general AWS makes the process of setting up SSL for a site pretty painless, but there were a few rather sensible decisions I made that made the process more complicated.  I'll break this article down into the problems I ran into and how I solved them.</p>
-<hr />
+<hr>
 <h2>Problem 1: Static IPs, elastic services, and DNS records</h2>
 <p>I had originally purchased a domain name from <a href="https://www.1and1.com/">1and1</a>, mostly since they offer domains at a very low price, esp. for the first year.  The <code>.info</code> domain I set up for the project cost less than $2 for the first year!  I had previously purchased a few domains through 1and1 for applications on <a href="https://www.bluehost.com/">BlueHost</a> (a long time ago) and <a href="https://cloud.google.com/appengine/">Google App Engine</a>, and everything had worked fine.</p>
 <p>However, when I went to use my domain name from 1and1 with ElasticbeanStalk, I quickly ran into a problem.  The issues came because:</p>
@@ -137,7 +135,7 @@
 <li>Assign the new SSL cert to the ELB app.  Another update.</li>
 </ol>
 <p>After that, both <a href="http://biblescholarsearch.net/">http://biblescholarsearch.net/</a> and <a href="http://www.biblescholarsearch.net/">http://www.biblescholarsearch.net/</a> has validating SSL credentials.</p>
-<hr />
+<hr>
 <p>So it was a little more involved than I planned, and I had to throw away a domain name while I was setting things up.  If I had to do things again, this is what I would change.</p>
 <ol>
 <li>Do domain registration through AWS (or at least via a provider that allows top level CNAME records).</li>
