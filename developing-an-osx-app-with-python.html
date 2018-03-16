@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="Application architecture The purpose of the project was to build an application that would watch a directory for changes and respond to directory events with a flexible set of actions. I broke the problem into a few parts, which mapped well into separate processes. Directory watcher. Responsible for responding to …" />
+<meta name="keywords" content="python, osx, ionic, pyinstaller, multiprocessing, pkgbuild">
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="Developing an OSX app with Python"/>
+<meta property="og:description" content="Application architecture The purpose of the project was to build an application that would watch a directory for changes and respond to directory events with a flexible set of actions. I broke the problem into a few parts, which mapped well into separate processes. Directory watcher. Responsible for responding to …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/developing-an-osx-app-with-python.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2018-03-16 15:00:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="osx"/>
+<meta property="article:tag" content="ionic"/>
+<meta property="article:tag" content="pyinstaller"/>
+<meta property="article:tag" content="multiprocessing"/>
+<meta property="article:tag" content="pkgbuild"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; Developing an OSX app with Python</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+    <h1 id="developing-an-osx-app-with-python">Developing an OSX app with Python</h1>
+    <p>
+          Posted on Fri 16 March 2018 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Application architecture</h2>
+<p>The purpose of the project was to build an application that would watch a directory for changes and respond to directory events with a flexible set of actions.</p>
+<p>I broke the problem into a few parts, which mapped well into separate processes.</p>
+<ol>
+<li>Directory watcher. Responsible for responding to directory changes and spawning an event.</li>
+<li>Event enrichment. Takes events from step 1, filters out events that don't need a response, and enriches events with additional information.</li>
+<li>Action executor. Takes enriched events from step 2 and acts on them.</li>
+</ol>
+<p>I used <a href="https://docs.python.org/2/library/multiprocessing.html">python's multiprocessing library</a> to spin off 3 worker processes and connect them together via queues.  Step 1 uses the excellent <a href="http://pythonhosted.org/watchdog/">watchdog library</a>.  Step 2 takes a list of functions that are called on every event. Each function returns either a modified event object or <code>None</code> (if the event should not be processed any further). Step 3 uses <a href="https://dev.ionic.com/getting-started/osx-python.html">the Ionic OSX Python SDK</a> to encrypt, decrypt, or reencrypt files.</p>
+<p>I used <a href="https://docs.python.org/2/library/argparse.html">argparse</a> to handle command line arguments, <a href="https://docs.python.org/2/library/configparser.html">configparser</a> for processing a configuration file, and <a href="http://setuptools.readthedocs.io/en/latest/setuptools.html#automatic-script-creation">the <code>entry_points</code> feature of setuptools</a> to generate an executable script when users install the package via <a href="https://pip.pypa.io/en/stable/quickstart/">pip</a> (or native setuptools).</p>
+<p>After this was all working, I wanted to make the package easier to install for less-technical users.  Also, I wanted the application to always be running in the background when the user was logged in.</p>
+<p>Thus began my journey toward OSX packaging nirvana.</p>
+<h2>Problem 1: Locking in shared library access when using multiprocessing</h2>
+<p>This problem was not related to OSX packaging specifically, and I talked about that problem already <a href="/python-multiprocessing-and-corefoundation-libraries.html">here</a>.  </p>
+<blockquote>
+<p>TL;DR: You can still use complex C libraries with multiprocessing if you take a couple steps to avoid issues with how *nix OSes fork processes.</p>
+</blockquote>
+<h2>Problem 2: Missing shared library for pyinstaller</h2>
+<p>When I ran <a href="http://www.pyinstaller.org/">pyinstaller</a> on the application, it found most of what it needed, but when the application got to the step where it tried to perform operations with the Ionic SDK, the application could not find the shared library it needed.  For reference, the command I used to build the OSX app was:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># https://pyinstaller.readthedocs.io/en/stable/usage.html#building-mac-os-x-app-bundles</span>
+pyinstaller --windowed --osx-bundle-identifier <span class="s2">&quot;com.ionic.python.ionic-fs-watcher&quot;</span> ionic-fs-watcher.spec --clean
+</pre></div>
+</td></tr></table>
+
+<p>The fix for this was not too hard, though it took me a little while to figure out the syntax that pyinstaller required in its specfile.  This is the section of the spec file that adds support for finding the shared library looks like.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># In this example I just grab the path for the shared lib on osx. In future versions, I&#39;ll extend to grab the path the shared lib on Windows and Linux, or even add a hook to automate this for future pyinstaller usersßß:</span>
+<span class="c1"># http://pyinstaller.readthedocs.io/en/stable/hooks.html</span>
+<span class="c1"># The Entrypoint class is a slightly modified version of the code here: https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Setuptools-Entry-Point</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Entrypoint</span><span class="p">(</span><span class="s1">&#39;ionic-sdk-ext&#39;</span><span class="p">,</span> <span class="s1">&#39;console_scripts&#39;</span><span class="p">,</span> <span class="s1">&#39;ionic-fs-watcher&#39;</span><span class="p">,</span>
+  <span class="n">binaries</span><span class="o">=</span><span class="p">[</span>
+    <span class="c1"># Grab the shared lib</span>
+    <span class="c1"># https://pythonhosted.org/PyInstaller/spec-files.html#adding-binary-files</span>
+    <span class="c1"># https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Collect-Data-Files</span>
+    <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ionicsdk</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;lib/libISAgentSDKC.dylib&quot;</span><span class="p">),</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+  <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>One other detail: <a href="https://pyinstaller.readthedocs.io/en/stable/spec-files.html#spec-file-options-for-a-mac-os-x-bundle">the section of the pyinstaller documentation that discusses the <code>BUNDLE</code> command for OSX</a> recommends calling <code>BUNDLE</code> with output of <code>EXE</code>.  When I did that, I noticed a lot of files missing in the <code>dist/IonicFSWatcher.app/Contents/MacOS/</code> directory, esp. compared to the outout in <code>dist/ionic-fs-watcher/</code> (created by the <code>COLLECT</code> operation).  On a whim, I tried calling <code>BUNDLE</code> with the output of <code>COLLECT</code> instead of <code>EXE</code>.  WHen I did that, all the files I was looking for were present.</p>
+<p>After that step, I could successfully run the executable file <code>ionic-fs-watcher</code> that was created at <code>dist/IonicFSWatcher.app/Contents/MacOS/ionic-fs-watcher</code>.</p>
+<h2>Problem 3: Strange default install behavior with pkgbuild</h2>
+<p>After a bit of Googling, building with <code>pkgbuild</code> was not very difficult to figure out once I realized that I could just set up a "fake root" to add files into and package that entire root.  But after building the application, I was having unexpected behavior when I installed.  I was building and installing the package like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Add contents into clean &quot;fake root&quot;</span>
+rm -rf /tmp/fs-watcher-root
+mkdir -p /tmp/fs-watcher-root/Applications
+cp -r dist/IonicFSWatcher.app /tmp/fs-watcher-root/Applications/IonicFSWatcher.app
+
+<span class="c1"># Build</span>
+pkgbuild --identifier com.ionic.python.ionic-fs-watcher --root /tmp/fs-watcher-root
+
+<span class="c1"># Install</span>
+<span class="c1"># The `-dumplog -verbose` options are not needed, but certainly help debugging</span>
+installer -pkg IonicFSWatcher.pkg -target / -dumplog -verbose
+</pre></div>
+</td></tr></table>
+
+<p>When I ran the <code>installer</code> command I did not see anything created in <code>/Applications/IonicFSWatcher.app</code>. I checked the output of <code>pkgutil --files com.ionic.python.ionic-fs-watcher</code> (and compared with the output for other installed applications), and it looked like everything was set up correctly (i.e. all files listed at the correct paths).</p>
+<p>After much searching, I learned that the issue was the <code>BundleIsRelocatable</code> attribute of the package, which <a href="https://scriptingosx.com/2017/05/relocatable-package-installers-and-quickpkg-update/">is by default set to <code>true</code></a>.  If you do not set this to <code>false</code> and the package is not already installed in <code>/Applications</code>, OSX will try to find another copy of the app that the user may have installed previously and moved, and install there.  THe idea here is to make upgrading applications even when the user has moved the application around.</p>
+<p>In my case, the other copy of the application that OSX found was the same <code>.app</code> directory I had just created the package from.  As <a href="https://apple.stackexchange.com/questions/219123/pkgbuild-created-package-does-not-install-correctly">others have have noted</a>, this is not a very obvious default behavior.  To fix this, you need to pass an extra option file to <code>pkgbuild</code>.  You can get a sample file to pass to <code>pkgbuild</code> with the following command.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Dumps to `example.plist`</span>
+pkgbuild --analyze --identifier com.ionic.python.ionic-fs-watcher --install-location /Applications --root /tmp/fs-watcher-root example.plist
+</pre></div>
+</td></tr></table>
+
+<p>After modification, <code>example.plist</code> should look like this (note the value of <code>BundleIsRelocatable</code>).</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+<span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;array&gt;</span>
+    <span class="nt">&lt;dict&gt;</span>
+        <span class="nt">&lt;key&gt;</span>BundleHasStrictIdentifier<span class="nt">&lt;/key&gt;</span>
+        <span class="nt">&lt;true/&gt;</span>
+        <span class="nt">&lt;key&gt;</span>BundleIsRelocatable<span class="nt">&lt;/key&gt;</span>
+        <span class="nt">&lt;false/&gt;</span>
+        <span class="nt">&lt;key&gt;</span>BundleIsVersionChecked<span class="nt">&lt;/key&gt;</span>
+        <span class="nt">&lt;true/&gt;</span>
+        <span class="nt">&lt;key&gt;</span>BundleOverwriteAction<span class="nt">&lt;/key&gt;</span>
+        <span class="nt">&lt;string&gt;</span>upgrade<span class="nt">&lt;/string&gt;</span>
+        <span class="nt">&lt;key&gt;</span>RootRelativeBundlePath<span class="nt">&lt;/key&gt;</span>
+        <span class="nt">&lt;string&gt;</span>Applications/IonicFSWatcher.app<span class="nt">&lt;/string&gt;</span>
+    <span class="nt">&lt;/dict&gt;</span>
+<span class="nt">&lt;/array&gt;</span>
+<span class="nt">&lt;/plist&gt;</span>
+</pre></div>
+</td></tr></table>
+
+<p>Once you modify <code>example.plist</code>, you can use it calling <code>pkgbuild</code> with the option <code>--component-plist example.plist</code>.</p>
+<p>After rebuilding with those new options and re-installing, I saw files showing up in <code>/Applications</code> as expected.  Even better, running <code>/Applications/IonicFSWatcher.app/Contents/MacOS/ionic-fs-watcher</code> directly gave the expected output.</p>
+<h2>Problem 4: OSX LaunchAgent and keychain access</h2>
+<p>The last step was getting the installer to also create a <code>ServiceAgent</code> that would run in the background.  I was able to use a <code>postinstall</code> script to create the file <code>~/Library/LaunchAgents/com.ionic.python.ionic-fs-watcher.startup.plist</code> (see <code>man pkgbuild</code> and the <code>--scripts</code> option for details).</p>
+<p>The first set of problems I ran into were around permissions.  If anything fails when trying to run a LaunchAgent, very little (if any) information shows up in syslog (<code>tail -f /var/log/system.log</code>).  Debugging permissions errors for things like log directories is especially difficult.  I don't have a great solution to this aside from a piece of advice: keep your LaunchAgent plist file very simple when debugging, and slowly add in any additional options as the service is running.</p>
+<p>But the bigger issue I ran into was just a general confusion about how to load, unload, launch, stop, and debug runs of a LaunchAgent.  Because of this I was getting some strange issues when trying to access the user's keychain, which is where the <a href="https://dev.ionic.com/registration.html">Ionic device profiles are stored on OSX</a>.  I was able to slowly and painfully work out a solution that is documented in these <a href="https://stackoverflow.com/">StackOverflow</a> questions:</p>
+<ul>
+<li>https://stackoverflow.com/questions/49289890/error-code-9216-when-attempting-to-access-keychain-password-in-launchagent/49323395#49323395</li>
+<li>https://stackoverflow.com/questions/49290174/osx-syntax-for-loading-a-single-launchagent-for-current-user/49302586#49302586</li>
+</ul>
+<p>The short story here is: if you are doing any of these things, <a href="https://www.youtube.com/watch?v=ynxPshq8ERo">you are going to have a bad time</a>.</p>
+<ul>
+<li>Using <code>sudo</code> to launch your launch agent</li>
+<li>Setting permissions on your plist file that are anything except for 644 with the installing user as the owner, and that user's default group as the group</li>
+<li>Using legacy <code>launchctl</code> commands like <code>load</code> and <code>unload</code> instead of their new equivalents <code>bootstrap</code> and <code>bootout</code></li>
+<li>Not using the <code>launchctl</code> <code>kickstart</code> and <code>debug</code> commands for debugging</li>
+<li>Not playing attention to whether your agents are enabled or disabled (<code>launchctl enable ...</code>)</li>
+</ul>
+<p>Please refer to the question answer themselves for more information about and recommendations for working with <code>launchd</code>.</p>
+<h2>Summary</h2>
+<p>After all of that, I have an application, packaged as an OSX <code>pkg</code>, which can monitor directories for changes and run a series of actions in response to those changes.  Installing the application sets up, enables, and starts a bacnground process that will watch directories specified by the user.</p>
+<p>More importantly, I have gained knowledge that will allow me to do this faster next time.  Well, here's to wishful thinking...</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/python.html">python</a>
+      <a href="http://turtlemonvh.github.io/tag/osx.html">osx</a>
+      <a href="http://turtlemonvh.github.io/tag/ionic.html">ionic</a>
+      <a href="http://turtlemonvh.github.io/tag/pyinstaller.html">pyinstaller</a>
+      <a href="http://turtlemonvh.github.io/tag/multiprocessing.html">multiprocessing</a>
+      <a href="http://turtlemonvh.github.io/tag/pkgbuild.html">pkgbuild</a>
+    </p>
+  </div>
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+</article>
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+</body>
+</html>
