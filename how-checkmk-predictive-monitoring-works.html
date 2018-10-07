@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="Introduction Recently I have been working with members of our NOC (network operations center) on improving monitoring tooling and processes for some of our production systems. One problem we have run into is overly sensitive (noisy) alerts. Partially, this is because many of our alerts are based on a metric …" />
+<meta name="keywords" content="python, monitoring">
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="How CheckMK predictive monitoring works"/>
+<meta property="og:description" content="Introduction Recently I have been working with members of our NOC (network operations center) on improving monitoring tooling and processes for some of our production systems. One problem we have run into is overly sensitive (noisy) alerts. Partially, this is because many of our alerts are based on a metric …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/how-checkmk-predictive-monitoring-works.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2018-10-07 15:00:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="monitoring"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; How CheckMK predictive monitoring works</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+    <h1 id="how-checkmk-predictive-monitoring-works">How CheckMK predictive monitoring works</h1>
+    <p>
+          Posted on Sun 07 October 2018 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Introduction</h2>
+<p>Recently I have been working with members of our NOC (network operations center) on improving monitoring tooling and processes for some of our production systems.  One problem we have run into is overly sensitive (noisy) alerts.  Partially, this is because many of our alerts are based on a metric value (CPU usage, request rate, etc) exceeding a threshold.  These thresholds can be difficult to set properly, and often if it is difficult for us to determine what "normal" looks like for a metric until the system has been live for a few weeks.</p>
+<p>The primary monitoring tool we use at Ionic Security is <a href="https://mathias-kettner.com/">CheckMK</a>, an open source monitoring suite based on Nagios.  I was wondering whether CheckMK had tools and settings that could help with this problem, and it turns out CheckMK does have a feature called <a href="https://mathias-kettner.com/checkmk_predictive.html">"Predictive Analytics"</a> which is designed for exactly this problem.  Since I spend a good amount of my time working on anomaly detection systems at Ionic, I was interested in learning how CheckMK's solution worked, and what the shortcomings of that system may be.  This article covers some of what I learned.</p>
+<h2>Walkthrough of the core functions used in predictive analytics</h2>
+<p>The core prediction code can be found in the public CheckMK git repository here: <a href="http://git.mathias-kettner.de/git/?p=check_mk.git;a=blob;f=cmk_base/prediction.py">http://git.mathias-kettner.de/git/?p=check_mk.git;a=blob;f=cmk_base/prediction.py</a>.  Everything that follows is my interpretation of the contents of this file.</p>
+<p>CheckMK's metric system is based on <a href="http://docs.pnp4nagios.org/">pnp4nagios</a> which uses <a href="https://en.wikipedia.org/wiki/RRDtool">RRDs (round robin databases)</a> to store data.  RRDs are a very interesting storage mechanism for time series data, but <a href="https://jawnsy.wordpress.com/2010/01/08/round-robin-databases/">how they work</a> is beyond the scope of this article.  The most important detail to know is that they store older data with less precision than newer data.  These RRD files are used as the source of metric data.</p>
+<p>Stepping through the <code>compute_prediction</code> function, we see the following steps:</p>
+<ol>
+<li>Data is loaded from RRD files into a 2 dimensional list named <code>slices</code>.<ul>
+<li>The loop goes from the start time (<code>horzion</code> days in the past) to <code>from_time</code>.<ul>
+<li>The loop moves from more recent data to older data so that the first row of data it accumulates has the smallest timestep (most accuracy).</li>
+<li>This is necessary because of the compression of older points in a time series in RRDs.</li>
+</ul>
+</li>
+<li>The loop proceeds through time at a granularity dependent on the user-specified periodicity of the data.<ul>
+<li>There are options are for minute, hour, day, weekday.<ul>
+<li><code>minute</code> means that data is bucketed per minute of the hour. This is really just for testing.</li>
+<li><code>hour</code> means that data is bucketed per hour of day.</li>
+<li><code>day</code> means that data is bucketed per day of the month.</li>
+<li><code>wday</code> means that data is bucketed per day of the week.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>In this first loop, data is loaded into a 2 dimensional list named <code>slices</code>.<ul>
+<li>The first dimension is the index of the slice of data (e.g. data for a single day).</li>
+<li>The second dimension is a set of tuples where the first 2 elements describe the shape of the data and the 3rd element is the data points themselves.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>A second loop loops over the number of data points in the first row of <code>slices</code>, creating a list named <code>consolidated</code>.<ul>
+<li>The function grabs the point from each slice at the same time offset into that slice.<ul>
+<li>Since not all slices have the same number of points, slices for older time ranges are interpolated to calculate the value at the requested offset.</li>
+</ul>
+</li>
+<li>Basic statistics (min, max, mean, stddev) are calculated for the N points at the same offset in each slice and appended to <code>consolidated</code>.<ul>
+<li>These stats tell us about the properties of a single second of a metric.</li>
+<li>For example, one of these points in <code>consolidated</code> will contain stats for the last N Mondays at 17:20:25 if periodicity is set to <code>wday</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The function return a dictionary with the <code>consolidated</code> list of per-second statistics as the field <code>points</code>.</li>
+</ol>
+<p>Thus at the end of this we have stats for every second at the user-specified periodicity.  These stats tell us what is normal for any given second of a metric.</p>
+<p>These predictions are used inside the function <code>get_levels</code>, which performs the following steps.</p>
+<ol>
+<li>Calculates the paths where the <code>prediction</code> should be stored for a given metric.</li>
+<li>Attempts to load the prediction data.<ul>
+<li>This load works by simply <code>eval</code>ing the contents of a file.</li>
+<li>The prediction will be recalculated if:<ul>
+<li>The prediction file doesn't exist.</li>
+<li>The prediction file is corrupt or in an out of date format.</li>
+<li>The prediction if out of date.<ul>
+<li>The recalculation interval is predefined for each periodicity option (<code>minute, hour, day, wday</code>) in the constant <code>prediction_periods</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The function also cleans up any unused prediction files that may be sitting around (e.g. from different parameter settings for prediction).</li>
+</ul>
+</li>
+<li>(Optionally) recalculate the prediction.<ul>
+<li>This is a call to <code>compute_prediction</code>.</li>
+<li>The raw contents of the dictionary returned by <code>compute_prediction</code> are written into a file (which is why the contents can be loaded via <code>eval</code>).</li>
+</ul>
+</li>
+<li>Look up the data for the time point being analyzed in <code>prediction</code>, and load the <code>average</code> and <code>stddev</code> values.<ul>
+<li>As far as I can tell the values for <code>max</code> and <code>min</code> are never used again after they are calculated.</li>
+</ul>
+</li>
+<li>Calculate admissable levels (warning and critical) for upper and lower bounds.<ul>
+<li>There are 3 methods than can be used to calculate levels.<ul>
+<li><code>absolute</code> = level is the average plus a constant value</li>
+<li><code>relative</code> = level is the average times a constant percent</li>
+<li><code>stddev</code> = level is the average plus a multiple of the standard deviation</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Return these levels to be used by the alerting and plotting systems in CheckMK.</li>
+</ol>
+<p>Thus at the end of the process what we get is a system that stores metrics about historical data on disk for each metric series configured for predictive monitoring, re-evaluating those metrics as the data ages off. These metrics are loaded and used to calculate bounds for values in the metric series using user-configured parameters.</p>
+<h2>Opportunities for enhancement</h2>
+<p>First, there are a few things that seem a bit odd about this system.</p>
+<ol>
+<li>Evaling files to load.<ul>
+<li>I don't remember ever seeing this before now, and I am actually a bit surprised it works.</li>
+<li>Since this is just a basic python dictionary, using something like JSON would be more expected. A more fancy system could use mmap'd files.</li>
+<li>I am curious about the relative overhead of this solution vs json. Lightweight compression may even make sense if the loading is IO dominated (but I would think loading is mostly CPU bound because of the need to parse data on load).</li>
+</ul>
+</li>
+<li>All data must be loaded for a single prediction to be computed.<ul>
+<li>Breaking the prediction storage up into smaller pieces would mean that the system would have to load much smaller files.</li>
+<li>For example, if data is stored in per-hour slices, we would need to load only ~0.6% (<code>= 1/(24*7)</code>) of the data needed for <code>wday</code> calculations.</li>
+<li>This would mean more IO when data is recomputed, and more small files to manage, but it seems like this would be worthwhile for a read-mostly system.</li>
+</ul>
+</li>
+<li>Predictions are done for 1 data point at a time.<ul>
+<li>Batching seems like it would make sense, esp. since once the data is loaded predictions are very fast to calculate.</li>
+</ul>
+</li>
+<li>No tests.<ul>
+<li>I don't see any test code for this fairly complex series of operations in the CheckMK code base.</li>
+<li>The code would be fairly hard to test well because the functions are not very granular (mix IO, business logic, failure checks, etc).</li>
+<li>Breaking these giant functions into smaller well-named pieces would make the code easier to understand and easier to test.</li>
+</ul>
+</li>
+</ol>
+<p>Second, given what I know about other similar anomaly detection systems, there are a few things that could be quickly improved with minimal code changes.</p>
+<ol>
+<li>Use robust estimators.<ul>
+<li>It is now common to use median / MAD for monitoring applications instead of mean / standard deviation because the robust estimators are less sensitive to outliers.</li>
+<li>Adding this in as an option (i.e. the user can select which to use) would be a quite simple.</li>
+</ul>
+</li>
+<li>Apply smoothing to the prediction values.<ul>
+<li>A simple rolling average would smooth out the data points and make the series less prone to sporadic jumps.</li>
+<li>Not all data benefits from smoothing (and it can be dangerous to smoothing to the prediction and not the data coming in), but a small moving window of a ~30 seconds would likely just make predictions more consistent.</li>
+<li>The stddev/MAD values could be smoothed in addition to the average/median values.</li>
+<li>The user could select the sliding window size, and this could be applied to the <code>consolidated</code> list in <code>compute_prediction</code> as a post-processing step.</li>
+</ul>
+</li>
+</ol>
+<p>However, even with all this there are a few things I really like about the current solution.</p>
+<ol>
+<li>Does all its work in 1 loop.<ul>
+<li>Ordinarily I would think that once you find data out of data you would put an item in a queue to kick off a background process to reload the data to keep the read process fast.</li>
+<li>However this means you have to handle missing/malformed and out of date records separately.</li>
+<li>Even though write and read happen in the same place, this makes the logic very easy to follow.</li>
+</ul>
+</li>
+<li>Results are easily interpretable.<ul>
+<li>Your baseline value is always the average of the last N values for a given time offset into a cycle.</li>
+<li>This is very easy to understand, and it makes the system less surprising.</li>
+</ul>
+</li>
+</ol>
+<h2>Summary</h2>
+<p>The predictive analytics feature of CheckMK is a fairly simple system (~300 LOC) based off simple statistics for historical data.  There are some odd parts in the implementation that go against best practices for the design of more modern analytics systems, and there are several opportunities for improvement.  Still, the system has been used by 1000s of organizations to solve real business problems.</p>
+<p>The biggest point I personally took away from this research is a reminder that, even for complex problems, sometimes simple solutions are good enough to do the job.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/python.html">python</a>
+      <a href="http://turtlemonvh.github.io/tag/monitoring.html">monitoring</a>
+    </p>
+  </div>
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+</article>
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+</body>
+</html>
