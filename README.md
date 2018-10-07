@@ -28,6 +28,7 @@ Publishing
 ## Setup
 
 ```
+# Install with all submodules loaded
 git submodule update --init --recursive
 
 # Create credentials.json file
@@ -41,15 +42,16 @@ cat > credentials.json <<EOF
 }
 EOF
 
-# Make directory for rendering
+# Make directory for storing rendered html
 mkdir output
 
 # Install python deps
 pip install pelican
+pip install ghp-import
 pip install disqus
 pip install markdown
 
-# Startup
+# Startup dev server
 bash develop_server.sh start
 
 ```
