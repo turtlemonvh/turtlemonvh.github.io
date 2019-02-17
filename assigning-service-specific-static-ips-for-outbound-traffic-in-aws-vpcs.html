@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="The problem At Ionic we commonly use network ACLs to restrict access to some services to a list of known IPs. In this specific case, I needed ephemeral servers spun up with Databricks Spark to be able to reach an internal monitoring server. The problem is that by default in …" />
+<meta name="keywords" content="aws, nat, vpc, networking">
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="Assigning service-specific static IPs for outbound traffic in AWS VPCs"/>
+<meta property="og:description" content="The problem At Ionic we commonly use network ACLs to restrict access to some services to a list of known IPs. In this specific case, I needed ephemeral servers spun up with Databricks Spark to be able to reach an internal monitoring server. The problem is that by default in …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/assigning-service-specific-static-ips-for-outbound-traffic-in-aws-vpcs.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-02-17 15:00:00-05:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="aws"/>
+<meta property="article:tag" content="nat"/>
+<meta property="article:tag" content="vpc"/>
+<meta property="article:tag" content="networking"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; Assigning service-specific static IPs for outbound traffic in AWS VPCs</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
+        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+    <h1 id="assigning-service-specific-static-ips-for-outbound-traffic-in-aws-vpcs">Assigning service-specific static IPs for outbound traffic in AWS VPCs</h1>
+    <p>
+          Posted on Sun 17 February 2019 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>The problem</h2>
+<p>At <a href="https://www.ionic.com/">Ionic</a> we commonly use <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html">network ACLs</a> to restrict access to some services to a list of known IPs.  In this specific case, I needed ephemeral servers spun up with <a href="https://databricks.com/aws">Databricks Spark</a> to be able to reach an internal monitoring server.</p>
+<p>The problem is that by default in AWS VPCs you have instances that spin up and are assigned their own public IPv4 address.  Those instances start inside subnets that have route tables set up with 2 entries:</p>
+<ul>
+<li>route all traffic in the VPC IP range (e.g. <code>172.31.0.0/16</code>) to the target <code>local</code></li>
+<li>route all other traffic (<code>0.0.0.0/0</code>) to an <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">internet gateway (IGW)</a></li>
+</ul>
+<p>The IGW acts as a 1-to-1 NAT for the instances in the those subnets, so each of those instances has its own public IP.  Because these public IPs change every time we launch a new server, this makes it hard to work with network ACLs.</p>
+<blockquote>
+<p>NOTE: I realize that you can reserve a pool of Elastic IPs (EIPs) for yourself and attach those to instances as they boot. This would also allow me to have traffic from a fixed set of IPs. However since I am booting a high variable number of servers, I would need a large block of EIPs to make this work, and I would need to add extra automation to attach EIPs on boot. This sounded like a much messier solution than what I came up with below.</p>
+</blockquote>
+<p>To fix this, I decided to use AWS's <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat.html">VPC NAT service</a>.  The NAT must be placed in a public subnet (meaning the route table points to an IGW), and you must update the route tables of other subnets to point to the NAT.  I figued I could add a couple specific IPs to the route tables so the IGW is used directly for most traffic but we use the NAT for querying some specific IPs.</p>
+<p>To do this, I took the following steps.</p>
+<h3>1) Create a new subnet</h3>
+<p>I didn't want to mess with any of the existing subnets, so I created a new subnet named <code>PublicNAT</code> with CIDR <code>172.31.96.0/20</code>.  That was the next block available in the default VPC created by Amazon when you first create an AWS, which uses the address space <code>172.31.0.0/16</code>.</p>
+<h3>2) Create a NAT</h3>
+<p>I had to choose the VPC to associate it with, and there was also an option to create an Elastic IP (EIP) during setup, or you could select one that you already creatded.  I chose to create a new EIP.</p>
+<h3>3) Boot an instance inside one of the other VPC subnets</h3>
+<p>I booted the instance and <code>ssh</code>'d in.  I ran the following to confirm the public IP was the same value AWS reported.</p>
+<div class="highlight"><pre><span></span>ubuntu@ip-172-31-35-2:~$ curl http://checkip.dyndns.org
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Current IP Check&lt;/title&gt;&lt;/head&gt;&lt;body&gt;Current IP Address: <span class="m">18</span>.210.78.190&lt;/body&gt;&lt;/html&gt;
+</pre></div>
+
+
+<p>I also ran a command to get the IP addresses used by the <code>checkip</code> service.</p>
+<div class="highlight"><pre><span></span>ubuntu@ip-172-31-35-2:~$ dig checkip.dyndns.org
+
+<span class="p">;</span> &lt;&lt;&gt;&gt; DiG <span class="m">9</span>.10.3-P4-Ubuntu &lt;&lt;&gt;&gt; checkip.dyndns.org
+<span class="p">;;</span> global options: +cmd
+<span class="p">;;</span> Got answer:
+<span class="p">;;</span> -&gt;&gt;HEADER<span class="s">&lt;&lt;- opco</span>de: QUERY, status: NOERROR, id: <span class="m">52264</span>
+<span class="p">;;</span> flags: qr rd ra<span class="p">;</span> QUERY: <span class="m">1</span>, ANSWER: <span class="m">4</span>, AUTHORITY: <span class="m">0</span>, ADDITIONAL: <span class="m">1</span>
+
+<span class="p">;;</span> OPT PSEUDOSECTION:
+<span class="p">;</span> EDNS: version: <span class="m">0</span>, flags:<span class="p">;</span> udp: <span class="m">4096</span>
+<span class="p">;;</span> QUESTION SECTION:
+<span class="p">;</span>checkip.dyndns.org.            IN      A
+
+<span class="p">;;</span> ANSWER SECTION:
+checkip.dyndns.org.     <span class="m">0</span>       IN      CNAME   checkip.dyndns.com.
+checkip.dyndns.com.     <span class="m">60</span>      IN      A       <span class="m">216</span>.146.43.70
+checkip.dyndns.com.     <span class="m">60</span>      IN      A       <span class="m">216</span>.146.43.71
+checkip.dyndns.com.     <span class="m">60</span>      IN      A       <span class="m">131</span>.186.113.70
+
+<span class="p">;;</span> Query time: <span class="m">2</span> msec
+<span class="p">;;</span> SERVER: <span class="m">172</span>.31.0.2#53<span class="o">(</span><span class="m">172</span>.31.0.2<span class="o">)</span>
+<span class="p">;;</span> WHEN: Sun Feb <span class="m">17</span> <span class="m">20</span>:02:28 UTC <span class="m">2019</span>
+<span class="p">;;</span> MSG SIZE  rcvd: <span class="m">127</span>
+</pre></div>
+
+
+<h3>4) Create new route table</h3>
+<p>All the subnets in the default VPC by default use the same route table with 2 rules in it, which look like this.</p>
+<p><img src="/images/NAT_default_route_table.png" alt="Default route table" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>I created a new one that point to the NAT we created in step 2 for the IP addresses used by the <code>checkip</code> service.  I named it <code>natforpublicip</code> so it would be easy to find.  After that it looked like this.</p>
+<p><img src="/images/NAT_updated_route_table.png" alt="New route table" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<h3>5) Associate new route table with the subnet containing the currently running instance</h3>
+<p>This is pretty simple.  Just click the "Edit route table association" in the "Route table" tab for the subnet.  That looks like this.</p>
+<p><img src="/images/subnet_routing_table_association.png" alt="Subnet route table association" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<h2>It worked</h2>
+<p>After these steps, I checked what my public IP is from the instance (which was still running), and I got this:</p>
+<div class="highlight"><pre><span></span>ubuntu@ip-172-31-35-2:~$ curl http://checkip.dyndns.org
+<span class="nt">&lt;html&gt;&lt;head&gt;&lt;title&gt;</span>Current IP Check<span class="nt">&lt;/title&gt;&lt;/head&gt;&lt;body&gt;</span>Current IP Address: 3.208.144.35<span class="nt">&lt;/body&gt;&lt;/html&gt;</span>
+</pre></div>
+
+
+<p>I checked my list of elastic IPs and confirmed that the IP reported by <code>checkip</code> was the same EIP associated with the NAT I created.  Note that the other EIP in the list is the one originally associated with the instance when it was launched.</p>
+<p><img src="/images/Elastic_IP_listing.png" alt="EIP listing" style="height: 300px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>So now by simply updating our route table to point to the NAT for our internal monitoring services (and making sure we launch instances in subnets that use that new route table), we can make sure that all their outbound traffic to those services comes from a single IP address that we can allow via network ACLs.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/aws.html">aws</a>
+      <a href="http://turtlemonvh.github.io/tag/nat.html">nat</a>
+      <a href="http://turtlemonvh.github.io/tag/vpc.html">vpc</a>
+      <a href="http://turtlemonvh.github.io/tag/networking.html">networking</a>
+    </p>
+  </div>
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+</article>
+
+    <footer>
+<p>&copy; turtlemonvh </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+</body>
+</html>
