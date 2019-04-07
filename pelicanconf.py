@@ -10,7 +10,8 @@ SITENAME = u'Systems Doing'
 SITETITLE = SITENAME
 SITESUBTITLE = 'Looking for beauty in the complex and the simple.'
 SITEDESCRIPTION = 'Thoughts and writings'
-SITEURL = 'http://turtlemonvh.github.io/'
+#SITEURL = 'http://turtlemonvh.github.io/'
+#SITEURL = 'http://localhost:8081/'
 SITELOGO = '//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120'
 
 # https://github.com/getpelican/pelican-themes
@@ -37,17 +38,19 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Ionic blog', 'https://www.ionic.com/blog/'),
-         ('My old blog', 'http://turtle-philosophy.blogspot.com/'),)
+LINKS = (
+    ('Ionic blog', 'https://www.ionic.com/blog/'),
+    ('My old blog', 'http://turtle-philosophy.blogspot.com/'),
+    ('about.me', 'https://about.me/turtlemonvh'),
+)
 
 # Social widget
 SOCIAL = (
     ('twitter', 'https://twitter.com/turtlemonvh'),
-    ('about.me', 'https://about.me/turtlemonvh'),
     ('github', 'https://github.com/turtlemonvh'),
     ('linkedin', 'https://www.linkedin.com/in/vanheetm'),
     ('bitbucket', 'https://bitbucket.org/turtlemonvh/'),
-    ('stackoverflow', 'http://stackoverflow.com/users/790075/turtlemonvh'),
+    ('stack-overflow', 'http://stackoverflow.com/users/790075/turtlemonvh'),
 )
 
 TWITTER_USERNAME = 'turtlemonvh'
@@ -78,3 +81,4 @@ DISQUS_PUBLIC_KEY = creds['disqus']['public_key']
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
+DISABLE_URL_HASH = True

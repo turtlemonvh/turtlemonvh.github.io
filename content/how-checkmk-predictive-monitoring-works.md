@@ -1,7 +1,10 @@
 Title: How CheckMK predictive monitoring works
 Date: 2018-10-07 15:00
+Modified: 2018-10-07 15:00
 Tags: python, monitoring
 Status: published
+Authors: Timothy Van Heest
+Summary: Code walk through of predictive monitoring features of the CheckMK monitoring toolset.
 
 ## Introduction
 

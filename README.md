@@ -55,3 +55,13 @@ pip install markdown
 bash develop_server.sh start
 
 ```
+
+## Custom settings
+
+* https://github.com/alexandrevicenzi/Flex/wiki/Custom-Settings
+    * general
+* JSON-LD
+    * https://github.com/alexandrevicenzi/Flex/blob/master/templates/partial/jsonld_article.html
+    * https://github.com/alexandrevicenzi/Flex/blob/master/templates/partial/jsonld.html
+* Article metadata
+    * https://docs.getpelican.com/en/stable/content.html
