@@ -2,36 +2,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
-
-    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
-
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
-
-
-
-
-
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/solid.css">
+
+
+
+
+
 
 
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available …" />
 <meta name="keywords" content="engineering, optimization, constraints, robustness">
+
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Engineering vs Math: Messiness in the system"/>
 <meta property="og:description" content="Yesterday I went to Lowes with my wife to get pieces for a modular shelving unit we were installing in our laundry room. Instead of going with a pre-packaged shelving arrangement, we had decided to custom cut the shelving for a better fit. The store had several length options available …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://turtlemonvh.github.io/engineering-vs-math-messiness-in-the-system.html"/>
+<meta property="og:url" content="http://localhost:8081/engineering-vs-math-messiness-in-the-system.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2016-07-18 09:30:00-04:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:author" content="http://localhost:8081/author/turtlemonvh.html">
 <meta property="article:section" content="Articles"/>
 <meta property="article:tag" content="engineering"/>
 <meta property="article:tag" content="optimization"/>
@@ -45,29 +49,49 @@
 <body>
   <aside>
     <div>
-      <a href="http://turtlemonvh.github.io">
+      <a href="http://localhost:8081">
         <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
       </a>
-      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+      <h1><a href="http://localhost:8081">Systems Doing</a></h1>
 
 <p>Looking for beauty in the complex and the simple.</p>
       <nav>
         <ul class="list">
-          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
-          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
+          <li><a href="http://localhost:8081/pages/home.html">Home</a></li>
+          <li><a href="http://localhost:8081/pages/projects.html">Projects</a></li>
 
           <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
           <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
-        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
-        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
+            <i class="fab fa-twitter">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
+            <i class="fab fa-linkedin">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
+            <i class="fab fa-bitbucket">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
+            <i class="fab fa-stack-overflow">
+            </i>
+          </a></li>
       </ul>
     </div>
 
@@ -78,9 +102,10 @@
 
 <article class="single">
   <header>
+      
     <h1 id="engineering-vs-math-messiness-in-the-system">Engineering vs Math: Messiness in the system</h1>
     <p>
-          Posted on Mon 18 July 2016 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+          Posted on Mon 18 July 2016 in <a href="http://localhost:8081/category/articles.html">Articles</a>
 
 
     </p>
@@ -114,16 +139,18 @@ I had to go back and use my hacksaw to trim some of those cut pieces anyway. It 
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="http://turtlemonvh.github.io/tag/engineering.html">engineering</a>
-      <a href="http://turtlemonvh.github.io/tag/optimization.html">optimization</a>
-      <a href="http://turtlemonvh.github.io/tag/constraints.html">constraints</a>
-      <a href="http://turtlemonvh.github.io/tag/robustness.html">robustness</a>
+      <a href="http://localhost:8081/tag/engineering.html">engineering</a>
+      <a href="http://localhost:8081/tag/optimization.html">optimization</a>
+      <a href="http://localhost:8081/tag/constraints.html">constraints</a>
+      <a href="http://localhost:8081/tag/robustness.html">robustness</a>
     </p>
   </div>
 
 
 
 
+
+<!-- Disqus -->
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'turtlemonvh-github-io';
@@ -137,14 +164,14 @@ I had to go back and use my hacksaw to trim some of those cut pieces anyway. It 
         Please enable JavaScript to view comments.
 
 </noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>
-<p>&copy; turtlemonvh </p>
+<p>&copy;  </p>
 <p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
 </p>    </footer>
   </main>
-
 
 
 
@@ -154,10 +181,11 @@ I had to go back and use my hacksaw to trim some of those cut pieces anyway. It 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Systems Doing ",
-  "url" : "http://turtlemonvh.github.io",
+  "url" : "http://localhost:8081",
   "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
   "description": "Thoughts and writings"
 }
 </script>
+
 </body>
 </html>

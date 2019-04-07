@@ -2,36 +2,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
-
-    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
-
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/font-awesome.min.css">
-
-
-
-
-
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/theme/font-awesome/css/solid.css">
+
+
+
+
+
 
 
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository …" />
 <meta name="keywords" content="meta">
+
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="Using pelican and github user pages to setup a blog"/>
 <meta property="og:description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://turtlemonvh.github.io/using-pelican-and-github-user-pages-to-setup-a-blog.html"/>
+<meta property="og:url" content="http://localhost:8081/using-pelican-and-github-user-pages-to-setup-a-blog.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-12-27 17:00:00-05:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:author" content="http://localhost:8081/author/turtlemonvh.html">
 <meta property="article:section" content="Articles"/>
 <meta property="article:tag" content="meta"/>
 <meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
@@ -42,29 +46,49 @@
 <body>
   <aside>
     <div>
-      <a href="http://turtlemonvh.github.io">
+      <a href="http://localhost:8081">
         <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
       </a>
-      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+      <h1><a href="http://localhost:8081">Systems Doing</a></h1>
 
 <p>Looking for beauty in the complex and the simple.</p>
       <nav>
         <ul class="list">
-          <li><a href="http://turtlemonvh.github.io/pages/home.html#home">Home</a></li>
-          <li><a href="http://turtlemonvh.github.io/pages/projects.html#projects">Projects</a></li>
+          <li><a href="http://localhost:8081/pages/home.html">Home</a></li>
+          <li><a href="http://localhost:8081/pages/projects.html">Projects</a></li>
 
           <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
           <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-about.me" href="https://about.me/turtlemonvh" target="_blank"><i class="fa fa-about.me"></i></a></li>
-        <li><a class="sc-github" href="https://github.com/turtlemonvh" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank"><i class="fa fa-bitbucket"></i></a></li>
-        <li><a class="sc-stackoverflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank"><i class="fa fa-stackoverflow"></i></a></li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
+            <i class="fab fa-twitter">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
+            <i class="fab fa-linkedin">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
+            <i class="fab fa-bitbucket">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
+            <i class="fab fa-stack-overflow">
+            </i>
+          </a></li>
       </ul>
     </div>
 
@@ -75,9 +99,10 @@
 
 <article class="single">
   <header>
+      
     <h1 id="using-pelican-and-github-user-pages-to-setup-a-blog">Using pelican and github user pages to setup a blog</h1>
     <p>
-          Posted on Sun 27 December 2015 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+          Posted on Sun 27 December 2015 in <a href="http://localhost:8081/category/articles.html">Articles</a>
 
 
     </p>
@@ -152,13 +177,15 @@ ghp-import -b master -p output
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="http://turtlemonvh.github.io/tag/meta.html">meta</a>
+      <a href="http://localhost:8081/tag/meta.html">meta</a>
     </p>
   </div>
 
 
 
 
+
+<!-- Disqus -->
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'turtlemonvh-github-io';
@@ -172,14 +199,14 @@ ghp-import -b master -p output
         Please enable JavaScript to view comments.
 
 </noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>
-<p>&copy; turtlemonvh </p>
+<p>&copy;  </p>
 <p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
 </p>    </footer>
   </main>
-
 
 
 
@@ -189,10 +216,11 @@ ghp-import -b master -p output
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Systems Doing ",
-  "url" : "http://turtlemonvh.github.io",
+  "url" : "http://localhost:8081",
   "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
   "description": "Thoughts and writings"
 }
 </script>
+
 </body>
 </html>
