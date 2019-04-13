@@ -10,7 +10,7 @@ SITENAME = u'Systems Doing'
 SITETITLE = SITENAME
 SITESUBTITLE = 'Looking for beauty in the complex and the simple.'
 SITEDESCRIPTION = 'Thoughts and writings'
-#SITEURL = 'http://turtlemonvh.github.io/'
+SITEURL = 'http://turtlemonvh.github.io/'
 #SITEURL = 'http://localhost:8081/'
 SITELOGO = '//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120'
 
