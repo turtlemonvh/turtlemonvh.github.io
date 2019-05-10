@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
+
+
+
+
+
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="After putting together a quick gist on pricing of compute options on AWS and then reading a few articles about GCP&#39;s new &#34;Cloud Run&#34; service, I wanted to look at the various &#34;serverless&#34; compute options across the major cloud providers. Here the primary dimensions I want to compare them based …" />
+<meta name="keywords" content="alexa, elasticbeanstalk, aws, biblescholar">
+
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="Comparing Serverless Compute Options Across Cloud Providers"/>
+<meta property="og:description" content="After putting together a quick gist on pricing of compute options on AWS and then reading a few articles about GCP&#39;s new &#34;Cloud Run&#34; service, I wanted to look at the various &#34;serverless&#34; compute options across the major cloud providers. Here the primary dimensions I want to compare them based …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/drafts/comparing-serverless-compute-options-across-cloud-providers.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-12-31 10:00:00-05:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="alexa"/>
+<meta property="article:tag" content="elasticbeanstalk"/>
+<meta property="article:tag" content="aws"/>
+<meta property="article:tag" content="biblescholar"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; Comparing Serverless Compute Options Across Cloud Providers</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
+            <i class="fab fa-twitter">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
+            <i class="fab fa-linkedin">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
+            <i class="fab fa-bitbucket">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
+            <i class="fab fa-stack-overflow">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="comparing-serverless-compute-options-across-cloud-providers">Comparing Serverless Compute Options Across Cloud Providers</h1>
+    <p>
+          Posted on Sat 31 December 2016 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>After putting together <a href="https://gist.github.com/turtlemonvh/89ceb82d80bfee10c19db33f45f8a7b4">a quick gist on pricing of compute options on AWS</a> and then reading a few articles about GCP's new "Cloud Run" service, I wanted to look at the various "serverless" compute options across the major cloud providers.</p>
+<p>Here the primary dimensions I want to compare them based on</p>
+<ul>
+<li>price</li>
+<li>use cases</li>
+<li>flexibility<ul>
+<li>ability to bring own libraries, handle compiles code, packaging formats</li>
+</ul>
+</li>
+<li>semantics<ul>
+<li>how are they invokes and configured</li>
+</ul>
+</li>
+<li>integration with rest of ecosystem (this is generally good, but we'll see)</li>
+</ul>
+<p>After doing my quick survey of AWS' offerings, I felt I had a better feel for where the industry was moving. In general, services that are easier to string together, have more predictable pricing, and allow a richer set of functionality.</p>
+<p>A partial motivation here is to understand what gaps the company I work for, Ionic Security, may have in our ability to help secure workloads on each of these platforms.</p>
+<h2>Systems in scope</h2>
+<h3>AWS</h3>
+<h4>Lambda</h4>
+<p>https://docs.aws.amazon.com/lambda/latest/dg/welcome.html</p>
+<h4>Fargate</h4>
+<p>https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_GetStarted.html</p>
+<h4>Batch</h4>
+<p>https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html</p>
+<h4>EMR</h4>
+<p>https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html</p>
+<h4>Glue</h4>
+<p>https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html</p>
+<h3>GCP</h3>
+<h4>Cloud functions</h4>
+<p>https://cloud.google.com/functions/</p>
+<p>https://cloud.google.com/functions/docs/writing/
+- handles node python and go
+- "HTTP functions and background functions"
+- the fact that you can process HTTP means you don't need silly things like this
+    - https://github.com/slank/awsgi
+- it also means that you can handle concurrent execution</p>
+<h4>Cloud Run</h4>
+<p>https://cloud.google.com/run/</p>
+<p>https://read.acloud.guru/the-good-and-the-bad-of-google-cloud-run-34455e673ef5
+- I disagree with this article
+    - I think cloud run is awesome
+    - Maybe kubernetes or something like it is awesome
+- the environment is very nice
+- I don't pay 100 ms per invocation (like lambda)
+- I can benefit from concurrency
+    - esp. for go, js, and python async
+- I can package things into a container
+- I'm less likely to have to worry about warm up (since a single server can handle concurrent requests)
+    - see articles about this</p>
+<p>https://docs.aws.amazon.com/apigateway/latest/developerguide/configure-api-gateway-lambda-authorization-with-console.html
+- apparently the custom authorizer responses <em>are</em> cached without having to allocate extra space for the cache
+- default is 5 min, but can go up to an hour for cache</p>
+<p>https://twitter.com/kelseyhightower/status/1116055726953074688</p>
+<h4>Kubernetes engine</h4>
+<blockquote>
+<p>Similar to Fargate</p>
+</blockquote>
+<p>https://cloud.google.com/kubernetes-engine/pricing
+- "Because GKE abstracts away the existence of the master, you are not charged for the master node."
+- "GKE uses Google Compute Engine instances for nodes in the cluster. You are billed for each of those instances according to Compute Engine's pricing, until the nodes are deleted. Compute Engine resources are billed on a per-second basis with a 1 minute minimum usage cost."
+https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler
+- "Beginning with Kubernetes version 1.7, you can specify a minimum size of zero for your node pool. This allows your node pool to scale down completely if the instances within aren't required to run your workloads."
+- "A node's deletion could be prevented if it contains a Pod with any of these conditions"
+    - "The Pod has local storage"</p>
+<p>https://cloud.google.com/kubernetes-engine/docs/tutorials/persistent-disk
+- persistent disks tutorial</p>
+<h1>Next battles</h1>
+<ul>
+<li>AWS Api gateway vs Google Cloud Endpoints<ul>
+<li>https://cloud.google.com/endpoints/</li>
+</ul>
+</li>
+<li>AWS SWS and Lambda step functions vs ???<ul>
+<li>https://cloud.google.com/free/docs/map-aws-google-cloud-platform<ul>
+<li>nothing maps to either of these</li>
+</ul>
+</li>
+<li>https://www.reddit.com/r/aws/comments/87c8ss/any_open_source_alternative_to_aws_step_functions/<ul>
+<li>no great recs here</li>
+</ul>
+</li>
+<li>https://fission.io/workflows/<ul>
+<li>this seems to be one, so I'm sure there are others</li>
+</ul>
+</li>
+<li>https://github.com/argoproj/argo<ul>
+<li>has workflows</li>
+<li>implemented as a CRD (custom resource definition)</li>
+<li>https://argoproj.github.io/docs/argo/demo.html</li>
+<li>https://argoproj.github.io/docs/argo/examples/readme.html#artifacts<ul>
+<li>handles secrets too</li>
+</ul>
+</li>
+<li>powers kubeflow<ul>
+<li>https://www.youtube.com/watch?v=VXrGp5er1ZE&amp;t=0s&amp;index=135&amp;list=PLj6h78yzYM2PZf9eA7bhWnIh_mK1vyOfU</li>
+<li>which uses this for api gateway: https://www.getambassador.io/</li>
+</ul>
+</li>
+<li>questions<ul>
+<li>how is state managed in these state machines?</li>
+<li>how can we check the progress of workflows independently?</li>
+</ul>
+</li>
+<li>https://argoproj.github.io/docs/argo/roadmap.html<ul>
+<li>they are planning on adding support for offloading state to persistence layer (db)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>https://www.kubeflow.org/<ul>
+<li>uses argo, can also use pachyderm</li>
+</ul>
+</li>
+<li>airflow as a kubernetes operator<ul>
+<li>https://kubernetes.io/blog/2018/06/28/airflow-on-kubernetes-part-1-a-different-kind-of-operator/</li>
+<li>https://hackernoon.com/meet-maat-alibabas-dag-based-distributed-task-scheduler-7c9cf0c83438</li>
+</ul>
+</li>
+<li>others<ul>
+<li>pachyderm and nomad (https://github.com/hashicorp/nomad/issues/419#issuecomment-468333207)</li>
+</ul>
+</li>
+<li>video<ul>
+<li>https://www.youtube.com/watch?v=M_rxPPLG8pU</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Kubernetes offerings<ul>
+<li>https://cloud.google.com/kubernetes-engine/<ul>
+<li>"Kubernetes Engine clusters are fully managed by Google Site Reliability Engineers (SREs), ensuring your cluster is available and up-to-date"</li>
+<li>"Built-in dashboard"</li>
+</ul>
+</li>
+<li>which ones have dashboards, require managing state, have flexibility, etc</li>
+</ul>
+</li>
+<li>Managed SQL<ul>
+<li>https://cloud.google.com/products/big-data/<ul>
+<li>BigQuery</li>
+</ul>
+</li>
+<li>Redshift</li>
+</ul>
+</li>
+<li>Stream processing<ul>
+<li>Dataflow + Cloud PubSub<ul>
+<li>https://cloud.google.com/products/big-data/</li>
+<li>https://cloud.google.com/dataflow/docs/concepts/beam-programming-model</li>
+</ul>
+</li>
+<li>Kinesis data analytics (Flink)</li>
+</ul>
+</li>
+<li>Build tools<ul>
+<li>https://cloud.google.com/cloud-build/<ul>
+<li>easy to push to docker hub</li>
+<li>generous free tier</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Container registries</li>
+<li>Log management<ul>
+<li>Amazon CloudWatch Logs</li>
+<li>Stackdriver logs</li>
+<li>Amazon's ELK + new timeseries database</li>
+</ul>
+</li>
+</ul>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/alexa.html">alexa</a>
+      <a href="http://turtlemonvh.github.io/tag/elasticbeanstalk.html">elasticbeanstalk</a>
+      <a href="http://turtlemonvh.github.io/tag/aws.html">aws</a>
+      <a href="http://turtlemonvh.github.io/tag/biblescholar.html">biblescholar</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+
+</body>
+</html>

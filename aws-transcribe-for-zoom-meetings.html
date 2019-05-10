@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
+
+
+
+
+
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="Introduction I have been meaning to play around with AWS Transcribe, AWS&#39; managed service for speech to text, for a while. This week I came across a good excuse. Our marketing department had a few longer meetings and they recorded those meetings in Zoom, the audio conferencing system we use …" />
+<meta name="keywords" content="aws, transcription">
+
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="AWS transcribe for Zoom meetings"/>
+<meta property="og:description" content="Introduction I have been meaning to play around with AWS Transcribe, AWS&#39; managed service for speech to text, for a while. This week I came across a good excuse. Our marketing department had a few longer meetings and they recorded those meetings in Zoom, the audio conferencing system we use …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/aws-transcribe-for-zoom-meetings.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-05-09 17:30:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="aws"/>
+<meta property="article:tag" content="transcription"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; AWS transcribe for Zoom meetings</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
+            <i class="fab fa-twitter">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
+            <i class="fab fa-linkedin">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
+            <i class="fab fa-bitbucket">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
+            <i class="fab fa-stack-overflow">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="aws-transcribe-for-zoom-meetings">AWS transcribe for Zoom meetings</h1>
+    <p>
+          Posted on Thu 09 May 2019 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Introduction</h2>
+<p>I have been meaning to play around with <a href="https://aws.amazon.com/transcribe/">AWS Transcribe</a>, AWS' managed service for speech to text, for a while. This week I came across a good excuse. Our marketing department had a few longer meetings and they recorded those meetings in <a href="https://zoom.us/">Zoom</a>, the audio conferencing system we use. I asked for a copy of the recording, and with a 6 hour long mp4 in hand, tried to see what I could pull together.</p>
+<p>Here are the steps I took. These are the correct sequence of commands for a Mac, but all tools (<code>ffmpeg</code> and <code>awscli</code>) on available on Linux and Windows as well.</p>
+<h2>Pre-processing audio files</h2>
+<p>First, I installed ffmpeg. This is easy via <code>homebrew</code>. I'm assuming the user already has <a href="https://aws.amazon.com/cli/">awscli</a> installed and configured with permissions to call out to both S3 and AWS Transcribe.</p>
+<div class="highlight"><pre><span></span>brew install ffmpeg
+</pre></div>
+
+
+<p>Next, I converted the mp4 to mp3.</p>
+<div class="highlight"><pre><span></span>ffmpeg -i recording.mp4 -f mp3 -ab <span class="m">192000</span> -vn recording_audio.mp3
+</pre></div>
+
+
+<p>Next, I split the audio file into smaller chunks. The <a href="https://docs.aws.amazon.com/transcribe/latest/dg/limits-guidelines.html">max recording length for AWS Transcribe is 4 hours</a> (there are also restructions on file size).  Note that in reality I tried to run a job first with the larger file and failed, then had to come back and do this step afterwards.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Get length of recording</span>
+$ ffprobe -i recording_audio.mp3 -show_format <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> grep duration
+<span class="nv">duration</span><span class="o">=</span><span class="m">23797</span>.944000 <span class="c1"># 6.6 hours; max is 4 hours</span>
+
+<span class="c1"># Split into hour chunks</span>
+$ ffmpeg -i recording_audio.mp3 -f segment -segment_time <span class="m">3600</span> -c copy recording_audio.part-%03d.mp3
+</pre></div>
+
+
+<p>This is what files looked like after running all those commands.</p>
+<div class="highlight"><pre><span></span>$ ll
+total <span class="m">4055736</span>
+drwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    16K May  <span class="m">9</span> <span class="m">16</span>:44 .
+drwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    16K May  <span class="m">7</span> <span class="m">18</span>:14 ..
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users   891M May  <span class="m">7</span> <span class="m">17</span>:39 recording.mp4
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users   545M May  <span class="m">9</span> <span class="m">12</span>:55 recording_audio.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:43 recording_audio.part-000.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:43 recording_audio.part-001.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:43 recording_audio.part-002.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:44 recording_audio.part-003.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:44 recording_audio.part-004.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    82M May  <span class="m">9</span> <span class="m">16</span>:44 recording_audio.part-005.mp3
+-rwx------+ <span class="m">1</span> un  INIS<span class="se">\D</span>omain Users    50M May  <span class="m">9</span> <span class="m">16</span>:44 recording_audio.part-006.mp3
+</pre></div>
+
+
+<h2>Running transcription jobs</h2>
+<p>Next, I uploaded those split files to s3 <a href="https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html">using the awscli</a>.</p>
+<div class="highlight"><pre><span></span>aws s3 cp . s3://mybucketname/transcribe/ --exclude <span class="s2">&quot;*.mp4,*audio.mp3&quot;</span> --recursive
+</pre></div>
+
+
+<p>Next, I kicked off a transcription job for each file <a href="https://docs.aws.amazon.com/cli/latest/reference/transcribe/start-transcription-job.html">using awscli</a>. I use a couple custom settings to get the job to provide speaker labels. It was a big meeting, so I used the maximum number of speakers supported by transcribe (10).</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> fn in <span class="sb">`</span>ls *.part-*<span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nb">echo</span> <span class="nv">$fn</span>
+    aws transcribe start-transcription-job --transcription-job-name <span class="nv">$fn</span> --language-code en-US --media-format mp3 --media <span class="nv">MediaFileUri</span><span class="o">=</span>s3://mybucketname/transcribe/<span class="nv">$fn</span> --output-bucket-name mybucketname --settings <span class="nv">ShowSpeakerLabels</span><span class="o">=</span>true,MaxSpeakerLabels<span class="o">=</span><span class="m">10</span>
+<span class="k">done</span>
+</pre></div>
+
+
+<p>I monitored those jobs in the AWS Transcribe console.  That looked like this. You can see my original attempt to process the original recording <code>mp4</code> file in 1 job, which failed because the recording was too long (&gt;4 hours).</p>
+<p><img src="/images/Amazon_Transcribe_job_status_chunks.png" alt="AWS Transcribe job status" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>Once I saw that the jobs were completed, I noted where the result files were written to and downloaded them using the <code>awscli</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> fn in <span class="sb">`</span>ls *.part-*<span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nb">echo</span> <span class="nv">$fn</span>
+    aws s3 cp s3://mybucketname/<span class="nv">$fn</span>.json .
+<span class="k">done</span>
+</pre></div>
+
+
+<p>After looking through the output file, I saw that there was one section of the file that contained the entire transcription on 1 line. I concatenated these lines together. Since I broke my 6.6 hour recording into 7 chunks, I had a 7 line transcription of the entire meeting.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Concat all</span>
+<span class="k">for</span> fn in <span class="sb">`</span>ls *.mp3.json<span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nb">echo</span> <span class="nv">$fn</span>
+    cat <span class="nv">$fn</span> <span class="p">|</span> jq .results.transcripts<span class="o">[</span><span class="m">0</span><span class="o">]</span> <span class="p">|</span> jq .transcript -r &gt;&gt; transcription.txt
+<span class="k">done</span>
+
+<span class="c1"># Check size</span>
+<span class="c1"># 7 lines (1 line per file)</span>
+<span class="c1"># 50K + words</span>
+$ wc transcription.txt
+       <span class="m">7</span>   <span class="m">57191</span>  <span class="m">312196</span> transcription.txt
+</pre></div>
+
+
+<h2>Reshaping output</h2>
+<p>This giant concatenated file is not the most friendly format to work with. I looked around for nice tools to create a better formatted output file from the set of files, but I didn't see a great tool that worked with multiple chunks of a single conversation, so I wrote a quick python program to handle this for me.</p>
+<p>To understand the program, it is helpful to understand the schema of the transcription result JSON file. Unfortunately <a href="https://docs.aws.amazon.com/transcribe/latest/dg/API_Transcript.html">the documentation on this is not great</a> (as of 2019/05/10). The JSON looks like this:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;accountId&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;AWS account ID&gt;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;jobName&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;transcribe job passed as the `transcription-job-name` parameter to `start-transcription-job` via `awscli` &gt;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="o">&lt;</span><span class="n">item</span><span class="o">&gt;</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;speaker_labels&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">&quot;segments&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="o">&lt;</span><span class="n">segment</span><span class="o">&gt;</span>
+          <span class="p">]</span>
+          <span class="s2">&quot;speakers&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">speakers</span><span class="p">,</span> <span class="n">integer</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="p">}</span>
+      <span class="s2">&quot;transcripts&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;&gt;&quot;</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;job status, e.g. COMPLETED&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The structure of <code>item</code>s and <code>segment</code>s looks like this:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Item</span>
+<span class="p">{</span>
+    <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;alternatives&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;string encoded float between (0,1) &gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;content as string&gt;&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;pronunciation&quot;</span>
+<span class="p">}</span>
+<span class="c1"># OR</span>
+<span class="p">{</span>
+    <span class="s2">&quot;alternatives&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;punctuation mark, e.g. `.`&gt;&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;punctuation&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Segment</span>
+<span class="p">{</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;speaker_label&quot;</span><span class="p">:</span> <span class="s2">&quot;spk_&lt;speaker number&gt;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="o">&lt;</span><span class="n">segment</span> <span class="n">item</span><span class="o">&gt;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Segment item</span>
+<span class="p">{</span>
+    <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;speaker_label&quot;</span><span class="p">:</span> <span class="s2">&quot;spk_&lt;speaker number&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;time&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>A few notes</p>
+<ul>
+<li>All the <code>_time</code> fields are represented as string encoded floats, representing seconds since the start of the recording for the file being transcribed.</li>
+<li>There are 2 types of items: <code>punctuation</code> and <code>pronunciation</code>. The <code>punctuation</code> items do not have <code>start_time</code> or <code>end_time</code> defined.<ul>
+<li>This makes sense, but does make parsing a little more annoying.</li>
+</ul>
+</li>
+<li>Speaker labels look like <code>spk_&lt;speaker number&gt;</code>, where <code>&lt;speaker number&gt;</code> is an integer starting at <code>0</code>.</li>
+</ul>
+<p>After using the python program to clean up the file, we get something like this:</p>
+<div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">speaker</span> <span class="nl">spk_5</span><span class="p">:</span><span class="n">recording_audio</span><span class="p">.</span><span class="n">part</span><span class="o">-</span><span class="mf">000.</span><span class="n">mp3</span><span class="p">.</span><span class="n">json</span> <span class="p">]</span> <span class="o">:</span> <span class="p">(</span> <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mi">08</span><span class="o">:</span><span class="mi">980</span> <span class="o">-</span> <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mi">09</span><span class="o">:</span><span class="mi">320</span> <span class="p">)</span>
+<span class="n">Alright</span> <span class="n">let</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">get</span> <span class="n">going</span><span class="p">.</span>
+<span class="p">[</span> <span class="n">speaker</span> <span class="nl">spk_6</span><span class="p">:</span><span class="n">recording_audio</span><span class="p">.</span><span class="n">part</span><span class="o">-</span><span class="mf">000.</span><span class="n">mp3</span><span class="p">.</span><span class="n">json</span> <span class="p">]</span> <span class="o">:</span> <span class="p">(</span> <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mi">27</span><span class="o">:</span><span class="mi">970</span> <span class="o">-</span> <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mi">29</span><span class="o">:</span><span class="mi">160</span> <span class="p">)</span>
+<span class="n">Should</span> <span class="n">we</span> <span class="n">start</span> <span class="n">off</span> <span class="n">with</span> <span class="n">intros</span><span class="o">?</span>
+</pre></div>
+
+
+<p>Each switch in the user speaking is marked by a header section that marks when that user is speaking and a time offset from the beginning of the conversation, across all N file chunks passed to the program.</p>
+<h2>Summary</h2>
+<p>With a couple lines of bash, ffmpeg, AWS tools, and a little python for formatting, we can put together some surprisingly decent transcriptions of long conversations.</p>
+<p>I hope this is useful to someone else with similar problems to solve. Let me know if it helped you!</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/aws.html">aws</a>
+      <a href="http://turtlemonvh.github.io/tag/transcription.html">transcription</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+
+</body>
+</html>
