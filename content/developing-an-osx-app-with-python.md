@@ -83,25 +83,26 @@ In my case, the other copy of the application that OSX found was the same `.app`
 
 After modification, `example.plist` should look like this (note the value of `BundleIsRelocatable`).
 
-    #!xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <array>
-        <dict>
-            <key>BundleHasStrictIdentifier</key>
-            <true/>
-            <key>BundleIsRelocatable</key>
-            <false/>
-            <key>BundleIsVersionChecked</key>
-            <true/>
-            <key>BundleOverwriteAction</key>
-            <string>upgrade</string>
-            <key>RootRelativeBundlePath</key>
-            <string>Applications/IonicFSWatcher.app</string>
-        </dict>
-    </array>
-    </plist>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+    <dict>
+        <key>BundleHasStrictIdentifier</key>
+        <true/>
+        <key>BundleIsRelocatable</key>
+        <false/>
+        <key>BundleIsVersionChecked</key>
+        <true/>
+        <key>BundleOverwriteAction</key>
+        <string>upgrade</string>
+        <key>RootRelativeBundlePath</key>
+        <string>Applications/IonicFSWatcher.app</string>
+    </dict>
+</array>
+</plist>
+```
 
 Once you modify `example.plist`, you can use it calling `pkgbuild` with the option `--component-plist example.plist`.
 
