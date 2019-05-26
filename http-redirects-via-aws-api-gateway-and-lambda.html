@@ -10,12 +10,12 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
 
 
 
@@ -25,22 +25,23 @@
 
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …" />
-<meta name="keywords" content="api, dns, aws-api-gateway, aws-lambda">
+<meta name="keywords" content="api, dns, aws-api-gateway, aws-lambda, this-blog">
 
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="HTTP redirects via AWS API Gateway and Lambda"/>
 <meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
+<meta property="og:url" content="https://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2019-05-25 18:00:00-04:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
 <meta property="article:section" content="Articles"/>
 <meta property="article:tag" content="api"/>
 <meta property="article:tag" content="dns"/>
 <meta property="article:tag" content="aws-api-gateway"/>
 <meta property="article:tag" content="aws-lambda"/>
+<meta property="article:tag" content="this-blog"/>
 <meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
 
   <title>Systems Doing &ndash; HTTP redirects via AWS API Gateway and Lambda</title>
@@ -49,16 +50,16 @@
 <body>
   <aside>
     <div>
-      <a href="http://turtlemonvh.github.io">
+      <a href="https://turtlemonvh.github.io">
         <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
       </a>
-      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+      <h1><a href="https://turtlemonvh.github.io">Systems Doing</a></h1>
 
 <p>Looking for beauty in the complex and the simple.</p>
       <nav>
         <ul class="list">
-          <li><a href="http://turtlemonvh.github.io/pages/home.html">Home</a></li>
-          <li><a href="http://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+          <li><a href="https://turtlemonvh.github.io/pages/home.html">Home</a></li>
+          <li><a href="https://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
 
           <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
           <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
@@ -105,7 +106,7 @@
       
     <h1 id="http-redirects-via-aws-api-gateway-and-lambda">HTTP redirects via AWS API Gateway and Lambda</h1>
     <p>
-          Posted on Sat 25 May 2019 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+          Posted on Sat 25 May 2019 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
 
 
     </p>
@@ -134,9 +135,9 @@
 </pre></div>
 
 
-<p>I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues.  API Gateway created a resource like this: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
+<p>I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues. API Gateway created a resource like this: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
 <p>One problem was the <code>default</code> in this uri. I wanted to add the Lambda function url (actually the API Gateway url, which calls the Lambda in proxy mode) as a dns entry, so I need the root of the api to be an empty path.</p>
-<p>Thankfully AWS has a solution for this via <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html">custom domains</a>.  The process I followed to make this work was the following. As usual, I stumbled across option this via <a href="https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri">a StackOverflow post</a>.</p>
+<p>Thankfully AWS has a solution for this via <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html">custom domains</a>. (As usual, I stumbled across this option via <a href="https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri">a StackOverflow post</a>) The process I followed to make this work was the following.</p>
 <h3>1. Create Lambda function</h3>
 <p>See the description above.</p>
 <h3>2. Create API Gateway integration</h3>
@@ -161,13 +162,29 @@
 <li><code>https://blog.vhtech.net/pages/home.html</code> -&gt; <code>http://turtlemonvh.github.io/pages/home.html</code></li>
 </ul>
 <p>In the end, this took about an hour, I have <code>blog.vhtech.net</code> redirecting to <code>turtlemonvh.github.io</code>, and I learned a bit more about Route 53 and API Gatway in the process, so I'll call the experiment a success.</p>
+<h2>Update: 2019/05/26</h2>
+<p>I had more or less ignored the fact that <code>blog.vhtech.net</code> only responds to <code>https</code> requests while <code>turtlemonvh.github.io</code> only works with <code>http</code> requests. This means link 1 works fine and link 2 gives you a mysterious error.</p>
+<ul>
+<li>https://blog.vhtech.net/http-redirects-via-aws-api-gateway-and-lambda.html</li>
+<li>http://blog.vhtech.net/http-redirects-via-aws-api-gateway-and-lambda.html</li>
+</ul>
+<p><img src="/images/blog-redirect-via-aws/blog_vhtech_net_over_http.png" alt="mysterious error" style="width: 50%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>I did a little more research on this topic today, and found that API Gateway does not support http, or even http to https redirects.</p>
+<p><img src="/images/blog-redirect-via-aws/Amazon_API_Gateway_https_only.png" alt="mysterious error" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>While it would be possible to <a href="https://stackoverflow.com/a/47373353/790075">handle the redirect via CloudFront</a>, I decided to take the first step to make this site work with TLS/https.</p>
+<p>It turns out this is quite simple, and it is <a href="https://help.github.com/en/articles/securing-your-github-pages-site-with-https#enforcing-https-for-your-github-pages-site">actually the default behavior for newer repos</a>.</p>
+<p>I just had to go into settings for <a href="https://github.com/turtlemonvh/turtlemonvh.github.io">the github repo hosting this blog</a> and flip the following switch.</p>
+<p><img src="/images/blog-redirect-via-aws/enforce_tls.png" alt="mysterious error" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>I also had to change my <a href="https://blog.getpelican.com/">pelican</a> settings in <code>pelicanconf.py</code> to use <code>https://turtlemonvh.github.io/</code> as the <code>SITEURL</code> instead of <code>http://turtlemonvh.github.io/</code>.</p>
+<p>Now I'm all <code>https</code>.  Github pages <em>does</em> handle the http to https redirect for me, so at least that bit works as expected.</p>
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="http://turtlemonvh.github.io/tag/api.html">api</a>
-      <a href="http://turtlemonvh.github.io/tag/dns.html">dns</a>
-      <a href="http://turtlemonvh.github.io/tag/aws-api-gateway.html">aws-api-gateway</a>
-      <a href="http://turtlemonvh.github.io/tag/aws-lambda.html">aws-lambda</a>
+      <a href="https://turtlemonvh.github.io/tag/api.html">api</a>
+      <a href="https://turtlemonvh.github.io/tag/dns.html">dns</a>
+      <a href="https://turtlemonvh.github.io/tag/aws-api-gateway.html">aws-api-gateway</a>
+      <a href="https://turtlemonvh.github.io/tag/aws-lambda.html">aws-lambda</a>
+      <a href="https://turtlemonvh.github.io/tag/this-blog.html">this-blog</a>
     </p>
   </div>
 
@@ -206,7 +223,7 @@
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Systems Doing ",
-  "url" : "http://turtlemonvh.github.io",
+  "url" : "https://turtlemonvh.github.io",
   "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
   "description": "Thoughts and writings"
 }
