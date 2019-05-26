@@ -1,6 +1,6 @@
 Title: HTTP redirects via AWS API Gateway and Lambda
 Date: 2019-05-25 18:00
-Tags: api, dns, aws-api-gateway, aws-lambda
+Tags: api, dns, aws-api-gateway, aws-lambda, this-blog
 Status: published
 
 > This article is a bit messy since I'm experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful.
@@ -26,11 +26,11 @@ def lambda_handler(event, context):
     }
 ```
 
-I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues.  API Gateway created a resource like this: `https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/`
+I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues. API Gateway created a resource like this: `https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/`
 
 One problem was the `default` in this uri. I wanted to add the Lambda function url (actually the API Gateway url, which calls the Lambda in proxy mode) as a dns entry, so I need the root of the api to be an empty path.
 
-Thankfully AWS has a solution for this via [custom domains](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html).  The process I followed to make this work was the following. As usual, I stumbled across option this via [a StackOverflow post](https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri).
+Thankfully AWS has a solution for this via [custom domains](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html). (As usual, I stumbled across this option via [a StackOverflow post](https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri)) The process I followed to make this work was the following.
 
 ### 1. Create Lambda function
 
@@ -73,3 +73,28 @@ After I finished this, the following redirects work as expected:
 * `https://blog.vhtech.net/pages/home.html` -> `http://turtlemonvh.github.io/pages/home.html`
 
 In the end, this took about an hour, I have `blog.vhtech.net` redirecting to `turtlemonvh.github.io`, and I learned a bit more about Route 53 and API Gatway in the process, so I'll call the experiment a success.
+
+## Update: 2019/05/26
+
+I had more or less ignored the fact that `blog.vhtech.net` only responds to `https` requests while `turtlemonvh.github.io` only works with `http` requests. This means link 1 works fine and link 2 gives you a mysterious error.
+
+* https://blog.vhtech.net/http-redirects-via-aws-api-gateway-and-lambda.html
+* http://blog.vhtech.net/http-redirects-via-aws-api-gateway-and-lambda.html
+
+<img src="/images/blog-redirect-via-aws/blog_vhtech_net_over_http.png" alt="mysterious error" style="width: 50%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+I did a little more research on this topic today, and found that API Gateway does not support http, or even http to https redirects.
+
+<img src="/images/blog-redirect-via-aws/Amazon_API_Gateway_https_only.png" alt="mysterious error" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+While it would be possible to [handle the redirect via CloudFront](https://stackoverflow.com/a/47373353/790075), I decided to take the first step to make this site work with TLS/https.
+
+It turns out this is quite simple, and it is [actually the default behavior for newer repos](https://help.github.com/en/articles/securing-your-github-pages-site-with-https#enforcing-https-for-your-github-pages-site).
+
+I just had to go into settings for [the github repo hosting this blog](https://github.com/turtlemonvh/turtlemonvh.github.io) and flip the following switch.
+
+<img src="/images/blog-redirect-via-aws/enforce_tls.png" alt="mysterious error" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+I also had to change my [pelican](https://blog.getpelican.com/) settings in `pelicanconf.py` to use `https://turtlemonvh.github.io/` as the `SITEURL` instead of `http://turtlemonvh.github.io/`.
+
+Now I'm all `https`.  Github pages *does* handle the http to https redirect for me, so at least that bit works as expected.

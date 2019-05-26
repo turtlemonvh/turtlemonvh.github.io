@@ -1,6 +1,6 @@
 Title: Using pelican and github user pages to setup a blog
 Date: 2015-12-27 17:00
-Tags: meta
+Tags: meta, this-blog
 Status: published
 
 This post explains how I set up this blog.
