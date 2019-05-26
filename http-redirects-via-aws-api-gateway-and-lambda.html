@@ -145,6 +145,9 @@
 <h3>3. Get rid of the "default" API resource</h3>
 <p>When creating the API via Lambda, a resource is created for you under the API root. We want to get rid of that.</p>
 <p>Instead, add a new resource of type <code>proxy</code> directly under the root.  The path component should look like: <code>/{proxy+}</code>. Don't forget to deploy the changes to the API after making your changes.</p>
+<blockquote>
+<p>NOTE: I later realized that I also should have created an <code>ANY</code> method on the <code>/</code> resource (in addition to the <code>proxy</code> resource) to handle redirects in the case of no path. So make sure you add the methods on <code>/</code> if you want to handle zero-length paths.</p>
+</blockquote>
 <h3>4. Make sure this works by visiting the API Gateway url</h3>
 <p>The url should look something like: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
 <p>While testing, I received the error <code>missing auth token</code> several times, and each time it was due to me not correctly capturing the path. Usually this was because I made changes to the API definition but forgot to deploy.  See this discussion for more information: https://forums.aws.amazon.com/thread.jspa?threadID=192977</p>
@@ -170,13 +173,222 @@
 </ul>
 <p><img src="/images/blog-redirect-via-aws/blog_vhtech_net_over_http.png" alt="mysterious error" style="width: 50%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>I did a little more research on this topic today, and found that API Gateway does not support http, or even http to https redirects.</p>
-<p><img src="/images/blog-redirect-via-aws/Amazon_API_Gateway_https_only.png" alt="mysterious error" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p><img src="/images/blog-redirect-via-aws/Amazon_API_Gateway_https_only.png" alt="API Gateway is HTTPS only" style="width: 100%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>While it would be possible to <a href="https://stackoverflow.com/a/47373353/790075">handle the redirect via CloudFront</a>, I decided to take the first step to make this site work with TLS/https.</p>
 <p>It turns out this is quite simple, and it is <a href="https://help.github.com/en/articles/securing-your-github-pages-site-with-https#enforcing-https-for-your-github-pages-site">actually the default behavior for newer repos</a>.</p>
 <p>I just had to go into settings for <a href="https://github.com/turtlemonvh/turtlemonvh.github.io">the github repo hosting this blog</a> and flip the following switch.</p>
-<p><img src="/images/blog-redirect-via-aws/enforce_tls.png" alt="mysterious error" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p><img src="/images/blog-redirect-via-aws/enforce_tls.png" alt="enforce tls" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>I also had to change my <a href="https://blog.getpelican.com/">pelican</a> settings in <code>pelicanconf.py</code> to use <code>https://turtlemonvh.github.io/</code> as the <code>SITEURL</code> instead of <code>http://turtlemonvh.github.io/</code>.</p>
 <p>Now I'm all <code>https</code>.  Github pages <em>does</em> handle the http to https redirect for me, so at least that bit works as expected.</p>
+<h2>Update: 2019/05/26 (v2)</h2>
+<p>After adding that last comment, I checked <a href="https://aws.amazon.com/cloudfront/pricing/">the pricing page for CloudFront</a> and saw that the free tier includes 2 million requests per month.</p>
+<p>Since I haven't messed with CloudFront yet and I'm starting to spend time gearing up to take the <a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/">AWS Certified Solutions Architect</a> exam this July, I figured this is a great excuse to learn a little about this service.</p>
+<p>So picking up with <a href="https://stackoverflow.com/a/47373353/790075">that StackOverflow post I mentioned in the previous update</a>, I visited CloudFront in the console and clicked the button to <code>Create Distribution</code>. I selected the default distribution of type <code>Web</code> then clicked the <code>Get Started</code> button, which dumped me in a large <code>Create Distribution</code> form.  In that form, I set the following values:</p>
+<blockquote>
+<p>After I did this myself, I found this article from AWS describing how to set up CloudFront and API Gateway, which may be useful for other people trying this in the future:
+https://aws.amazon.com/premiumsupport/knowledge-center/api-gateway-cloudfront-distribution/</p>
+</blockquote>
+<ul>
+<li>Grabbed the API Gateway invoke url from the <code>Default</code> stage view in the console and entered that in the settings page in the <code>Origin Domain Name</code> and <code>Origin Path</code> boxes</li>
+<li>Updated <code>Origin Protocol Policy</code> to <code>https</code> (since that is all that API Gateway supports)</li>
+<li>Updated <code>Allowed HTTP Methods</code> to include <code>Options</code> in addition to <code>Head</code> and <code>Get</code></li>
+<li>Set <code>Cache Based on Selected Request Headers</code> to <code>None</code> since the headers sent by the client should never influnce the response (only the <code>path</code> matters)</li>
+<li>Set <code>Object Caching</code> to <code>Use Origin Cache Headers</code>; this means I can set <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"><code>Cache-Control</code> headers</a> in my lambda function or API Gateway to customize cachine behavior</li>
+<li>Set <code>Default TTL</code> to <code>86400</code> (1 day); this is what will be used if no <code>Cache-Control</code> headers are send by my origin</li>
+<li>Set <code>Forward Cookies</code> to <code>None</code> since I don't need to authenicate requests</li>
+<li>Set <code>Query String Forwarding and Caching</code> to <code>None</code> since pages on my blog are not defined by query params (only the path)</li>
+<li>Set <code>Compress Objects Automatically</code> to <code>No</code> since I am not planning on actually serving files via CloudFront (just returning redirects)</li>
+<li>Left <code>Price Class</code> set to <code>All</code> since there is no extra charge for using more locations; the total request count is aggregated across all locations for the free tier</li>
+<li>Added <code>blog.vhtech.net</code> to <code>Alternate Domain Names</code></li>
+<li>Set <code>SSL Certificate</code> to use the certificate I created in ACM for <code>blog.vhtech.net</code></li>
+<li>Kept <code>Custom SSL Client Support</code> and <code>Security Policy</code> (TLS settings) at their default values (e.g. SNI only)</li>
+<li>Left <code>Default Root Object</code> empty, and left logging turned off</li>
+</ul>
+<p>Here is what that giant form looked like in the AWS console.</p>
+<p><img src="/images/blog-redirect-via-aws/AWS_CloudFront_Management_Console_1.png" alt="CloudFront Management Console 1" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+<img src="/images/blog-redirect-via-aws/AWS_CloudFront_Management_Console_2.png" alt="CloudFront Management Console 2" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>Once I updated those settings, I clicked the <code>Create Distribution</code> button on the bottom of the form. That took me to a status page where I could check on the status of my new distribution.</p>
+<p>I waited until the CloudFront distribution showed <code>Status</code> of <code>Deployed</code> (this <a href="https://forums.aws.amazon.com/thread.jspa?threadID=237248">took &gt;15 minutes</a>), then I updated the <code>DNS</code> <code>A</code> record I created for <code>blog.vhtech.net</code> to point to API Gateway to point to the CloudFront distribution url (the record type is still a <code>A</code> record alias).</p>
+<p>I thought that, since I added a CNAME of <code>blog.vhtech.net</code> when creating the CloudFront distribution, CloudFront would add the DNS records for me, but this was not the case. The <code>A</code> record was there unchanged after the CloudFront distribution launched, and I had to update it manually.</p>
+<p>... but even after I did all above I ran into <em>another</em> issue.</p>
+<p>My CloudFront distribition url, <code>d7v7skc7xxa1j.cloudfront.net</code>, still returned <code>missing authentication token</code> when I hit <code>http://d7v7skc7xxa1j.cloudfront.net</code> (which did properly redirect to <code>https</code>). Going to <code>http://d7v7skc7xxa1j.cloudfront.net/a</code> did properly redirect to <code>https://turtlemonvh.github.io/a</code>. I thought this may be because of how API Gateway handles the <code>stage</code> portion of its urls, or it may be because I didn't set <code>Default Root Object</code>, but when I looked more into the documentation, this didn't line up.</p>
+<p>Here are the redirect chains for <code>curl -LI http://blog.vhtech.net/a</code>.</p>
+<div class="highlight"><pre><span></span><span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
+<span class="nt">Server</span><span class="o">:</span> <span class="nt">CloudFront</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">183</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">blog</span><span class="p">.</span><span class="nc">vhtech</span><span class="p">.</span><span class="nc">net</span><span class="o">/</span><span class="nt">a</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Redirect</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">4eb6db543899d63048055031c3411b01</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
+<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">9zT3MdPoKJ4vhyiSd5n3W8v6WfYcoDmGVQG2-k0etg7UthnMrvbelw</span><span class="o">==</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">application</span><span class="o">/</span><span class="nt">json</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">0</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">56</span><span class="p">:</span><span class="nd">02</span> <span class="nt">GMT</span>
+<span class="nt">x-amzn-RequestId</span><span class="o">:</span> <span class="nt">ac053546-7ff8-11e9-8c14-63ee0d562e8e</span>
+<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
+<span class="nt">x-amz-apigw-id</span><span class="o">:</span> <span class="nt">aTyHaHHuIAMFiKw</span><span class="o">=</span>
+<span class="nt">Location</span><span class="o">:</span> <span class="nt">http</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span><span class="nt">a</span>
+<span class="nt">X-Amzn-Trace-Id</span><span class="o">:</span> <span class="nt">Root</span><span class="o">=</span><span class="nt">1-5ceafd62-b41390d052c8716845179af8</span><span class="o">;</span><span class="nt">Sampled</span><span class="o">=</span><span class="nt">0</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Hit</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">1c1b89f1f3c38ed1685254901bc8fb2d</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
+<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">XUPJC2iPgcM36P8jzWj49s3sC0KVceusch-vJEJ6PYq6Io7j4Xx4Eg</span><span class="o">==</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
+<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
+<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span><span class="nt">a</span>
+<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">7D64</span><span class="p">:</span><span class="nd">097A</span><span class="p">:</span><span class="nd">227A7A1</span><span class="p">:</span><span class="nd">2CF784A</span><span class="p">:</span><span class="nd">5CEAFD5C</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">178</span>
+<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-fty21334-FTY</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
+<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
+<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558904256</span><span class="p">.</span><span class="nc">598708</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
+<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
+<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">7bc012ee4bdcbc6a04bb43a60a854ca2e09491c6</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">404</span> <span class="nt">Not</span> <span class="nt">Found</span>
+<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span><span class="o">;</span> <span class="nt">charset</span><span class="o">=</span><span class="nt">utf-8</span>
+<span class="nt">ETag</span><span class="o">:</span> <span class="s2">&quot;5cc0aee0-247b&quot;</span>
+<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
+<span class="nt">Content-Security-Policy</span><span class="o">:</span> <span class="nt">default-src</span> <span class="s1">&#39;none&#39;</span><span class="o">;</span> <span class="nt">style-src</span> <span class="s1">&#39;unsafe-inline&#39;</span><span class="o">;</span> <span class="nt">img-src</span> <span class="nt">data</span><span class="o">:;</span> <span class="nt">connect-src</span> <span class="s1">&#39;self&#39;</span>
+<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">7012</span><span class="p">:</span><span class="nd">50DA</span><span class="p">:</span><span class="nd">200D22B</span><span class="p">:</span><span class="nd">29F3365</span><span class="p">:</span><span class="nd">5CEAFD60</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">9339</span>
+<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-fty21350-FTY</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
+<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
+<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558904256</span><span class="p">.</span><span class="nc">846499</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
+<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
+<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">2d7005d30627ba7d9b953c37aee457d6ec6a3048</span>
+</pre></div>
+
+
+<p>Contrast that with what we see when we do <code>curl -LI http://blog.vhtech.net/</code>.</p>
+<div class="highlight"><pre><span></span>HTTP/1.1 301 Moved Permanently
+Server: CloudFront
+Date: Sun, 26 May 2019 22:46:23 GMT
+Content-Type: text/html
+Content-Length: 183
+Connection: keep-alive
+Location: https://blog.vhtech.net/
+X-Cache: Redirect from cloudfront
+Via: 1.1 2049bafbdd2d1f88e039f5995c93088a.cloudfront.net (CloudFront)
+X-Amz-Cf-Id: NIVeaHPk_0vDc-lmCygVoLvdwl_8bPV7M34ZAegocGzJRc0V7GQuUQ==
+
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Date: Sun, 26 May 2019 22:46:23 GMT
+x-amzn-RequestId: 1664cfb9-8008-11e9-ab15-6b983bb47f65
+x-amzn-ErrorType: MissingAuthenticationTokenException
+x-amz-apigw-id: aUCR7Fy1IAMFpBQ=
+X-Cache: Error from cloudfront
+Via: 1.1 77b355e48e983a9f568a89f4dbebf383.cloudfront.net (CloudFront)
+X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
+</pre></div>
+
+
+<p>After more digging, I noticed this on the API Gateway setup page in the console.</p>
+<p><img src="/images/blog-redirect-via-aws/API_Gateway_ANY_method_root.png" alt="ANY method on /" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
+<p>After adding <code>ANY</code> and <code>OPTIONS</code> methods to the <code>/</code> resource, I see the following for <code>curl -LI http://blog.vhtech.net/</code>.</p>
+<div class="highlight"><pre><span></span><span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">application</span><span class="o">/</span><span class="nt">json</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">0</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">30</span><span class="p">:</span><span class="nd">48</span> <span class="nt">GMT</span>
+<span class="nt">x-amzn-RequestId</span><span class="o">:</span> <span class="nt">4b08402c-800e-11e9-93fb-37487883e1b4</span>
+<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
+<span class="nt">x-amz-apigw-id</span><span class="o">:</span> <span class="nt">aUIyYGsyoAMFgzA</span><span class="o">=</span>
+<span class="nt">Location</span><span class="o">:</span> <span class="nt">http</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span>
+<span class="nt">X-Amzn-Trace-Id</span><span class="o">:</span> <span class="nt">Root</span><span class="o">=</span><span class="nt">1-5ceb21a8-d2af9bc886fa43bc4f42971b</span><span class="o">;</span><span class="nt">Sampled</span><span class="o">=</span><span class="nt">0</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">161</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Hit</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">0a576c2dd3353021ea1e162ded4d3a7d</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
+<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">2tcrphTEEMvM71W-48mVX3db_6NI5FM8vNvsy0hiYo3LmjyNiVCYTg</span><span class="o">==</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
+<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
+<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span>
+<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">B968</span><span class="p">:</span><span class="nd">0FB6</span><span class="p">:</span><span class="nd">60B7C1</span><span class="p">:</span><span class="nd">7F24DE</span><span class="p">:</span><span class="nd">5CEB2192</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">178</span>
+<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">33</span><span class="p">:</span><span class="nd">29</span> <span class="nt">GMT</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">176</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-atl6221-ATL</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
+<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
+<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558913610</span><span class="p">.</span><span class="nc">918408</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
+<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
+<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">b6a3eb53b8ceeed706fdd6a4e014727d29343fe5</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">200</span> <span class="nt">OK</span>
+<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
+<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span><span class="o">;</span> <span class="nt">charset</span><span class="o">=</span><span class="nt">utf-8</span>
+<span class="nt">Last-Modified</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">19</span><span class="p">:</span><span class="nd">31</span><span class="p">:</span><span class="nd">17</span> <span class="nt">GMT</span>
+<span class="nt">ETag</span><span class="o">:</span> <span class="s2">&quot;5ceae985-4071&quot;</span>
+<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
+<span class="nt">Expires</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">40</span><span class="p">:</span><span class="nd">34</span> <span class="nt">GMT</span>
+<span class="nt">Cache-Control</span><span class="o">:</span> <span class="nt">max-age</span><span class="o">=</span><span class="nt">600</span>
+<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">83B2</span><span class="p">:</span><span class="nd">33ED</span><span class="p">:</span><span class="nd">10C3628</span><span class="p">:</span><span class="nd">1569AA0</span><span class="p">:</span><span class="nd">5CEB2195</span>
+<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">16497</span>
+<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
+<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">33</span><span class="p">:</span><span class="nd">29</span> <span class="nt">GMT</span>
+<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
+<span class="nt">Age</span><span class="o">:</span> <span class="nt">176</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
+<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-atl6233-ATL</span>
+<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
+<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">2</span>
+<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558913610</span><span class="p">.</span><span class="nc">992689</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
+<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
+<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">dd197651fb8823a9113cb41c2479dedc7ecf026a</span>
+</pre></div>
+
+
+<p>This is the <code>http://blog.vhtech.net -&gt; https://blog.vhtech.net -&gt; https://turtlemonvh.github.io</code> chain we're looking for!</p>
+<p>I think I had missed this a few times earlierin my testing because my original distribution <em>did</em> include the appropriate resources on the root object, and <a href="https://stackoverflow.com/questions/9130422/how-long-do-browsers-cache-http-301s">I <em>think</em> my browser was caching the 301 responses I was sending</a> so browser testing looked fine when requesting with path <code>/</code> even though using <code>curl</code> gave a different result (e.g. 403 vs 200). So a note for those who follow (including my future self!): watch out for caching when setting up these resources.</p>
+<p>So, now with total time closer to 3 hours and using 3 different services, I have accomplished a very simple task. <code>blog.vhtech.net</code> redirects to <code>turtlemonvh.github.io</code>, handling both <code>http</code> and <code>https</code>.</p>
+<p>However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. :D</p>
+<h3>Pricing</h3>
+<p>Some quick notes on pricing I put together while waiting for CloudFront to deploy. These are the services I used:</p>
+<ul>
+<li>https://aws.amazon.com/api-gateway/pricing/</li>
+<li>https://aws.amazon.com/cloudfront/pricing/</li>
+<li>https://aws.amazon.com/lambda/pricing/</li>
+</ul>
+<p>Some notes on each</p>
+<ul>
+<li>API Gateway, CloudFront, and Lambda are all in the free tier when there are &lt;1M requests per month.</li>
+<li>CloudFront costs &lt;$0.01 per 10K requests when out of the free tier, but per request price about doubled when requests are https vs http. Data costs are negligible for the small responses I am sending. I am not making active cache invalidation requests, so I don't expect any charges there.</li>
+<li>API Gateway costs ~$3.5/M requests, or about 1/3rd the cost of each CloudFront request. This price difference was a bit surprising to me, since I expected CloudFront to be cheaper. I am not using API Gateway caching, so I don't have to deal with that part of pricing.</li>
+<li>Lambda per-request costs are $0.20/M, so significantly less than API Gateway and CloudFront. However you also pay for gb-seconds for the lambda runtime. I am using <a href="https://docs.aws.amazon.com/lambda/latest/dg/limits.html">the smallest available size (128 mb)</a> and doing minumum computation, so I do not expect to exceed the fre tier of 400,000 GB-s.</li>
+</ul>
+<p>http://blog.vhtech.net/
+d-jtfo6z8vbk.execute-api.us-east-1.amazonaws.com.</p>
+<p>http://d7v7skc7xxa1j.cloudfront.net
+- "missing authentication token"
+http://d7v7skc7xxa1j.cloudfront.net/a
+- works</p>
   </div>
   <div class="tag-cloud">
     <p>
