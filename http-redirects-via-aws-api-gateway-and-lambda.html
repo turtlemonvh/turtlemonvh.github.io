@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="http://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
+
+
+
+
+
+
+
+<meta name="author" content="turtlemonvh" />
+<meta name="description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …" />
+<meta name="keywords" content="api, dns, aws-api-gateway, aws-lambda">
+
+<meta property="og:site_name" content="Systems Doing"/>
+<meta property="og:title" content="HTTP redirects via AWS API Gateway and Lambda"/>
+<meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-05-25 18:00:00-04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://turtlemonvh.github.io/author/turtlemonvh.html">
+<meta property="article:section" content="Articles"/>
+<meta property="article:tag" content="api"/>
+<meta property="article:tag" content="dns"/>
+<meta property="article:tag" content="aws-api-gateway"/>
+<meta property="article:tag" content="aws-lambda"/>
+<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <title>Systems Doing &ndash; HTTP redirects via AWS API Gateway and Lambda</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://turtlemonvh.github.io">
+        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+      </a>
+      <h1><a href="http://turtlemonvh.github.io">Systems Doing</a></h1>
+
+<p>Looking for beauty in the complex and the simple.</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://turtlemonvh.github.io/pages/home.html">Home</a></li>
+          <li><a href="http://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+
+          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
+          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
+          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
+            <i class="fab fa-twitter">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
+            <i class="fab fa-linkedin">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
+            <i class="fab fa-bitbucket">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
+            <i class="fab fa-stack-overflow">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="http-redirects-via-aws-api-gateway-and-lambda">HTTP redirects via AWS API Gateway and Lambda</h1>
+    <p>
+          Posted on Sat 25 May 2019 in <a href="http://turtlemonvh.github.io/category/articles.html">Articles</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <blockquote>
+<p>This article is a bit messy since I'm experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful.</p>
+</blockquote>
+<p>Instead of purchasing a new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased <code>vhtech.net</code> for this purpose.</p>
+<p>I wanted to make <code>blog.vhtech.net</code> redirect to <code>turtlemonvh.github.io</code>.  My first attempt was adding a CNAME record, but this didn't work because of cross resource / virtual host issues with the way github serves their pages.  I know that <a href="https://help.github.com/en/articles/using-a-custom-domain-with-github-pages">github pages supports custom domains</a>, but I still want to keep the <code>turtlemonvh.github.io</code> address, so I decided to set up a simple http redirect instead.</p>
+<p>Also, I figured this would be a nice way to learn a bit more about AWS Lambda functions and API Gateway.  My Lambda function looks like this (which is a port of <a href="https://gist.github.com/DavidWells/99216c20cdb3df334d5b98ff19644fa2">this nodejs version</a> with a little extra path handling):</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># https://docs.aws.amazon.com/lambda/latest/dg/with-on-demand-https.html</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;statusCode&#39;</span><span class="p">:</span> <span class="mi">301</span><span class="p">,</span>
+        <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;Location&#39;</span><span class="p">:</span> <span class="s1">&#39;http://turtlemonvh.github.io/&#39;</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+            <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues.  API Gateway created a resource like this: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
+<p>One problem was the <code>default</code> in this uri. I wanted to add the Lambda function url (actually the API Gateway url, which calls the Lambda in proxy mode) as a dns entry, so I need the root of the api to be an empty path.</p>
+<p>Thankfully AWS has a solution for this via <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html">custom domains</a>.  The process I followed to make this work was the following. As usual, I stumbled across option this via <a href="https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri">a StackOverflow post</a>.</p>
+<h3>1. Create Lambda function</h3>
+<p>See the description above.</p>
+<h3>2. Create API Gateway integration</h3>
+<p>As I mentioned above, I started out by setting up the API via AWS Lambda, which ensured the relevant IAM policies and roles were created.  This is nice since I have found that IAM roles and policies are usually the thing that I'm most likely to mess up when gluing services together in AWS.</p>
+<h3>3. Get rid of the "default" API resource</h3>
+<p>When creating the API via Lambda, a resource is created for you under the API root. We want to get rid of that.</p>
+<p>Instead, add a new resource of type <code>proxy</code> directly under the root.  The path component should look like: <code>/{proxy+}</code>. Don't forget to deploy the changes to the API after making your changes.</p>
+<h3>4. Make sure this works by visiting the API Gateway url</h3>
+<p>The url should look something like: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
+<p>While testing, I received the error <code>missing auth token</code> several times, and each time it was due to me not correctly capturing the path. Usually this was because I made changes to the API definition but forgot to deploy.  See this discussion for more information: https://forums.aws.amazon.com/thread.jspa?threadID=192977</p>
+<h3>5. Create a custom domain</h3>
+<p>To start, I had to create a DNS record for <code>blog.vhtech.net</code>.  I just created a CNAME record to point to <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com</code> (the base of my API Gatway url). After adding this record, requests like <code>http://blog.vhtech.net/default</code> redirected properly.</p>
+<p>Next, I had to request an ACM certificate. Because <code>vhtech.net</code> is managed by AWS via Route 53, this was easy. I just had to create a DNS TXT record, and there was even a conveinent option to let ACM create the Route 53 resources for me just by clicking a button on the ACM request submission page. After creating the TXT record, it will be a few minutes (2-5) until ACM marks your certificate request with a <code>Status</code> of <code>Issued</code>.</p>
+<p>Once the certificate request is <code>Issued</code>, you can create the custom domain for API Gateway. I created a "regional endpoint" using the ACM cert I just created.  Once I created this, API Gateway showed some DNS information I needed to update.  I went back to Route 53 and changed the CNAME record for <code>blog.vhtech.net</code> to an A record that is an <code>alias</code> pointing to the url provided by API Gateway. At first I had created this as a CNAME record instead of an A record.  This would have worked <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html">according to the docs</a>, but the A name record was nice because after entering the url in the A record alias box, Route 53 shows you the hosted zone of the url you are referencing, which you can confirm lines up with the hosted zone API Gateway reports. Note that you never have to enter the hosted zone id anywhere, but seeing it show up in both places is a nice confirmation that you're on the right track.</p>
+<h3>6. Add base path mapping to custom domain</h3>
+<p>To route requests from <code>/</code> to the <code>default</code> stage, I had to create something called a <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html#create-regional-domain-using-console">"base path mapping" for the custom domain</a>.</p>
+<p>I left the <code>path</code> field empty (so everything under <code>/</code> is captured), selected my api as <code>destination</code>, and selected stage <code>default</code>.</p>
+<p>After I finished this, the following redirects work as expected:</p>
+<ul>
+<li><code>https://blog.vhtech.net</code> -&gt; <code>http://turtlemonvh.github.io</code></li>
+<li><code>https://blog.vhtech.net/</code> -&gt; <code>http://turtlemonvh.github.io/</code></li>
+<li><code>https://blog.vhtech.net/pages/home.html</code> -&gt; <code>http://turtlemonvh.github.io/pages/home.html</code></li>
+</ul>
+<p>In the end, this took about an hour, I have <code>blog.vhtech.net</code> redirecting to <code>turtlemonvh.github.io</code>, and I learned a bit more about Route 53 and API Gatway in the process, so I'll call the experiment a success.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://turtlemonvh.github.io/tag/api.html">api</a>
+      <a href="http://turtlemonvh.github.io/tag/dns.html">dns</a>
+      <a href="http://turtlemonvh.github.io/tag/aws-api-gateway.html">aws-api-gateway</a>
+      <a href="http://turtlemonvh.github.io/tag/aws-lambda.html">aws-lambda</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'turtlemonvh-github-io';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Systems Doing ",
+  "url" : "http://turtlemonvh.github.io",
+  "image": "//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120",
+  "description": "Thoughts and writings"
+}
+</script>
+
+</body>
+</html>
