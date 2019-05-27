@@ -1,5 +1,6 @@
 Title: Developing an OSX app with Python
 Date: 2018-03-16 15:00
+Modified: 2019-05-26 20:00
 Tags: python, osx, ionic, pyinstaller, multiprocessing, pkgbuild
 Status: published
 

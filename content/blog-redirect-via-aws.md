@@ -1,5 +1,6 @@
 Title: HTTP redirects via AWS API Gateway and Lambda
 Date: 2019-05-25 18:00
+Modified: 2019-05-27 10:00
 Tags: api, dns, aws-api-gateway, aws-lambda, this-blog
 Status: published
 
@@ -32,6 +33,8 @@ One problem was the `default` in this uri. I wanted to add the Lambda function u
 
 Thankfully AWS has a solution for this via [custom domains](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html). (As usual, I stumbled across this option via [a StackOverflow post](https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri)) The process I followed to make this work was the following.
 
+> **UPDATE 20190526**: I ended up using CloudFront in front of my API so I could get `http -> https` redirects working, which meant that I didn't need the API Gateway custom domain. If you want to handle `http` in addition to `https` (either as a redirect or actually serving `http` requests), I recommend skipping the custom domain steps (5 and 6) and going straight to CloudFront (see the update section from 2019/05/26, below). You will still need the ACM certificate either way (assuming you want to serve requests for your domain over https), so you should still complete that setup step.
+
 ### 1. Create Lambda function
 
 See the description above.
@@ -46,7 +49,7 @@ When creating the API via Lambda, a resource is created for you under the API ro
 
 Instead, add a new resource of type `proxy` directly under the root.  The path component should look like: `/{proxy+}`. Don't forget to deploy the changes to the API after making your changes.
 
-> NOTE: I later realized that I also should have created an `ANY` method on the `/` resource (in addition to the `proxy` resource) to handle redirects in the case of no path. So make sure you add the methods on `/` if you want to handle zero-length paths.
+> **UPDATE 20190526**: I later realized that I also should have created an `ANY` method on the `/` resource (in addition to the `proxy` resource) to handle redirects in the case of no path. So make sure you add the methods on `/` if you want to handle zero-length paths.
 
 ### 4. Make sure this works by visiting the API Gateway url
 
@@ -99,11 +102,11 @@ I just had to go into settings for [the github repo hosting this blog](https://g
 
 I also had to change my [pelican](https://blog.getpelican.com/) settings in `pelicanconf.py` to use `https://turtlemonvh.github.io/` as the `SITEURL` instead of `http://turtlemonvh.github.io/`.
 
-Now I'm all `https`.  Github pages *does* handle the http to https redirect for me, so at least that bit works as expected.
+Now I'm all `https`.  Github pages *does* handle the http to https redirect for me, so at least that bit works as expected even though `blog.vhtech.net` doesn't respond to `http` requests.
 
 ## Update: 2019/05/26 (v2)
 
-After adding that last comment, I checked [the pricing page for CloudFront](https://aws.amazon.com/cloudfront/pricing/) and saw that the free tier includes 2 million requests per month.
+After adding that last update I checked [the pricing page for CloudFront](https://aws.amazon.com/cloudfront/pricing/) and saw that the free tier includes 2 million requests per month.
 
 Since I haven't messed with CloudFront yet and I'm starting to spend time gearing up to take the [AWS Certified Solutions Architect](https://aws.amazon.com/certification/certified-solutions-architect-associate/) exam this July, I figured this is a great excuse to learn a little about this service.
 
@@ -140,9 +143,9 @@ I thought that, since I added a CNAME of `blog.vhtech.net` when creating the Clo
 
 ... but even after I did all above I ran into *another* issue.
 
-My CloudFront distribition url, `d7v7skc7xxa1j.cloudfront.net`, still returned `missing authentication token` when I hit `http://d7v7skc7xxa1j.cloudfront.net` (which did properly redirect to `https`). Going to `http://d7v7skc7xxa1j.cloudfront.net/a` did properly redirect to `https://turtlemonvh.github.io/a`. I thought this may be because of how API Gateway handles the `stage` portion of its urls, or it may be because I didn't set `Default Root Object`, but when I looked more into the documentation, this didn't line up.
+My CloudFront distribition url, `d7v7skc7xxa1j.cloudfront.net`, still returned `missing authentication token` when I hit `http://d7v7skc7xxa1j.cloudfront.net` (which did properly redirect to `https`). Going to `http://d7v7skc7xxa1j.cloudfront.net/a` did properly redirect to `https://turtlemonvh.github.io/a`. I thought this may be because of how API Gateway handles the `stage` portion of its urls, or because I didn't set `Default Root Object` in my CloudFront configuration, but when I looked more into the documentation, neither of these theories panned out.
 
-Here are the redirect chains for `curl -LI http://blog.vhtech.net/a`.
+Here are the redirect chains I was seeing for `curl -LI http://blog.vhtech.net/a`.
 
 ```
 HTTP/1.1 301 Moved Permanently
@@ -237,11 +240,13 @@ Via: 1.1 77b355e48e983a9f568a89f4dbebf383.cloudfront.net (CloudFront)
 X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
 ```
 
-After more digging, I noticed this on the API Gateway setup page in the console.
+After more digging, I noticed this on text on page that API Gateway shows in the console when attempting to create a new resource.
+
+> To handle requests to /, add a new ANY method on the / resource.
 
 <img src="/images/blog-redirect-via-aws/API_Gateway_ANY_method_root.png" alt="ANY method on /" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
 
-After adding `ANY` and `OPTIONS` methods to the `/` resource, I see the following for `curl -LI http://blog.vhtech.net/`.
+After adding `ANY` and `OPTIONS` methods to the `/` resource and deploying the changes to the API, I see the following for `curl -LI http://blog.vhtech.net/`.
 
 ```
 HTTP/1.1 301 Moved Permanently
@@ -302,9 +307,11 @@ X-Fastly-Request-ID: dd197651fb8823a9113cb41c2479dedc7ecf026a
 
 This is the `http://blog.vhtech.net -> https://blog.vhtech.net -> https://turtlemonvh.github.io` chain we're looking for!
 
-I think I had missed this a few times earlierin my testing because my original distribution *did* include the appropriate resources on the root object, and [I *think* my browser was caching the 301 responses I was sending](https://stackoverflow.com/questions/9130422/how-long-do-browsers-cache-http-301s) so browser testing looked fine when requesting with path `/` even though using `curl` gave a different result (e.g. 403 vs 200). So a note for those who follow (including my future self!): watch out for caching when setting up these resources.
+I think I had missed this a few times earlier in my testing because my original distribution *did* include the appropriate resources on the root object, and [I *think* my browser was caching the 301 responses I was sending](https://stackoverflow.com/questions/9130422/how-long-do-browsers-cache-http-301s), so browser testing looked fine when requesting with path `/` even though using `curl` gave a different result (e.g. `403` vs `200`). So a note for those who follow (including my future self!): watch out for caching when setting up these resources.
 
-So, now with total time closer to 3 hours and using 3 different services, I have accomplished a very simple task. `blog.vhtech.net` redirects to `turtlemonvh.github.io`, handling both `http` and `https`.
+Also, the API Gateway custom domain ended up being completely unnecessary after setting up CloudFront, so I deleted that once I confirmed CloudFront was returning responses as expected.
+
+So, now with total time closer to 3 hours and using 4 different services (ACM, API Gateway, CloudFront, and Lambda), I have accomplished a very simple task. `blog.vhtech.net` redirects to `turtlemonvh.github.io`, handling both `http` and `https`.
 
 However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. :D
 
@@ -315,19 +322,14 @@ Some quick notes on pricing I put together while waiting for CloudFront to deplo
 * https://aws.amazon.com/api-gateway/pricing/
 * https://aws.amazon.com/cloudfront/pricing/
 * https://aws.amazon.com/lambda/pricing/
+* https://aws.amazon.com/certificate-manager/pricing/
 
 Some notes on each
 
 * API Gateway, CloudFront, and Lambda are all in the free tier when there are <1M requests per month.
+* ACM is free for public certs. Given the simple integration with AWS services and the fact that AWS handles annoying details like [cert renewal](https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html) for you automatically, I strongly recommend using the service.
+  * For more notes on my previous experience with ACM and Elastic Beanstalk
 * CloudFront costs <$0.01 per 10K requests when out of the free tier, but per request price about doubled when requests are https vs http. Data costs are negligible for the small responses I am sending. I am not making active cache invalidation requests, so I don't expect any charges there.
 * API Gateway costs ~$3.5/M requests, or about 1/3rd the cost of each CloudFront request. This price difference was a bit surprising to me, since I expected CloudFront to be cheaper. I am not using API Gateway caching, so I don't have to deal with that part of pricing.
 * Lambda per-request costs are $0.20/M, so significantly less than API Gateway and CloudFront. However you also pay for gb-seconds for the lambda runtime. I am using [the smallest available size (128 mb)](https://docs.aws.amazon.com/lambda/latest/dg/limits.html) and doing minumum computation, so I do not expect to exceed the fre tier of 400,000 GB-s.
 
-
-http://blog.vhtech.net/
-d-jtfo6z8vbk.execute-api.us-east-1.amazonaws.com.
-
-http://d7v7skc7xxa1j.cloudfront.net
-- "missing authentication token"
-http://d7v7skc7xxa1j.cloudfront.net/a
-- works
