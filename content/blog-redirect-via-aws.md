@@ -33,7 +33,11 @@ One problem was the `default` in this uri. I wanted to add the Lambda function u
 
 Thankfully AWS has a solution for this via [custom domains](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html). (As usual, I stumbled across this option via [a StackOverflow post](https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri)) The process I followed to make this work was the following.
 
-> **UPDATE 20190526**: I ended up using CloudFront in front of my API so I could get `http -> https` redirects working, which meant that I didn't need the API Gateway custom domain. If you want to handle `http` in addition to `https` (either as a redirect or actually serving `http` requests), I recommend skipping the custom domain steps (5 and 6) and going straight to CloudFront (see the update section from 2019/05/26, below). You will still need the ACM certificate either way (assuming you want to serve requests for your domain over https), so you should still complete that setup step.
+> **UPDATE 20190526**: I ended up using CloudFront in front of my API so I could get `http -> https` redirects working, which meant that I didn't need the API Gateway custom domain. If you want to handle `http` in addition to `https` (either as a redirect or actually serving `http` requests), I recommend skipping the custom domain steps (5 and 6) and going straight to CloudFront (see the update section from 2019/05/26, below).
+>
+> You will still need the [ACM certificate](https://aws.amazon.com/certificate-manager/) either way (assuming you want to serve requests for your domain over https), so you should still complete that setup step.
+>
+> If you don't need to handle http and https, however, custom domains are a good option that allow you avoid having to pay for API Gateway *and* CloudFront.
 
 ### 1. Create Lambda function
 
@@ -313,7 +317,7 @@ Also, the API Gateway custom domain ended up being completely unnecessary after 
 
 So, now with total time closer to 3 hours and using 4 different services (ACM, API Gateway, CloudFront, and Lambda), I have accomplished a very simple task. `blog.vhtech.net` redirects to `turtlemonvh.github.io`, handling both `http` and `https`.
 
-However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. :D
+However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. <span>&#128512;</span>
 
 ### Pricing
 
@@ -328,7 +332,7 @@ Some notes on each
 
 * API Gateway, CloudFront, and Lambda are all in the free tier when there are <1M requests per month.
 * ACM is free for public certs. Given the simple integration with AWS services and the fact that AWS handles annoying details like [cert renewal](https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html) for you automatically, I strongly recommend using the service.
-  * For more notes on my previous experience with ACM and Elastic Beanstalk
+    * See [this article](/setting-up-ssl-for-an-elasticbeanstalk-application.html) for more notes on my previous experience with ACM and Elastic Beanstalk.
 * CloudFront costs <$0.01 per 10K requests when out of the free tier, but per request price about doubled when requests are https vs http. Data costs are negligible for the small responses I am sending. I am not making active cache invalidation requests, so I don't expect any charges there.
 * API Gateway costs ~$3.5/M requests, or about 1/3rd the cost of each CloudFront request. This price difference was a bit surprising to me, since I expected CloudFront to be cheaper. I am not using API Gateway caching, so I don't have to deal with that part of pricing.
 * Lambda per-request costs are $0.20/M, so significantly less than API Gateway and CloudFront. However you also pay for gb-seconds for the lambda runtime. I am using [the smallest available size (128 mb)](https://docs.aws.amazon.com/lambda/latest/dg/limits.html) and doing minumum computation, so I do not expect to exceed the fre tier of 400,000 GB-s.
