@@ -139,7 +139,9 @@
 <p>One problem was the <code>default</code> in this uri. I wanted to add the Lambda function url (actually the API Gateway url, which calls the Lambda in proxy mode) as a dns entry, so I need the root of the api to be an empty path.</p>
 <p>Thankfully AWS has a solution for this via <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-regional-api-custom-domain-create.html">custom domains</a>. (As usual, I stumbled across this option via <a href="https://stackoverflow.com/questions/39523150/aws-api-gateway-remove-stage-name-from-uri">a StackOverflow post</a>) The process I followed to make this work was the following.</p>
 <blockquote>
-<p><strong>UPDATE 20190526</strong>: I ended up using CloudFront in front of my API so I could get <code>http -&gt; https</code> redirects working, which meant that I didn't need the API Gateway custom domain. If you want to handle <code>http</code> in addition to <code>https</code> (either as a redirect or actually serving <code>http</code> requests), I recommend skipping the custom domain steps (5 and 6) and going straight to CloudFront (see the update section from 2019/05/26, below). You will still need the ACM certificate either way (assuming you want to serve requests for your domain over https), so you should still complete that setup step.</p>
+<p><strong>UPDATE 20190526</strong>: I ended up using CloudFront in front of my API so I could get <code>http -&gt; https</code> redirects working, which meant that I didn't need the API Gateway custom domain. If you want to handle <code>http</code> in addition to <code>https</code> (either as a redirect or actually serving <code>http</code> requests), I recommend skipping the custom domain steps (5 and 6) and going straight to CloudFront (see the update section from 2019/05/26, below).</p>
+<p>You will still need the <a href="https://aws.amazon.com/certificate-manager/">ACM certificate</a> either way (assuming you want to serve requests for your domain over https), so you should still complete that setup step.</p>
+<p>If you don't need to handle http and https, however, custom domains are a good option that allow you avoid having to pay for API Gateway <em>and</em> CloudFront.</p>
 </blockquote>
 <h3>1. Create Lambda function</h3>
 <p>See the description above.</p>
@@ -375,7 +377,7 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
 <p>I think I had missed this a few times earlier in my testing because my original distribution <em>did</em> include the appropriate resources on the root object, and <a href="https://stackoverflow.com/questions/9130422/how-long-do-browsers-cache-http-301s">I <em>think</em> my browser was caching the 301 responses I was sending</a>, so browser testing looked fine when requesting with path <code>/</code> even though using <code>curl</code> gave a different result (e.g. <code>403</code> vs <code>200</code>). So a note for those who follow (including my future self!): watch out for caching when setting up these resources.</p>
 <p>Also, the API Gateway custom domain ended up being completely unnecessary after setting up CloudFront, so I deleted that once I confirmed CloudFront was returning responses as expected.</p>
 <p>So, now with total time closer to 3 hours and using 4 different services (ACM, API Gateway, CloudFront, and Lambda), I have accomplished a very simple task. <code>blog.vhtech.net</code> redirects to <code>turtlemonvh.github.io</code>, handling both <code>http</code> and <code>https</code>.</p>
-<p>However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. :D</p>
+<p>However, I did get to learn more about each of these services along the way, so I'll chaulk this one up as a partial win. <span>&#128512;</span></p>
 <h3>Pricing</h3>
 <p>Some quick notes on pricing I put together while waiting for CloudFront to deploy. These are the services I used:</p>
 <ul>
@@ -387,8 +389,10 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
 <p>Some notes on each</p>
 <ul>
 <li>API Gateway, CloudFront, and Lambda are all in the free tier when there are &lt;1M requests per month.</li>
-<li>ACM is free for public certs. Given the simple integration with AWS services and the fact that AWS handles annoying details like <a href="https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html">cert renewal</a> for you automatically, I strongly recommend using the service.</li>
-<li>For more notes on my previous experience with ACM and Elastic Beanstalk</li>
+<li>ACM is free for public certs. Given the simple integration with AWS services and the fact that AWS handles annoying details like <a href="https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html">cert renewal</a> for you automatically, I strongly recommend using the service.<ul>
+<li>See <a href="/setting-up-ssl-for-an-elasticbeanstalk-application.html">this article</a> for more notes on my previous experience with ACM and Elastic Beanstalk.</li>
+</ul>
+</li>
 <li>CloudFront costs &lt;$0.01 per 10K requests when out of the free tier, but per request price about doubled when requests are https vs http. Data costs are negligible for the small responses I am sending. I am not making active cache invalidation requests, so I don't expect any charges there.</li>
 <li>API Gateway costs ~$3.5/M requests, or about 1/3rd the cost of each CloudFront request. This price difference was a bit surprising to me, since I expected CloudFront to be cheaper. I am not using API Gateway caching, so I don't have to deal with that part of pricing.</li>
 <li>Lambda per-request costs are $0.20/M, so significantly less than API Gateway and CloudFront. However you also pay for gb-seconds for the lambda runtime. I am using <a href="https://docs.aws.amazon.com/lambda/latest/dg/limits.html">the smallest available size (128 mb)</a> and doing minumum computation, so I do not expect to exceed the fre tier of 400,000 GB-s.</li>
