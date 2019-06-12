@@ -6,7 +6,7 @@ Status: published
 
 > This article is a bit messy since I'm experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful.
 
-Instead of purchasing a new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased `vhtech.net` for this purpose.
+Instead of purchasing new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased `vhtech.net` for this purpose.
 
 I wanted to make `blog.vhtech.net` redirect to `turtlemonvh.github.io`.  My first attempt was adding a CNAME record, but this didn't work because of cross resource / virtual host issues with the way github serves their pages.  I know that [github pages supports custom domains](https://help.github.com/en/articles/using-a-custom-domain-with-github-pages), but I still want to keep the `turtlemonvh.github.io` address, so I decided to set up a simple http redirect instead.
 
