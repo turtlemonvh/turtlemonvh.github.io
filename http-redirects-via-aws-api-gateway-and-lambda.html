@@ -24,12 +24,12 @@
 
 
 <meta name="author" content="turtlemonvh" />
-<meta name="description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …" />
+<meta name="description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing new custom domains for …" />
 <meta name="keywords" content="api, dns, aws-api-gateway, aws-lambda, this-blog">
 
 <meta property="og:site_name" content="Systems Doing"/>
 <meta property="og:title" content="HTTP redirects via AWS API Gateway and Lambda"/>
-<meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing a new custom domains …"/>
+<meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing new custom domains for …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
 <meta property="og:type" content="article"/>
@@ -117,7 +117,7 @@
     <blockquote>
 <p>This article is a bit messy since I'm experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful.</p>
 </blockquote>
-<p>Instead of purchasing a new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased <code>vhtech.net</code> for this purpose.</p>
+<p>Instead of purchasing new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased <code>vhtech.net</code> for this purpose.</p>
 <p>I wanted to make <code>blog.vhtech.net</code> redirect to <code>turtlemonvh.github.io</code>.  My first attempt was adding a CNAME record, but this didn't work because of cross resource / virtual host issues with the way github serves their pages.  I know that <a href="https://help.github.com/en/articles/using-a-custom-domain-with-github-pages">github pages supports custom domains</a>, but I still want to keep the <code>turtlemonvh.github.io</code> address, so I decided to set up a simple http redirect instead.</p>
 <p>Also, I figured this would be a nice way to learn a bit more about AWS Lambda functions and API Gateway.  My Lambda function looks like this (which is a port of <a href="https://gist.github.com/DavidWells/99216c20cdb3df334d5b98ff19644fa2">this nodejs version</a> with a little extra path handling):</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
