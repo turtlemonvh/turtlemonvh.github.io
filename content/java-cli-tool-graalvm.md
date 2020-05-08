@@ -279,3 +279,66 @@ Single Argument Commands:
 
 Note that I haven't used this binary for anything serious yet, so caveats abound, but if this works out I'll at least consider jvm + native image for CLI tools. Honestly I probably won't consider it too often because I love python and go and go cross compiling is awesome, but if there are JVM packages to do something interesting I'll be less prone to shy away from CLI-based tooling.
 
+## EDIT: 20200508
+
+Right after I published this post I ran some quick function tests on the binary produced by `native-image`.
+
+```bash
+# Version command is ok
+$ icct version
+0.4.0-LOCAL
+
+# Local copy works fine
+$ icct /tmp/testfile.txt stdout:
+hi there
+
+$ icct /tmp/testfile.txt /tmp/testfile.txt.2
+$ cat /tmp/testfile.txt.2
+hi there
+
+# Config output doesn't look good
+$ icct config
+Exception in thread "main" java.lang.ExceptionInInitializerError
+	at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:290)
+	at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+	at com.ionic.sdk.agent.hfp.Fingerprint.<init>(Fingerprint.java:28)
+	at com.ionic.sdk.agent.Agent.<init>(Agent.java:95)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.checkIonicConfiguration(IonicCloudCopy.java:529)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.configurationCheck(IonicCloudCopy.java:605)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.main(IonicCloudCopy.java:138)
+Caused by: java.lang.IllegalStateException: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
+	at com.ionic.sdk.core.codec.Transcoder.getFactory(Transcoder.java:62)
+	at com.ionic.sdk.core.codec.Transcoder.<clinit>(Transcoder.java:45)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:350)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:270)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
+	at com.oracle.svm.core.hub.ClassForNameSupport.forName(ClassForNameSupport.java:60)
+	at java.lang.Class.forName(DynamicHub.java:1211)
+	at com.ionic.sdk.core.codec.Transcoder.getFactory(Transcoder.java:60)
+	... 9 more
+
+# Copy to s3 doesn't look good
+$ icct /tmp/testfile.txt s3://$BUCKET_NAME/testfile.txt
+Exception in thread "main" java.lang.NoClassDefFoundError: org.apache.commons.logging.LogFactory
+	at org.apache.commons.logging.LogFactory.class$(LogFactory.java:847)
+	at org.apache.commons.logging.LogFactory.<clinit>(LogFactory.java:1717)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:350)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:270)
+	at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+	at com.amazonaws.auth.AWSCredentialsProviderChain.<clinit>(AWSCredentialsProviderChain.java:41)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:350)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:270)
+	at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+	at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:235)
+	at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.checkAWSCredentialsConfiguration(IonicCloudCopy.java:551)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.S3Location(IonicCloudCopy.java:359)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.destinationFromArg(IonicCloudCopy.java:202)
+	at com.ionic.cloudstorage.icct.IonicCloudCopy.main(IonicCloudCopy.java:144)
+
+```
+
+So it looks like I have a bit more to dig into, likely involving [adding classpaths to the `native-image` call](https://github.com/oracle/graal/issues/671#issuecomment-422993966) and fixing [relection and dynamic resource loading](https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md). It looks like `--allow-incomplete-classpath` was added to handle runtime dependencies that are not loaded, whereas I used it to force `native-image` to give me something when it was (rightly, it seems) complaining about missing dependencies at build time.
+
+I'll publish updates on this post. If the work turns out to be significant, I'll move those updates to a new post.

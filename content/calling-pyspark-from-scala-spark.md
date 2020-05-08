@@ -35,6 +35,22 @@ Calling python / pyspark from scala Spark; should be able to see this in Spark j
 - as long as the amt of data passed back and forth is minimal, performance should be ok
 
 
+Passing dataframe references
+- https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset@createTempView(viewName:String):Unit
+- https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset@createTempView(viewName:String):Unit
+- https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.catalog.Catalog
+
+```
+// Create and cache table
+val df = sc.range(1,1000).toDF
+df.createTempView("abc")
+df.sparkSession.catalog.cacheTable("abc")
+
+// Get information from `sqlContext.tables`
+```
+- referencing tables is fast when you incude db reference
+
+
 
 > Demo
 - make a small project where I can demo this on github
