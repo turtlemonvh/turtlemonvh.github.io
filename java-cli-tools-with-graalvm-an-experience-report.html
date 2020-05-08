@@ -373,6 +373,65 @@ Single Argument Commands:
 
 
 <p>Note that I haven't used this binary for anything serious yet, so caveats abound, but if this works out I'll at least consider jvm + native image for CLI tools. Honestly I probably won't consider it too often because I love python and go and go cross compiling is awesome, but if there are JVM packages to do something interesting I'll be less prone to shy away from CLI-based tooling.</p>
+<h2>EDIT: 20200508</h2>
+<p>Right after I published this post I ran some quick function tests on the binary produced by <code>native-image</code>.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Version command is ok</span>
+$ icct version
+<span class="m">0</span>.4.0-LOCAL
+
+<span class="c1"># Local copy works fine</span>
+$ icct /tmp/testfile.txt stdout:
+hi there
+
+$ icct /tmp/testfile.txt /tmp/testfile.txt.2
+$ cat /tmp/testfile.txt.2
+hi there
+
+<span class="c1"># Config output doesn&#39;t look good</span>
+$ icct config
+Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.ExceptionInInitializerError
+    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:290<span class="o">)</span>
+    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+    at com.ionic.sdk.agent.hfp.Fingerprint.&lt;init&gt;<span class="o">(</span>Fingerprint.java:28<span class="o">)</span>
+    at com.ionic.sdk.agent.Agent.&lt;init&gt;<span class="o">(</span>Agent.java:95<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.checkIonicConfiguration<span class="o">(</span>IonicCloudCopy.java:529<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.configurationCheck<span class="o">(</span>IonicCloudCopy.java:605<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:138<span class="o">)</span>
+Caused by: java.lang.IllegalStateException: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
+    at com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:62<span class="o">)</span>
+    at com.ionic.sdk.core.codec.Transcoder.&lt;clinit&gt;<span class="o">(</span>Transcoder.java:45<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+    ... <span class="m">6</span> more
+Caused by: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
+    at com.oracle.svm.core.hub.ClassForNameSupport.forName<span class="o">(</span>ClassForNameSupport.java:60<span class="o">)</span>
+    at java.lang.Class.forName<span class="o">(</span>DynamicHub.java:1211<span class="o">)</span>
+    at com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:60<span class="o">)</span>
+    ... <span class="m">9</span> more
+
+<span class="c1"># Copy to s3 doesn&#39;t look good</span>
+$ icct /tmp/testfile.txt s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt
+Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.NoClassDefFoundError: org.apache.commons.logging.LogFactory
+    at org.apache.commons.logging.LogFactory.class<span class="k">$(</span>LogFactory.java:847<span class="k">)</span>
+    at org.apache.commons.logging.LogFactory.&lt;clinit&gt;<span class="o">(</span>LogFactory.java:1717<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+    at com.amazonaws.auth.AWSCredentialsProviderChain.&lt;clinit&gt;<span class="o">(</span>AWSCredentialsProviderChain.java:41<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:235<span class="o">)</span>
+    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.checkAWSCredentialsConfiguration<span class="o">(</span>IonicCloudCopy.java:551<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.S3Location<span class="o">(</span>IonicCloudCopy.java:359<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.destinationFromArg<span class="o">(</span>IonicCloudCopy.java:202<span class="o">)</span>
+    at com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:144<span class="o">)</span>
+</pre></div>
+
+
+<p>So it looks like I have a bit more to dig into, likely involving <a href="https://github.com/oracle/graal/issues/671#issuecomment-422993966">adding classpaths to the <code>native-image</code> call</a> and fixing <a href="https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md">relection and dynamic resource loading</a>. It looks like <code>--allow-incomplete-classpath</code> was added to handle runtime dependencies that are not loaded, whereas I used it to force <code>native-image</code> to give me something when it was (rightly, it seems) complaining about missing dependencies at build time.</p>
+<p>I'll publish updates on this post. If the work turns out to be significant, I'll move those updates to a new post.</p>
   </div>
   <div class="tag-cloud">
     <p>
