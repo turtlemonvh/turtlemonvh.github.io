@@ -243,7 +243,7 @@ real	0m4.167s
 user	0m3.321s
 sys	0m1.474s
 
-is-mbp-timothy4:ionic-cloud-copy-tool timothy$ time for i in $(seq 1 10); do target/IonicCloudCopyTool-0.4.0 >/dev/null; done
+is-mbp-timothy4:ionic-cloud-copy-tool timothy$ time for i in $(seq 1 10); do target/IonicCloudCopyTool-0.4.0 -h >/dev/null; done
 
 real	0m0.172s
 user	0m0.036s
@@ -342,3 +342,188 @@ Exception in thread "main" java.lang.NoClassDefFoundError: org.apache.commons.lo
 So it looks like I have a bit more to dig into, likely involving [adding classpaths to the `native-image` call](https://github.com/oracle/graal/issues/671#issuecomment-422993966) and fixing [relection and dynamic resource loading](https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md). It looks like `--allow-incomplete-classpath` was added to handle runtime dependencies that are not loaded, whereas I used it to force `native-image` to give me something when it was (rightly, it seems) complaining about missing dependencies at build time.
 
 I'll publish updates on this post. If the work turns out to be significant, I'll move those updates to a new post.
+
+## EDIT: 20200509
+
+Continuing with graalvm, I'm following the recommendations in [the graalvm documentation for working with their java agent](https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md) to trace the reflective calls (and resource access) from the application and write that to config files for the native image tool to consume.
+
+```bash
+# I'll be putting these directly into the META-INF directory of this maven project
+# https://github.com/IonicDev/ionic-cloud-copy-tool
+GRAAL_CONF_DIR=./src/main/resources/META-INF/native-image
+mkdir -p $GRAAL_CONF_DIR
+
+# Start collecting details about graalvm operation
+# All other commands will use the `config-merge-dir` option instead of `config-output-dir`
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent=config-output-dir=$GRAAL_CONF_DIR -jar target/IonicCloudCopyTool-0.4.0.jar version
+
+# The tool only takes a plaintext persisor now, so I need to export to plaintext for testing
+# Uses the machinacli tool: https://dev.ionic.com/tools/machina
+# https://github.com/IonicDev/ionic-cloud-copy-tool/blob/master/src/main/java/com/ionic/cloudstorage/icct/IonicCloudCopy.java
+machina profile move -d L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef -t plaintext -f ~/.ionicsecurity/profiles.pt
+machina -t plaintext -f ~/.ionicsecurity/profiles.pt profile set -d L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef
+
+# Needed to export AWS_REGION instead AWS_DEFAULT_REGION
+# https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/providers/DefaultAwsRegionProviderChain.html
+# https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
+# This is AWS_DEFAULT_REGION in boto3
+# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#environment-variable-configuration
+# Also confusing in other tools: https://github.com/aws/aws-sdk-go/issues/2103
+export AWS_REGION=$AWS_DEFAULT_REGION
+
+# Run some commands with the tool, merging output for graal
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent=config-merge-dir=$GRAAL_CONF_DIR -jar target/IonicCloudCopyTool-0.4.0.jar config
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent=config-merge-dir=$GRAAL_CONF_DIR -jar target/IonicCloudCopyTool-0.4.0.jar /tmp/testfile.txt s3://$BUCKET_NAME/testfile.txt
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent=config-merge-dir=$GRAAL_CONF_DIR -jar target/IonicCloudCopyTool-0.4.0.jar s3://$BUCKET_NAME/testfile.txt /tmp/testfile.txt.decrypted
+
+# Inspect written files
+ls -lah $GRAAL_CONF_DIR
+for f in `ls $GRAAL_CONF_DIR`; do echo //$f; cat $GRAAL_CONF_DIR/$f | jq .; done
+
+# Re-build the jar with the native image resources included
+mvn package
+
+# Ensure the META-INF files are included (I had originally written them to the wrong place)
+$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/jar tf target/IonicCloudCopyTool-0.4.0.jar | grep META-INF/native
+META-INF/native-image/
+META-INF/native-image/jni-config.json
+META-INF/native-image/proxy-config.json
+META-INF/native-image/reflect-config.json
+META-INF/native-image/resource-config.json
+
+# Build the native image from the jar
+$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --enable-http --enable-https --allow-incomplete-classpath --no-server
+[IonicCloudCopyTool-0.4.0:61591]    classlist:   5,538.37 ms,  1.32 GB
+[IonicCloudCopyTool-0.4.0:61591]        (cap):   3,568.30 ms,  1.32 GB
+[IonicCloudCopyTool-0.4.0:61591]        setup:   5,479.04 ms,  1.67 GB
+[IonicCloudCopyTool-0.4.0:61591]     analysis:  24,360.97 ms,  3.91 GB
+Error: Classes that should be initialized at run time got initialized during image building:
+ org.apache.http.pool.ConnPoolControl was unintentionally initialized at build time. To see why org.apache.http.pool.ConnPoolControl got initialized use -H:+TraceClassInitialization
+org.apache.http.HttpClientConnection was unintentionally initialized at build time. To see why org.apache.http.HttpClientConnection got initialized use -H:+TraceClassInitialization
+org.apache.http.conn.routing.HttpRoute was unintentionally initialized at build time. To see why org.apache.http.conn.routing.HttpRoute got initialized use -H:+TraceClassInitialization
+org.apache.http.conn.ConnectionRequest was unintentionally initialized at build time. To see why org.apache.http.conn.ConnectionRequest got initialized use -H:+TraceClassInitialization
+org.apache.http.protocol.HttpContext was unintentionally initialized at build time. To see why org.apache.http.protocol.HttpContext got initialized use -H:+TraceClassInitialization
+org.apache.http.conn.HttpClientConnectionManager was unintentionally initialized at build time. To see why org.apache.http.conn.HttpClientConnectionManager got initialized use -H:+TraceClassInitialization
+
+Error: Use -H:+ReportExceptionStackTraces to print stacktrace of underlying exception
+Error: Image build request failed with exit status 1
+
+# Still getting errors.
+# Trying some additional tricks with initialization hints from: https://spring.io/blog/2020/04/16/spring-tips-the-graalvm-native-image-builder-feature
+$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time=org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager -H:+TraceClassInitialization
+[IonicCloudCopyTool-0.4.0:62055]    classlist:   6,351.16 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62055]        (cap):   2,361.68 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62055]        setup:   4,093.37 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62055]   (typeflow):  26,550.09 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]    (objects):  18,375.48 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]   (features):   1,496.49 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]     analysis:  48,187.45 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]     (clinit):     966.15 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]     universe:   2,632.33 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]      (parse):   5,510.07 ms,  9.21 GB
+[IonicCloudCopyTool-0.4.0:62055]     (inline):  22,769.90 ms, 10.64 GB
+[IonicCloudCopyTool-0.4.0:62055]    (compile):  50,351.15 ms, 11.46 GB
+[IonicCloudCopyTool-0.4.0:62055]      compile:  90,526.27 ms, 11.46 GB
+[IonicCloudCopyTool-0.4.0:62055]        image:   8,356.94 ms, 11.73 GB
+[IonicCloudCopyTool-0.4.0:62055]        write:   5,285.07 ms, 11.73 GB
+[IonicCloudCopyTool-0.4.0:62055]      [total]: 165,849.45 ms, 11.73 GB
+
+# Got a working build! But got a fatal error when running.
+# Thankfully the recommendation is quite clear.
+$ ./IonicCloudCopyTool-0.4.0 config
+Fatal error: javax.crypto.JceSecurity.getCodeBase(Class) is reached at runtime. This should not happen. The contents of JceSecurity.verificationResults are computed and cached at image build time. Try enabling all security services with --enable-all-security-services.
+
+JavaFrameAnchor dump:
+
+  No anchors
+<more dump contents>
+
+# Building again
+$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time=org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager --enable-all-security-services -H:+TraceClassInitialization
+[IonicCloudCopyTool-0.4.0:62308]    classlist:   6,934.81 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62308]        (cap):   5,159.98 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62308]        setup:   6,967.24 ms,  1.29 GB
+[IonicCloudCopyTool-0.4.0:62308]   (typeflow):  31,334.62 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]    (objects):  25,477.01 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]   (features):   2,076.97 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]     analysis:  61,493.13 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]     (clinit):   1,126.30 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]     universe:   3,392.50 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]      (parse):   5,999.22 ms,  9.61 GB
+[IonicCloudCopyTool-0.4.0:62308]     (inline):  15,347.59 ms, 11.28 GB
+[IonicCloudCopyTool-0.4.0:62308]    (compile):  42,364.79 ms, 11.58 GB
+[IonicCloudCopyTool-0.4.0:62308]      compile:  68,682.98 ms, 11.58 GB
+[IonicCloudCopyTool-0.4.0:62308]        image:   7,207.60 ms, 11.83 GB
+[IonicCloudCopyTool-0.4.0:62308]        write:   5,135.07 ms, 11.83 GB
+[IonicCloudCopyTool-0.4.0:62308]      [total]: 161,169.69 ms, 11.83 GB
+
+# Still errors, but getting closer...
+$ ./IonicCloudCopyTool-0.4.0 config
+Exception in thread "main" java.lang.IllegalArgumentException: java.net.MalformedURLException: Accessing an URL protocol that was not enabled. The URL protocol https is supported but not enabled by default. It must be enabled by adding the -H:EnableURLProtocols=https option to the native-image command.
+
+# Building again
+$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time=org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager --enable-all-security-services --enable-http --enable-https -H:+TraceClassInitialization
+[IonicCloudCopyTool-0.4.0:62455]    classlist:   6,262.77 ms,  1.55 GB
+[IonicCloudCopyTool-0.4.0:62455]        (cap):   4,359.17 ms,  1.55 GB
+[IonicCloudCopyTool-0.4.0:62455]        setup:   6,042.22 ms,  1.55 GB
+[IonicCloudCopyTool-0.4.0:62455]   (typeflow):  28,935.83 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]    (objects):  21,362.67 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]   (features):   2,181.84 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]     analysis:  55,527.36 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]     (clinit):   1,751.76 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]     universe:   4,590.87 ms,  7.94 GB
+[IonicCloudCopyTool-0.4.0:62455]      (parse):   8,816.98 ms,  8.29 GB
+[IonicCloudCopyTool-0.4.0:62455]     (inline):   8,942.87 ms, 10.02 GB
+[IonicCloudCopyTool-0.4.0:62455]    (compile):  43,584.38 ms, 10.91 GB
+[IonicCloudCopyTool-0.4.0:62455]      compile:  65,789.12 ms, 10.91 GB
+[IonicCloudCopyTool-0.4.0:62455]        image:  11,449.58 ms, 10.91 GB
+[IonicCloudCopyTool-0.4.0:62455]        write:   3,868.79 ms, 10.91 GB
+[IonicCloudCopyTool-0.4.0:62455]      [total]: 153,932.43 ms, 10.91 GB
+
+# Definitely getting closer, but this one is strange.
+# The "Failed to parse serialized data" is unexpected. The Ionic SDK swallows the exception details, so we don't have much to go on here.
+$ ./IonicCloudCopyTool-0.4.0 config
+Ionic Configuration Status: ERROR:
+	40010 - Failed to parse serialized data
+
+AWS Credential Configuration: CONFIGURED
+AWS Region Configuration: CONFIGURED
+Google Credential Configuration: ERROR:
+	Error reading credential file from location /Users/timothy/.config/gcloud/application_default_credentials.json: 400 Bad Request
+{
+  "error" : "invalid_grant",
+  "error_description" : "Bad Request"
+}
+
+Azure Credential Configuration: ERROR:
+	AZURE_STORAGE_ACCOUNT is not present in environment.
+
+# Likely related to the `config` error.
+$ ./IonicCloudCopyTool-0.4.0 s3://$BUCKET_NAME/testfile.txt /tmp/testfile.txt.decrypted
+Ionic Persistor not found at: /Users/timothy/.ionicsecurity/profiles.pt
+
+# OK, but these worked before too.
+$ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt /tmp/testfile.txt.2
+$ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt stdout:
+```
+
+So it looks like the error is getting swallowed into an unknown exception and returned as an error. I'll dig into this one later and post another update.
+
+Since this is supposed to be an experience report, here are my thoughts at this point:
+
+* The native image files are *much* faster to startup than the java jars (>10x), which is pretty awesome.
+    * I'll keep messing with graal for that reason alone.
+* The graal java agent (for writing `native-image` config files) is pretty cool, but definitely not a panacea.
+* For larger projects I think these `native-image` config files would get hard to manage.
+    * I would also be pretty uncomfortable deploying something that would hit a runtime exception in case a missing configuration just because I failed to exersize some edge case of the application's behavior to get the agent to write config for me.
+    * I imagine this set of resources would stabilize over time, but as dependencies are updated this gives me yet another edge case of things to check.
+    * This pushes us from the benefits of build time checks backwards to more run time worries. I'm used to dealing with this in python, but I trust large scala, go, and java systems more than python systems because of the safety static compilation and type checking.
+* The swallowing of the native image related runtime exception is unfortunate.
+    * Perhaps there is another way that the runtime can be instrumented to dump more details on error?
+* The native image compile time is very slow.
+    * Like 90s+ for a maven project that takes ~5s.
+    * This makes iteration on this phase of development quite slow, and I imagine it gets worse for substantially larger projects.
+    * I bet running the build in server mode can help with caching of build stages to make this less painful, but still, this is very slow.
+
+In summary: this is really neat technology, but it does have some leaky abstractions associated with it. I can't just toss an uberjar over the wall at `native-image` and expect success. If the technology and solution continues to advance to resolve the complexities associated with reflection and build time I can see this becoming a tool useful for more general problems, but as it stands, I would be most likely to recommend Graal's `native-image` if I know someone really needed fast boot for an existing Java code base, or needed to wrap mature Java libraries for a CLI application. For many other scenarios (like greenfield development) I'd still be more likely to recommend a non-JVM language for these problems, most likely Go or Rust (I haven't played with Rust yet but I hear great things from people I respect).
+
