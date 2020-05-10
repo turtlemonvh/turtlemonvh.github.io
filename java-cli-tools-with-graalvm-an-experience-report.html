@@ -620,6 +620,43 @@ $ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt stdout:
 </li>
 </ul>
 <p>In summary: this is really neat technology, but it does have some leaky abstractions associated with it. I can't just toss an uberjar over the wall at <code>native-image</code> and expect success. If the technology and solution continues to advance to resolve the complexities associated with reflection and build time I can see this becoming a tool useful for more general problems, but as it stands, I would be most likely to recommend Graal's <code>native-image</code> if I know someone really needed fast boot for an existing Java code base, or needed to wrap mature Java libraries for a CLI application. For many other scenarios (like greenfield development) I'd still be more likely to recommend a non-JVM language for these problems, most likely Go or Rust (I haven't played with Rust yet but I hear great things from people I respect).</p>
+<h2>EDIT: 20200510</h2>
+<p>I wanted to make sure the agent has captured any changes from the <code>config</code> command, so I ran that again to merge changes with the existing set of config files.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Checking for updates</span>
+$ md5 src/main/resources/META-INF/native-image/*
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span> <span class="o">=</span> f17c6890ce3e5d805aad7ee46da00fd7
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span> <span class="o">=</span> 12828ec64929f92bbf3e0325b40937a8
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span> <span class="o">=</span> 3b8dc1c1d460ddc8440f2c13bef85288
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span> <span class="o">=</span> e17d413784ceb49b51579047cb4bbd58
+$ ls -latr src/main/resources/META-INF/native-image/*
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">543</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>  <span class="m">14147</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">212</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>      <span class="m">4</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/jni-config.json
+
+<span class="c1"># Run to add new resources</span>
+is-mbp-timothy4:ionic-cloud-copy-tool timothy$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar config
+Ionic Configuration Status: CONFIGURED
+AWS Credential Configuration: CONFIGURED
+AWS Region Configuration: CONFIGURED
+&lt;...&gt;
+
+<span class="c1"># Check again; nothing changed except the timestamps</span>
+$ md5 src/main/resources/META-INF/native-image/*
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span> <span class="o">=</span> f17c6890ce3e5d805aad7ee46da00fd7
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span> <span class="o">=</span> 12828ec64929f92bbf3e0325b40937a8
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span> <span class="o">=</span> 3b8dc1c1d460ddc8440f2c13bef85288
+MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span> <span class="o">=</span> e17d413784ceb49b51579047cb4bbd58
+$ ls -latr src/main/resources/META-INF/native-image/*
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">543</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>  <span class="m">14147</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">212</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>      <span class="m">4</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/jni-config.json
+</pre></div>
+
+
+<p>Since the timestamps of the output files changes but the contents did not, we can be pretty confident that the agent is running and updating the files - it just didn't find anything new. So whatever is going on in the <code>config</code> command, it isn't being captured by the java agent.</p>
+<p>So I need a new approach to get the details of what I'm assuming is an exception thrown inside the Ionic SDK which is getting swallowed into the <a href="https://dev.ionic.com/sdk_docs/ionic_platform_sdk/java/latest/sdk/index.html?constant-values.html">40010 error ("Failed to parse serialized data")</a>.</p>
   </div>
   <div class="tag-cloud">
     <p>
