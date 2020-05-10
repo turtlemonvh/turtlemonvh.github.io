@@ -527,3 +527,43 @@ Since this is supposed to be an experience report, here are my thoughts at this 
 
 In summary: this is really neat technology, but it does have some leaky abstractions associated with it. I can't just toss an uberjar over the wall at `native-image` and expect success. If the technology and solution continues to advance to resolve the complexities associated with reflection and build time I can see this becoming a tool useful for more general problems, but as it stands, I would be most likely to recommend Graal's `native-image` if I know someone really needed fast boot for an existing Java code base, or needed to wrap mature Java libraries for a CLI application. For many other scenarios (like greenfield development) I'd still be more likely to recommend a non-JVM language for these problems, most likely Go or Rust (I haven't played with Rust yet but I hear great things from people I respect).
 
+## EDIT: 20200510
+
+I wanted to make sure the agent has captured any changes from the `config` command, so I ran that again to merge changes with the existing set of config files.
+
+```bash
+# Checking for updates
+$ md5 src/main/resources/META-INF/native-image/*
+MD5 (src/main/resources/META-INF/native-image/jni-config.json) = f17c6890ce3e5d805aad7ee46da00fd7
+MD5 (src/main/resources/META-INF/native-image/proxy-config.json) = 12828ec64929f92bbf3e0325b40937a8
+MD5 (src/main/resources/META-INF/native-image/reflect-config.json) = 3b8dc1c1d460ddc8440f2c13bef85288
+MD5 (src/main/resources/META-INF/native-image/resource-config.json) = e17d413784ceb49b51579047cb4bbd58
+$ ls -latr src/main/resources/META-INF/native-image/*
+-rw-r--r--  1 timothy  1145057864    543 May  9 23:19 src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--  1 timothy  1145057864  14147 May  9 23:19 src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--  1 timothy  1145057864    212 May  9 23:19 src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--  1 timothy  1145057864      4 May  9 23:19 src/main/resources/META-INF/native-image/jni-config.json
+
+# Run to add new resources
+is-mbp-timothy4:ionic-cloud-copy-tool timothy$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent=config-merge-dir=$GRAAL_CONF_DIR -jar target/IonicCloudCopyTool-0.4.0.jar config
+Ionic Configuration Status: CONFIGURED
+AWS Credential Configuration: CONFIGURED
+AWS Region Configuration: CONFIGURED
+<...>
+
+# Check again; nothing changed except the timestamps
+$ md5 src/main/resources/META-INF/native-image/*
+MD5 (src/main/resources/META-INF/native-image/jni-config.json) = f17c6890ce3e5d805aad7ee46da00fd7
+MD5 (src/main/resources/META-INF/native-image/proxy-config.json) = 12828ec64929f92bbf3e0325b40937a8
+MD5 (src/main/resources/META-INF/native-image/reflect-config.json) = 3b8dc1c1d460ddc8440f2c13bef85288
+MD5 (src/main/resources/META-INF/native-image/resource-config.json) = e17d413784ceb49b51579047cb4bbd58
+$ ls -latr src/main/resources/META-INF/native-image/*
+-rw-r--r--  1 timothy  1145057864    543 May 10 00:42 src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--  1 timothy  1145057864  14147 May 10 00:42 src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--  1 timothy  1145057864    212 May 10 00:42 src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--  1 timothy  1145057864      4 May 10 00:42 src/main/resources/META-INF/native-image/jni-config.json
+```
+
+Since the timestamps of the output files changes but the contents did not, we can be pretty confident that the agent is running and updating the files - it just didn't find anything new. So whatever is going on in the `config` command, it isn't being captured by the java agent.
+
+So I need a new approach to get the details of what I'm assuming is an exception thrown inside the Ionic SDK which is getting swallowed into the [40010 error ("Failed to parse serialized data")](https://dev.ionic.com/sdk_docs/ionic_platform_sdk/java/latest/sdk/index.html?constant-values.html).
