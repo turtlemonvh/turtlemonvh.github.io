@@ -6,13 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="" />
+  <meta name="robots" content="" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+
+
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
@@ -23,81 +28,123 @@
 
 
 
+
+
+
+
+
+ 
+
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing new custom domains for …" />
 <meta name="keywords" content="api, dns, aws-api-gateway, aws-lambda, this-blog">
 
-<meta property="og:site_name" content="Systems Doing"/>
-<meta property="og:title" content="HTTP redirects via AWS API Gateway and Lambda"/>
-<meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing new custom domains for …"/>
-<meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
-<meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2019-05-25 18:00:00-04:00"/>
-<meta property="article:modified_time" content="2019-05-27 10:00:00-04:00"/>
-<meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
-<meta property="article:section" content="Articles"/>
-<meta property="article:tag" content="api"/>
-<meta property="article:tag" content="dns"/>
-<meta property="article:tag" content="aws-api-gateway"/>
-<meta property="article:tag" content="aws-lambda"/>
-<meta property="article:tag" content="this-blog"/>
-<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <meta property="og:site_name" content="Systems Doing"/>
+  <meta property="og:title" content="HTTP redirects via AWS API Gateway and Lambda"/>
+  <meta property="og:description" content="This article is a bit messy since I&#39;m experimenting with less editing to get content out a little faster for smaller projects. Feedback on the value of this format would be helpful, e.g. if it is too messy to be coherent / useful. Instead of purchasing new custom domains for …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://turtlemonvh.github.io/http-redirects-via-aws-api-gateway-and-lambda.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2019-05-25 18:00:00-04:00"/>
+  <meta property="article:modified_time" content="2019-05-27 10:00:00-04:00"/>
+  <meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
+  <meta property="article:section" content="Articles"/>
+  <meta property="article:tag" content="api"/>
+  <meta property="article:tag" content="dns"/>
+  <meta property="article:tag" content="aws-api-gateway"/>
+  <meta property="article:tag" content="aws-lambda"/>
+  <meta property="article:tag" content="this-blog"/>
+  <meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
 
   <title>Systems Doing &ndash; HTTP redirects via AWS API Gateway and Lambda</title>
 
+
 </head>
-<body>
-  <aside>
-    <div>
-      <a href="https://turtlemonvh.github.io">
-        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
-      </a>
-      <h1><a href="https://turtlemonvh.github.io">Systems Doing</a></h1>
+<body class="light-theme">
 
-<p>Looking for beauty in the complex and the simple.</p>
-      <nav>
-        <ul class="list">
-          <li><a href="https://turtlemonvh.github.io/pages/home.html">Home</a></li>
-          <li><a href="https://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+<aside>
+  <div>
+    <a href="https://turtlemonvh.github.io/">
+      <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+    </a>
 
-          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
-          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
-          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
-        </ul>
-      </nav>
+    <h1>
+      <a href="https://turtlemonvh.github.io/">Systems Doing</a>
+    </h1>
 
-      <ul class="social">
+    <p>Looking for beauty in the complex and the simple.</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/home.html">
+                Home
+              </a>
+            </li>
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/projects.html">
+                Projects
+              </a>
+            </li>
+
           <li>
-            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
-            <i class="fab fa-twitter">
-            </i>
-          </a></li>
+            <a target="_self" href="https://about.me/turtlemonvh" >about.me</a>
+          </li>
           <li>
-            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
-            <i class="fab fa-github">
-            </i>
-          </a></li>
+            <a target="_self" href="https://www.dropbox.com/scl/fi/iqwp08l5mlb0gnv3kq5dm/TVH-Resume-2023-09-09.pdf?rlkey=4ixwskt3m9f4ceqcnnes2hrfn&raw=1" >resume</a>
+          </li>
           <li>
-            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
-            <i class="fab fa-linkedin">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
-            <i class="fab fa-bitbucket">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
-            <i class="fab fa-stack-overflow">
-            </i>
-          </a></li>
+            <a target="_self" href="http://turtle-philosophy.blogspot.com/" >old blog</a>
+          </li>
       </ul>
-    </div>
+    </nav>
 
+    <ul class="social">
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-github"
+           href="https://github.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/vanheetm"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-bitbucket"
+           href="https://bitbucket.org/turtlemonvh/"
+           target="_blank">
+          <i class="fa-brands fa-bitbucket"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-stack-overflow"
+           href="http://stackoverflow.com/users/790075/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-stack-overflow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-  </aside>
+</aside>
   <main>
 
 
@@ -106,8 +153,7 @@
       
     <h1 id="http-redirects-via-aws-api-gateway-and-lambda">HTTP redirects via AWS API Gateway and Lambda</h1>
     <p>
-          Posted on Sat 25 May 2019 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
-
+      Posted on Sat 25 May 2019 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
 
     </p>
   </header>
@@ -120,7 +166,7 @@
 <p>Instead of purchasing new custom domains for each of my side projects, I decided to start hosting more resources under 1 common domain name.  I purchased <code>vhtech.net</code> for this purpose.</p>
 <p>I wanted to make <code>blog.vhtech.net</code> redirect to <code>turtlemonvh.github.io</code>.  My first attempt was adding a CNAME record, but this didn't work because of cross resource / virtual host issues with the way github serves their pages.  I know that <a href="https://help.github.com/en/articles/using-a-custom-domain-with-github-pages">github pages supports custom domains</a>, but I still want to keep the <code>turtlemonvh.github.io</code> address, so I decided to set up a simple http redirect instead.</p>
 <p>Also, I figured this would be a nice way to learn a bit more about AWS Lambda functions and API Gateway.  My Lambda function looks like this (which is a port of <a href="https://gist.github.com/DavidWells/99216c20cdb3df334d5b98ff19644fa2">this nodejs version</a> with a little extra path handling):</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="c1"># https://docs.aws.amazon.com/lambda/latest/dg/with-on-demand-https.html</span>
@@ -132,8 +178,7 @@
             <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>I first tried to set up the API Gateway connection via the Lambda dashboard, but ran into a few issues. API Gateway created a resource like this: <code>https://s9jkfvzuq2.execute-api.us-east-1.amazonaws.com/default/</code></p>
 <p>One problem was the <code>default</code> in this uri. I wanted to add the Lambda function url (actually the API Gateway url, which calls the Lambda in proxy mode) as a dns entry, so I need the root of the api to be an empty path.</p>
@@ -218,83 +263,82 @@ https://aws.amazon.com/premiumsupport/knowledge-center/api-gateway-cloudfront-di
 <p>... but even after I did all above I ran into <em>another</em> issue.</p>
 <p>My CloudFront distribition url, <code>d7v7skc7xxa1j.cloudfront.net</code>, still returned <code>missing authentication token</code> when I hit <code>http://d7v7skc7xxa1j.cloudfront.net</code> (which did properly redirect to <code>https</code>). Going to <code>http://d7v7skc7xxa1j.cloudfront.net/a</code> did properly redirect to <code>https://turtlemonvh.github.io/a</code>. I thought this may be because of how API Gateway handles the <code>stage</code> portion of its urls, or because I didn't set <code>Default Root Object</code> in my CloudFront configuration, but when I looked more into the documentation, neither of these theories panned out.</p>
 <p>Here are the redirect chains I was seeing for <code>curl -LI http://blog.vhtech.net/a</code>.</p>
-<div class="highlight"><pre><span></span><span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
-<span class="nt">Server</span><span class="o">:</span> <span class="nt">CloudFront</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">183</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">blog</span><span class="p">.</span><span class="nc">vhtech</span><span class="p">.</span><span class="nc">net</span><span class="o">/</span><span class="nt">a</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Redirect</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">4eb6db543899d63048055031c3411b01</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
-<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">9zT3MdPoKJ4vhyiSd5n3W8v6WfYcoDmGVQG2-k0etg7UthnMrvbelw</span><span class="o">==</span>
+<div class="highlight"><pre><span></span><code><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">301</span> <span class="ne">Moved Permanently</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">CloudFront</span>
+<span class="na">Date</span><span class="o">:</span> <span class="l">Sun, 26 May 2019 20:57:35 GMT</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/html</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">183</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Location</span><span class="o">:</span> <span class="l">https://blog.vhtech.net/a</span>
+<span class="na">X-Cache</span><span class="o">:</span> <span class="l">Redirect from cloudfront</span>
+<span class="na">Via</span><span class="o">:</span> <span class="l">1.1 4eb6db543899d63048055031c3411b01.cloudfront.net (CloudFront)</span>
+<span class="na">X-Amz-Cf-Id</span><span class="o">:</span> <span class="l">9zT3MdPoKJ4vhyiSd5n3W8v6WfYcoDmGVQG2-k0etg7UthnMrvbelw==</span>
 
-<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">application</span><span class="o">/</span><span class="nt">json</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">0</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">56</span><span class="p">:</span><span class="nd">02</span> <span class="nt">GMT</span>
-<span class="nt">x-amzn-RequestId</span><span class="o">:</span> <span class="nt">ac053546-7ff8-11e9-8c14-63ee0d562e8e</span>
-<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
-<span class="nt">x-amz-apigw-id</span><span class="o">:</span> <span class="nt">aTyHaHHuIAMFiKw</span><span class="o">=</span>
-<span class="nt">Location</span><span class="o">:</span> <span class="nt">http</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span><span class="nt">a</span>
-<span class="nt">X-Amzn-Trace-Id</span><span class="o">:</span> <span class="nt">Root</span><span class="o">=</span><span class="nt">1-5ceafd62-b41390d052c8716845179af8</span><span class="o">;</span><span class="nt">Sampled</span><span class="o">=</span><span class="nt">0</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Hit</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">1c1b89f1f3c38ed1685254901bc8fb2d</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
-<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">XUPJC2iPgcM36P8jzWj49s3sC0KVceusch-vJEJ6PYq6Io7j4Xx4Eg</span><span class="o">==</span>
+HTTP/1.1 301 Moved Permanently
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Date: Sun, 26 May 2019 20:56:02 GMT
+x-amzn-RequestId: ac053546-7ff8-11e9-8c14-63ee0d562e8e
+Access-Control-Allow-Origin: *
+x-amz-apigw-id: aTyHaHHuIAMFiKw=
+Location: http://turtlemonvh.github.io/a
+X-Amzn-Trace-Id: Root=1-5ceafd62-b41390d052c8716845179af8;Sampled=0
+Age: 93
+X-Cache: Hit from cloudfront
+Via: 1.1 1c1b89f1f3c38ed1685254901bc8fb2d.cloudfront.net (CloudFront)
+X-Amz-Cf-Id: XUPJC2iPgcM36P8jzWj49s3sC0KVceusch-vJEJ6PYq6Io7j4Xx4Eg==
 
-<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
-<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
-<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span><span class="nt">a</span>
-<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">7D64</span><span class="p">:</span><span class="nd">097A</span><span class="p">:</span><span class="nd">227A7A1</span><span class="p">:</span><span class="nd">2CF784A</span><span class="p">:</span><span class="nd">5CEAFD5C</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">178</span>
-<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-fty21334-FTY</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
-<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
-<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558904256</span><span class="p">.</span><span class="nc">598708</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
-<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
-<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">7bc012ee4bdcbc6a04bb43a60a854ca2e09491c6</span>
+HTTP/1.1 301 Moved Permanently
+Server: GitHub.com
+Content-Type: text/html
+Location: https://turtlemonvh.github.io/a
+X-GitHub-Request-Id: 7D64:097A:227A7A1:2CF784A:5CEAFD5C
+Content-Length: 178
+Accept-Ranges: bytes
+Date: Sun, 26 May 2019 20:57:35 GMT
+Via: 1.1 varnish
+Age: 93
+Connection: keep-alive
+X-Served-By: cache-fty21334-FTY
+X-Cache: HIT
+X-Cache-Hits: 1
+X-Timer: S1558904256.598708,VS0,VE0
+Vary: Accept-Encoding
+X-Fastly-Request-ID: 7bc012ee4bdcbc6a04bb43a60a854ca2e09491c6
 
-<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">404</span> <span class="nt">Not</span> <span class="nt">Found</span>
-<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span><span class="o">;</span> <span class="nt">charset</span><span class="o">=</span><span class="nt">utf-8</span>
-<span class="nt">ETag</span><span class="o">:</span> <span class="s2">&quot;5cc0aee0-247b&quot;</span>
-<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
-<span class="nt">Content-Security-Policy</span><span class="o">:</span> <span class="nt">default-src</span> <span class="s1">&#39;none&#39;</span><span class="o">;</span> <span class="nt">style-src</span> <span class="s1">&#39;unsafe-inline&#39;</span><span class="o">;</span> <span class="nt">img-src</span> <span class="nt">data</span><span class="o">:;</span> <span class="nt">connect-src</span> <span class="s1">&#39;self&#39;</span>
-<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">7012</span><span class="p">:</span><span class="nd">50DA</span><span class="p">:</span><span class="nd">200D22B</span><span class="p">:</span><span class="nd">29F3365</span><span class="p">:</span><span class="nd">5CEAFD60</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">9339</span>
-<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">20</span><span class="p">:</span><span class="nd">57</span><span class="p">:</span><span class="nd">35</span> <span class="nt">GMT</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">93</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-fty21350-FTY</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
-<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
-<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558904256</span><span class="p">.</span><span class="nc">846499</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
-<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
-<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">2d7005d30627ba7d9b953c37aee457d6ec6a3048</span>
-</pre></div>
-
+HTTP/1.1 404 Not Found
+Server: GitHub.com
+Content-Type: text/html; charset=utf-8
+ETag: &quot;5cc0aee0-247b&quot;
+Access-Control-Allow-Origin: *
+Content-Security-Policy: default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; connect-src &#39;self&#39;
+X-GitHub-Request-Id: 7012:50DA:200D22B:29F3365:5CEAFD60
+Content-Length: 9339
+Accept-Ranges: bytes
+Date: Sun, 26 May 2019 20:57:35 GMT
+Via: 1.1 varnish
+Age: 93
+Connection: keep-alive
+X-Served-By: cache-fty21350-FTY
+X-Cache: HIT
+X-Cache-Hits: 1
+X-Timer: S1558904256.846499,VS0,VE0
+Vary: Accept-Encoding
+X-Fastly-Request-ID: 2d7005d30627ba7d9b953c37aee457d6ec6a3048
+</code></pre></div>
 
 <p>Contrast that with what we see when we do <code>curl -LI http://blog.vhtech.net/</code>.</p>
-<div class="highlight"><pre><span></span>HTTP/1.1 301 Moved Permanently
-Server: CloudFront
-Date: Sun, 26 May 2019 22:46:23 GMT
-Content-Type: text/html
-Content-Length: 183
-Connection: keep-alive
-Location: https://blog.vhtech.net/
-X-Cache: Redirect from cloudfront
-Via: 1.1 2049bafbdd2d1f88e039f5995c93088a.cloudfront.net (CloudFront)
-X-Amz-Cf-Id: NIVeaHPk_0vDc-lmCygVoLvdwl_8bPV7M34ZAegocGzJRc0V7GQuUQ==
+<div class="highlight"><pre><span></span><code><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">301</span> <span class="ne">Moved Permanently</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">CloudFront</span>
+<span class="na">Date</span><span class="o">:</span> <span class="l">Sun, 26 May 2019 22:46:23 GMT</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/html</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">183</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Location</span><span class="o">:</span> <span class="l">https://blog.vhtech.net/</span>
+<span class="na">X-Cache</span><span class="o">:</span> <span class="l">Redirect from cloudfront</span>
+<span class="na">Via</span><span class="o">:</span> <span class="l">1.1 2049bafbdd2d1f88e039f5995c93088a.cloudfront.net (CloudFront)</span>
+<span class="na">X-Amz-Cf-Id</span><span class="o">:</span> <span class="l">NIVeaHPk_0vDc-lmCygVoLvdwl_8bPV7M34ZAegocGzJRc0V7GQuUQ==</span>
 
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -307,8 +351,7 @@ x-amz-apigw-id: aUCR7Fy1IAMFpBQ=
 X-Cache: Error from cloudfront
 Via: 1.1 77b355e48e983a9f568a89f4dbebf383.cloudfront.net (CloudFront)
 X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
-</pre></div>
-
+</code></pre></div>
 
 <p>After more digging, I noticed this on text on page that API Gateway shows in the console when attempting to create a new resource.</p>
 <blockquote>
@@ -316,62 +359,61 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
 </blockquote>
 <p><img src="/images/blog-redirect-via-aws/API_Gateway_ANY_method_root.png" alt="ANY method on /" style="width: 75%; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/></p>
 <p>After adding <code>ANY</code> and <code>OPTIONS</code> methods to the <code>/</code> resource and deploying the changes to the API, I see the following for <code>curl -LI http://blog.vhtech.net/</code>.</p>
-<div class="highlight"><pre><span></span><span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">application</span><span class="o">/</span><span class="nt">json</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">0</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">30</span><span class="p">:</span><span class="nd">48</span> <span class="nt">GMT</span>
-<span class="nt">x-amzn-RequestId</span><span class="o">:</span> <span class="nt">4b08402c-800e-11e9-93fb-37487883e1b4</span>
-<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
-<span class="nt">x-amz-apigw-id</span><span class="o">:</span> <span class="nt">aUIyYGsyoAMFgzA</span><span class="o">=</span>
-<span class="nt">Location</span><span class="o">:</span> <span class="nt">http</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span>
-<span class="nt">X-Amzn-Trace-Id</span><span class="o">:</span> <span class="nt">Root</span><span class="o">=</span><span class="nt">1-5ceb21a8-d2af9bc886fa43bc4f42971b</span><span class="o">;</span><span class="nt">Sampled</span><span class="o">=</span><span class="nt">0</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">161</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">Hit</span> <span class="nt">from</span> <span class="nt">cloudfront</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">0a576c2dd3353021ea1e162ded4d3a7d</span><span class="p">.</span><span class="nc">cloudfront</span><span class="p">.</span><span class="nc">net</span> <span class="o">(</span><span class="nt">CloudFront</span><span class="o">)</span>
-<span class="nt">X-Amz-Cf-Id</span><span class="o">:</span> <span class="nt">2tcrphTEEMvM71W-48mVX3db_6NI5FM8vNvsy0hiYo3LmjyNiVCYTg</span><span class="o">==</span>
+<div class="highlight"><pre><span></span><code><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">301</span> <span class="ne">Moved Permanently</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Date</span><span class="o">:</span> <span class="l">Sun, 26 May 2019 23:30:48 GMT</span>
+<span class="na">x-amzn-RequestId</span><span class="o">:</span> <span class="l">4b08402c-800e-11e9-93fb-37487883e1b4</span>
+<span class="na">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="l">*</span>
+<span class="na">x-amz-apigw-id</span><span class="o">:</span> <span class="l">aUIyYGsyoAMFgzA=</span>
+<span class="na">Location</span><span class="o">:</span> <span class="l">http://turtlemonvh.github.io/</span>
+<span class="na">X-Amzn-Trace-Id</span><span class="o">:</span> <span class="l">Root=1-5ceb21a8-d2af9bc886fa43bc4f42971b;Sampled=0</span>
+<span class="na">Age</span><span class="o">:</span> <span class="l">161</span>
+<span class="na">X-Cache</span><span class="o">:</span> <span class="l">Hit from cloudfront</span>
+<span class="na">Via</span><span class="o">:</span> <span class="l">1.1 0a576c2dd3353021ea1e162ded4d3a7d.cloudfront.net (CloudFront)</span>
+<span class="na">X-Amz-Cf-Id</span><span class="o">:</span> <span class="l">2tcrphTEEMvM71W-48mVX3db_6NI5FM8vNvsy0hiYo3LmjyNiVCYTg==</span>
 
-<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">301</span> <span class="nt">Moved</span> <span class="nt">Permanently</span>
-<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
-<span class="nt">Location</span><span class="o">:</span> <span class="nt">https</span><span class="o">://</span><span class="nt">turtlemonvh</span><span class="p">.</span><span class="nc">github</span><span class="p">.</span><span class="nc">io</span><span class="o">/</span>
-<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">B968</span><span class="p">:</span><span class="nd">0FB6</span><span class="p">:</span><span class="nd">60B7C1</span><span class="p">:</span><span class="nd">7F24DE</span><span class="p">:</span><span class="nd">5CEB2192</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">178</span>
-<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">33</span><span class="p">:</span><span class="nd">29</span> <span class="nt">GMT</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">176</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-atl6221-ATL</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
-<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">1</span>
-<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558913610</span><span class="p">.</span><span class="nc">918408</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
-<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
-<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">b6a3eb53b8ceeed706fdd6a4e014727d29343fe5</span>
+<span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="err">Moved</span><span class="w"> </span><span class="err">Perma</span><span class="kc">nentl</span><span class="err">y</span>
+<span class="err">Server</span><span class="p">:</span><span class="w"> </span><span class="err">Gi</span><span class="kc">t</span><span class="err">Hub.com</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span><span class="err">/h</span><span class="kc">t</span><span class="err">ml</span>
+<span class="err">Loca</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">h</span><span class="kc">tt</span><span class="err">ps</span><span class="p">:</span><span class="c1">//turtlemonvh.github.io/</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Gi</span><span class="kc">t</span><span class="err">Hub</span><span class="mi">-</span><span class="err">Reques</span><span class="kc">t</span><span class="mi">-</span><span class="err">Id</span><span class="p">:</span><span class="w"> </span><span class="err">B</span><span class="mi">968</span><span class="p">:</span><span class="mi">0</span><span class="err">FB</span><span class="mi">6</span><span class="p">:</span><span class="mi">60</span><span class="err">B</span><span class="mi">7</span><span class="err">C</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="err">F</span><span class="mi">24</span><span class="err">DE</span><span class="p">:</span><span class="mi">5</span><span class="err">CEB</span><span class="mi">2192</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Le</span><span class="kc">n</span><span class="err">g</span><span class="kc">t</span><span class="err">h</span><span class="p">:</span><span class="w"> </span><span class="mi">178</span>
+<span class="err">Accep</span><span class="kc">t</span><span class="mi">-</span><span class="err">Ra</span><span class="kc">n</span><span class="err">ges</span><span class="p">:</span><span class="w"> </span><span class="err">by</span><span class="kc">tes</span>
+<span class="err">Da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="err">Su</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="w"> </span><span class="err">May</span><span class="w"> </span><span class="mi">2019</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">29</span><span class="w"> </span><span class="err">GMT</span>
+<span class="err">Via</span><span class="p">:</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="err">var</span><span class="kc">n</span><span class="err">ish</span>
+<span class="err">Age</span><span class="p">:</span><span class="w"> </span><span class="mi">176</span>
+<span class="err">Co</span><span class="kc">nne</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">keep</span><span class="mi">-</span><span class="err">alive</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Served</span><span class="mi">-</span><span class="err">By</span><span class="p">:</span><span class="w"> </span><span class="err">cache</span><span class="mi">-</span><span class="err">a</span><span class="kc">tl</span><span class="mi">6221-</span><span class="err">ATL</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Cache</span><span class="p">:</span><span class="w"> </span><span class="err">HIT</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Cache</span><span class="mi">-</span><span class="err">Hi</span><span class="kc">ts</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Timer</span><span class="p">:</span><span class="w"> </span><span class="err">S</span><span class="mf">1558913610.918408</span><span class="p">,</span><span class="err">VS</span><span class="mi">0</span><span class="p">,</span><span class="err">VE</span><span class="mi">0</span>
+<span class="err">Vary</span><span class="p">:</span><span class="w"> </span><span class="err">Accep</span><span class="kc">t</span><span class="mf">-E</span><span class="kc">n</span><span class="err">codi</span><span class="kc">n</span><span class="err">g</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Fas</span><span class="kc">tl</span><span class="err">y</span><span class="mi">-</span><span class="err">Reques</span><span class="kc">t</span><span class="mi">-</span><span class="err">ID</span><span class="p">:</span><span class="w"> </span><span class="err">b</span><span class="mi">6</span><span class="err">a</span><span class="mf">3e</span><span class="err">b</span><span class="mi">53</span><span class="err">b</span><span class="mi">8</span><span class="err">ceeed</span><span class="mi">706</span><span class="kc">f</span><span class="err">dd</span><span class="mi">6</span><span class="err">a</span><span class="mf">4e014727</span><span class="err">d</span><span class="mi">29343</span><span class="kc">fe</span><span class="mi">5</span>
 
-<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">200</span> <span class="nt">OK</span>
-<span class="nt">Server</span><span class="o">:</span> <span class="nt">GitHub</span><span class="p">.</span><span class="nc">com</span>
-<span class="nt">Content-Type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span><span class="o">;</span> <span class="nt">charset</span><span class="o">=</span><span class="nt">utf-8</span>
-<span class="nt">Last-Modified</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">19</span><span class="p">:</span><span class="nd">31</span><span class="p">:</span><span class="nd">17</span> <span class="nt">GMT</span>
-<span class="nt">ETag</span><span class="o">:</span> <span class="s2">&quot;5ceae985-4071&quot;</span>
-<span class="nt">Access-Control-Allow-Origin</span><span class="o">:</span> <span class="o">*</span>
-<span class="nt">Expires</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">40</span><span class="p">:</span><span class="nd">34</span> <span class="nt">GMT</span>
-<span class="nt">Cache-Control</span><span class="o">:</span> <span class="nt">max-age</span><span class="o">=</span><span class="nt">600</span>
-<span class="nt">X-GitHub-Request-Id</span><span class="o">:</span> <span class="nt">83B2</span><span class="p">:</span><span class="nd">33ED</span><span class="p">:</span><span class="nd">10C3628</span><span class="p">:</span><span class="nd">1569AA0</span><span class="p">:</span><span class="nd">5CEB2195</span>
-<span class="nt">Content-Length</span><span class="o">:</span> <span class="nt">16497</span>
-<span class="nt">Accept-Ranges</span><span class="o">:</span> <span class="nt">bytes</span>
-<span class="nt">Date</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">26</span> <span class="nt">May</span> <span class="nt">2019</span> <span class="nt">23</span><span class="p">:</span><span class="nd">33</span><span class="p">:</span><span class="nd">29</span> <span class="nt">GMT</span>
-<span class="nt">Via</span><span class="o">:</span> <span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">varnish</span>
-<span class="nt">Age</span><span class="o">:</span> <span class="nt">176</span>
-<span class="nt">Connection</span><span class="o">:</span> <span class="nt">keep-alive</span>
-<span class="nt">X-Served-By</span><span class="o">:</span> <span class="nt">cache-atl6233-ATL</span>
-<span class="nt">X-Cache</span><span class="o">:</span> <span class="nt">HIT</span>
-<span class="nt">X-Cache-Hits</span><span class="o">:</span> <span class="nt">2</span>
-<span class="nt">X-Timer</span><span class="o">:</span> <span class="nt">S1558913610</span><span class="p">.</span><span class="nc">992689</span><span class="o">,</span><span class="nt">VS0</span><span class="o">,</span><span class="nt">VE0</span>
-<span class="nt">Vary</span><span class="o">:</span> <span class="nt">Accept-Encoding</span>
-<span class="nt">X-Fastly-Request-ID</span><span class="o">:</span> <span class="nt">dd197651fb8823a9113cb41c2479dedc7ecf026a</span>
-</pre></div>
-
+<span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="err">OK</span>
+<span class="err">Server</span><span class="p">:</span><span class="w"> </span><span class="err">Gi</span><span class="kc">t</span><span class="err">Hub.com</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span><span class="err">/h</span><span class="kc">t</span><span class="err">ml;</span><span class="w"> </span><span class="err">charse</span><span class="kc">t</span><span class="err">=u</span><span class="kc">tf</span><span class="mi">-8</span>
+<span class="err">Las</span><span class="kc">t</span><span class="mi">-</span><span class="err">Modi</span><span class="kc">f</span><span class="err">ied</span><span class="p">:</span><span class="w"> </span><span class="err">Su</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="w"> </span><span class="err">May</span><span class="w"> </span><span class="mi">2019</span><span class="w"> </span><span class="mi">19</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">17</span><span class="w"> </span><span class="err">GMT</span>
+<span class="err">ETag</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5ceae985-4071&quot;</span>
+<span class="err">Access</span><span class="mi">-</span><span class="err">Co</span><span class="kc">ntr</span><span class="err">ol</span><span class="mi">-</span><span class="err">Allow</span><span class="mi">-</span><span class="err">Origi</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">*</span>
+<span class="err">Expires</span><span class="p">:</span><span class="w"> </span><span class="err">Su</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="w"> </span><span class="err">May</span><span class="w"> </span><span class="mi">2019</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">34</span><span class="w"> </span><span class="err">GMT</span>
+<span class="err">Cache</span><span class="mi">-</span><span class="err">Co</span><span class="kc">ntr</span><span class="err">ol</span><span class="p">:</span><span class="w"> </span><span class="err">max</span><span class="mi">-</span><span class="err">age=</span><span class="mi">600</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Gi</span><span class="kc">t</span><span class="err">Hub</span><span class="mi">-</span><span class="err">Reques</span><span class="kc">t</span><span class="mi">-</span><span class="err">Id</span><span class="p">:</span><span class="w"> </span><span class="mi">83</span><span class="err">B</span><span class="mi">2</span><span class="p">:</span><span class="mf">33E</span><span class="err">D</span><span class="p">:</span><span class="mi">10</span><span class="err">C</span><span class="mi">3628</span><span class="p">:</span><span class="mi">1569</span><span class="err">AA</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="err">CEB</span><span class="mi">2195</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Le</span><span class="kc">n</span><span class="err">g</span><span class="kc">t</span><span class="err">h</span><span class="p">:</span><span class="w"> </span><span class="mi">16497</span>
+<span class="err">Accep</span><span class="kc">t</span><span class="mi">-</span><span class="err">Ra</span><span class="kc">n</span><span class="err">ges</span><span class="p">:</span><span class="w"> </span><span class="err">by</span><span class="kc">tes</span>
+<span class="err">Da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="err">Su</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="w"> </span><span class="err">May</span><span class="w"> </span><span class="mi">2019</span><span class="w"> </span><span class="mi">23</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">29</span><span class="w"> </span><span class="err">GMT</span>
+<span class="err">Via</span><span class="p">:</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="err">var</span><span class="kc">n</span><span class="err">ish</span>
+<span class="err">Age</span><span class="p">:</span><span class="w"> </span><span class="mi">176</span>
+<span class="err">Co</span><span class="kc">nne</span><span class="err">c</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">keep</span><span class="mi">-</span><span class="err">alive</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Served</span><span class="mi">-</span><span class="err">By</span><span class="p">:</span><span class="w"> </span><span class="err">cache</span><span class="mi">-</span><span class="err">a</span><span class="kc">tl</span><span class="mi">6233-</span><span class="err">ATL</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Cache</span><span class="p">:</span><span class="w"> </span><span class="err">HIT</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Cache</span><span class="mi">-</span><span class="err">Hi</span><span class="kc">ts</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Timer</span><span class="p">:</span><span class="w"> </span><span class="err">S</span><span class="mf">1558913610.992689</span><span class="p">,</span><span class="err">VS</span><span class="mi">0</span><span class="p">,</span><span class="err">VE</span><span class="mi">0</span>
+<span class="err">Vary</span><span class="p">:</span><span class="w"> </span><span class="err">Accep</span><span class="kc">t</span><span class="mf">-E</span><span class="kc">n</span><span class="err">codi</span><span class="kc">n</span><span class="err">g</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">Fas</span><span class="kc">tl</span><span class="err">y</span><span class="mi">-</span><span class="err">Reques</span><span class="kc">t</span><span class="mi">-</span><span class="err">ID</span><span class="p">:</span><span class="w"> </span><span class="err">dd</span><span class="mi">197651</span><span class="kc">f</span><span class="err">b</span><span class="mi">8823</span><span class="err">a</span><span class="mi">9113</span><span class="err">cb</span><span class="mi">41</span><span class="err">c</span><span class="mi">2479</span><span class="err">dedc</span><span class="mf">7e</span><span class="err">c</span><span class="kc">f</span><span class="mi">026</span><span class="err">a</span>
+</code></pre></div>
 
 <p>This is the <code>http://blog.vhtech.net -&gt; https://blog.vhtech.net -&gt; https://turtlemonvh.github.io</code> chain we're looking for!</p>
 <p>I think I had missed this a few times earlier in my testing because my original distribution <em>did</em> include the appropriate resources on the root object, and <a href="https://stackoverflow.com/questions/9130422/how-long-do-browsers-cache-http-301s">I <em>think</em> my browser was caching the 301 responses I was sending</a>, so browser testing looked fine when requesting with path <code>/</code> even though using <code>curl</code> gave a different result (e.g. <code>403</code> vs <code>200</code>). So a note for those who follow (including my future self!): watch out for caching when setting up these resources.</p>
@@ -412,6 +454,7 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
 
 
 
+
 <!-- Disqus -->
 <div id="disqus_thread"></div>
 <script type="text/javascript">
@@ -423,20 +466,16 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
-    <footer>
+<footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
-</p>    </footer>
-  </main>
-
-
-
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p></footer>  </main>
 
 <script type="application/ld+json">
 {
@@ -448,6 +487,5 @@ X-Amz-Cf-Id: 411tPFqGdyHOFjJb7YWas8OCssEXNiak6CPl_Y2A020t9F7EEyZyWw==
   "description": "Thoughts and writings"
 }
 </script>
-
 </body>
 </html>

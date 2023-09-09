@@ -6,13 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="" />
+  <meta name="robots" content="" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+
+
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
@@ -23,78 +28,120 @@
 
 
 
+
+
+
+
+
+ 
+
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository …" />
 <meta name="keywords" content="meta, this-blog">
 
-<meta property="og:site_name" content="Systems Doing"/>
-<meta property="og:title" content="Using pelican and github user pages to setup a blog"/>
-<meta property="og:description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository …"/>
-<meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://turtlemonvh.github.io/using-pelican-and-github-user-pages-to-setup-a-blog.html"/>
-<meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2015-12-27 17:00:00-05:00"/>
-<meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
-<meta property="article:section" content="Articles"/>
-<meta property="article:tag" content="meta"/>
-<meta property="article:tag" content="this-blog"/>
-<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <meta property="og:site_name" content="Systems Doing"/>
+  <meta property="og:title" content="Using pelican and github user pages to setup a blog"/>
+  <meta property="og:description" content="This post explains how I set up this blog. I wrote this partly for myself to make sure I had a well documented way to configure development, and partly for my sister @woah_caitlyn so she could copy any useful parts to make sites for herself and for friends. Create repository …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://turtlemonvh.github.io/using-pelican-and-github-user-pages-to-setup-a-blog.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2015-12-27 17:00:00-05:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
+  <meta property="article:section" content="Articles"/>
+  <meta property="article:tag" content="meta"/>
+  <meta property="article:tag" content="this-blog"/>
+  <meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
 
   <title>Systems Doing &ndash; Using pelican and github user pages to setup a blog</title>
 
+
 </head>
-<body>
-  <aside>
-    <div>
-      <a href="https://turtlemonvh.github.io">
-        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
-      </a>
-      <h1><a href="https://turtlemonvh.github.io">Systems Doing</a></h1>
+<body class="light-theme">
 
-<p>Looking for beauty in the complex and the simple.</p>
-      <nav>
-        <ul class="list">
-          <li><a href="https://turtlemonvh.github.io/pages/home.html">Home</a></li>
-          <li><a href="https://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+<aside>
+  <div>
+    <a href="https://turtlemonvh.github.io/">
+      <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+    </a>
 
-          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
-          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
-          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
-        </ul>
-      </nav>
+    <h1>
+      <a href="https://turtlemonvh.github.io/">Systems Doing</a>
+    </h1>
 
-      <ul class="social">
+    <p>Looking for beauty in the complex and the simple.</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/home.html">
+                Home
+              </a>
+            </li>
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/projects.html">
+                Projects
+              </a>
+            </li>
+
           <li>
-            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
-            <i class="fab fa-twitter">
-            </i>
-          </a></li>
+            <a target="_self" href="https://about.me/turtlemonvh" >about.me</a>
+          </li>
           <li>
-            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
-            <i class="fab fa-github">
-            </i>
-          </a></li>
+            <a target="_self" href="https://www.dropbox.com/scl/fi/iqwp08l5mlb0gnv3kq5dm/TVH-Resume-2023-09-09.pdf?rlkey=4ixwskt3m9f4ceqcnnes2hrfn&raw=1" >resume</a>
+          </li>
           <li>
-            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
-            <i class="fab fa-linkedin">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
-            <i class="fab fa-bitbucket">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
-            <i class="fab fa-stack-overflow">
-            </i>
-          </a></li>
+            <a target="_self" href="http://turtle-philosophy.blogspot.com/" >old blog</a>
+          </li>
       </ul>
-    </div>
+    </nav>
 
+    <ul class="social">
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-github"
+           href="https://github.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/vanheetm"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-bitbucket"
+           href="https://bitbucket.org/turtlemonvh/"
+           target="_blank">
+          <i class="fa-brands fa-bitbucket"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-stack-overflow"
+           href="http://stackoverflow.com/users/790075/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-stack-overflow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-  </aside>
+</aside>
   <main>
 
 
@@ -103,8 +150,7 @@
       
     <h1 id="using-pelican-and-github-user-pages-to-setup-a-blog">Using pelican and github user pages to setup a blog</h1>
     <p>
-          Posted on Sun 27 December 2015 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
-
+      Posted on Sun 27 December 2015 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
 
     </p>
   </header>
@@ -120,44 +166,41 @@
 <h2>Pelican setup</h2>
 <p>I followed the instructions <a href="http://docs.getpelican.com/en/stable/quickstart.html">in the quickstart</a> to set up pelican.  One change is that I ran <code>pip install pelican markdown ghp-import</code> to get the <code>ghp-import</code> package too.</p>
 <p>Next I ran <code>pelican-quickstart</code> to generate the initial content. Here are the values I used at the prompts.</p>
-<div class="highlight"><pre><span></span>&amp;gt; Where do you want to create your new web site? [.]
-&amp;gt; What will be the title of this web site? Systems Doing
-&amp;gt; Who will be the author of this web site? turtlemonvh
-&amp;gt; What will be the default language of this web site? [en]
-&amp;gt; Do you want to specify a URL prefix? e.g., http://example.com   (Y/n) Y
-&amp;gt; What is your URL prefix? (see above example; no trailing slash) http://turtlemonvh.github.io/
-&amp;gt; Do you want to enable article pagination? (Y/n) Y
-&amp;gt; How many articles per page do you want? [10]
-&amp;gt; What is your time zone? [Europe/Paris] America/New_York
-&amp;gt; Do you want to generate a Fabfile/Makefile to automate generation and publishing? (Y/n) n
-&amp;gt; Do you want an auto-reload &amp;amp; simpleHTTP script to assist with theme and site development? (Y/n) Y
-Done. Your new project is available at /Users/timothy/Projects/turtlemonvh.github.io
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span><span class="w"> </span><span class="k">Where</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">.</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="n">Systems</span><span class="w"> </span><span class="n">Doing</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Who</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">author</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="n">turtlemonvh</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="k">language</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">en</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">specify</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">prefix</span><span class="vm">?</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.,</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">   </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Y</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">prefix</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">see</span><span class="w"> </span><span class="n">above</span><span class="w"> </span><span class="n">example</span><span class="p">;</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">trailing</span><span class="w"> </span><span class="n">slash</span><span class="p">)</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">turtlemonvh</span><span class="p">.</span><span class="n">github</span><span class="p">.</span><span class="n">io</span><span class="o">/</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">article</span><span class="w"> </span><span class="n">pagination</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Y</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">How</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">10</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="nc">time</span><span class="w"> </span><span class="k">zone</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">Europe/Paris</span><span class="o">]</span><span class="w"> </span><span class="n">America</span><span class="o">/</span><span class="n">New_York</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Fabfile</span><span class="o">/</span><span class="n">Makefile</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">automate</span><span class="w"> </span><span class="n">generation</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">publishing</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">n</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">auto</span><span class="o">-</span><span class="n">reload</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">simpleHTTP</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">assist</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">theme</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="n">development</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Y</span>
+<span class="n">Done</span><span class="p">.</span><span class="w"> </span><span class="n">Your</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">timothy</span><span class="o">/</span><span class="n">Projects</span><span class="o">/</span><span class="n">turtlemonvh</span><span class="p">.</span><span class="n">github</span><span class="p">.</span><span class="n">io</span>
+</code></pre></div>
 
 <p>I also edited the settings file (<code>pelicanconf.py</code>).  You can see my current settings <a href="https://github.com/turtlemonvh/turtlemonvh.github.io/blob/source/pelicanconf.py">on github</a>.  You can also see more docs on settings options <a href="http://docs.getpelican.com/en/latest/settings.html">in the pelican docs</a>.</p>
 <h2>Publishing</h2>
 <p>Next, I started the pelican development server to watch for changes and serve the site locally.</p>
-<div class="highlight"><pre><span></span>./develop_server.sh start
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>./develop_server.sh start
+</code></pre></div>
 
 <p>After this you can preview your site at: <a href="http://localhost:8000/">http://localhost:8000/</a></p>
 <p>Then I created my first bit of content in the <code>content</code> directory.  See more docs on writing content <a href="http://docs.getpelican.com/en/latest/content.html">here</a>.  I used <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> since I'm familiar with it from a lot of other applications.  You may know it from <a href="https://help.github.com/articles/github-flavored-markdown/">github READMEs</a>.</p>
 <p>Lastly I needed to publish the generated content (in the <code>output</code> directory) to the <code>master</code> branch so the content would be found by github.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Add a commit with new generated output</span>
-ghp-import -b master output
+<div class="highlight"><pre><span></span><code><span class="c1"># Add a commit with new generated output</span>
+ghp-import<span class="w"> </span>-b<span class="w"> </span>master<span class="w"> </span>output
 
 <span class="c1"># Switch branches and push</span>
-git checkout master
-git push origin master
+git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
 
 <span class="c1"># OR</span>
 
 <span class="c1"># Pushes for you automatically so you don&#39;t have to switch branches</span>
-ghp-import -b master -p output
-</pre></div>
-
+ghp-import<span class="w"> </span>-b<span class="w"> </span>master<span class="w"> </span>-p<span class="w"> </span>output
+</code></pre></div>
 
 <p>See more options for the <code>ghp-import</code> command <a href="https://github.com/davisp/ghp-import">in the project' README</a>.</p>
 <p>After that I could see all my content at: <a href="http://turtlemonvh.github.io/">http://turtlemonvh.github.io/</a></p>
@@ -187,6 +230,7 @@ ghp-import -b master -p output
 
 
 
+
 <!-- Disqus -->
 <div id="disqus_thread"></div>
 <script type="text/javascript">
@@ -198,20 +242,16 @@ ghp-import -b master -p output
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
-    <footer>
+<footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
-</p>    </footer>
-  </main>
-
-
-
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p></footer>  </main>
 
 <script type="application/ld+json">
 {
@@ -223,6 +263,5 @@ ghp-import -b master -p output
   "description": "Thoughts and writings"
 }
 </script>
-
 </body>
 </html>

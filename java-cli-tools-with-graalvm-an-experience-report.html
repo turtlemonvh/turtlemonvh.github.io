@@ -6,13 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="" />
+  <meta name="robots" content="" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://turtlemonvh.github.io/theme/pygments/github.min.css">
+
+
+
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/fontawesome.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/brands.css">
   <link rel="stylesheet" type="text/css" href="https://turtlemonvh.github.io/theme/font-awesome/css/solid.css">
@@ -23,79 +28,121 @@
 
 
 
+
+
+
+
+
+ 
+
 <meta name="author" content="turtlemonvh" />
 <meta name="description" content="Over the last few years I have used several CLI tools written in java. Usually these have been utility tools packaged with JVM applications, like kafka. The slow startup time from the JVM (and general bloatiness) of these tools has made me wholly uninterested in the JVM as a tool …" />
 <meta name="keywords" content="jvm, cli, graalvm">
 
-<meta property="og:site_name" content="Systems Doing"/>
-<meta property="og:title" content="Java CLI tools with GraalVM: An experience report"/>
-<meta property="og:description" content="Over the last few years I have used several CLI tools written in java. Usually these have been utility tools packaged with JVM applications, like kafka. The slow startup time from the JVM (and general bloatiness) of these tools has made me wholly uninterested in the JVM as a tool …"/>
-<meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://turtlemonvh.github.io/java-cli-tools-with-graalvm-an-experience-report.html"/>
-<meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2020-05-07 23:00:00-04:00"/>
-<meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
-<meta property="article:section" content="Articles"/>
-<meta property="article:tag" content="jvm"/>
-<meta property="article:tag" content="cli"/>
-<meta property="article:tag" content="graalvm"/>
-<meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
+
+  <meta property="og:site_name" content="Systems Doing"/>
+  <meta property="og:title" content="Java CLI tools with GraalVM: An experience report"/>
+  <meta property="og:description" content="Over the last few years I have used several CLI tools written in java. Usually these have been utility tools packaged with JVM applications, like kafka. The slow startup time from the JVM (and general bloatiness) of these tools has made me wholly uninterested in the JVM as a tool …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://turtlemonvh.github.io/java-cli-tools-with-graalvm-an-experience-report.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-05-07 23:00:00-04:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://turtlemonvh.github.io/author/turtlemonvh.html">
+  <meta property="article:section" content="Articles"/>
+  <meta property="article:tag" content="jvm"/>
+  <meta property="article:tag" content="cli"/>
+  <meta property="article:tag" content="graalvm"/>
+  <meta property="og:image" content="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120">
 
   <title>Systems Doing &ndash; Java CLI tools with GraalVM: An experience report</title>
 
+
 </head>
-<body>
-  <aside>
-    <div>
-      <a href="https://turtlemonvh.github.io">
-        <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
-      </a>
-      <h1><a href="https://turtlemonvh.github.io">Systems Doing</a></h1>
+<body class="light-theme">
 
-<p>Looking for beauty in the complex and the simple.</p>
-      <nav>
-        <ul class="list">
-          <li><a href="https://turtlemonvh.github.io/pages/home.html">Home</a></li>
-          <li><a href="https://turtlemonvh.github.io/pages/projects.html">Projects</a></li>
+<aside>
+  <div>
+    <a href="https://turtlemonvh.github.io/">
+      <img src="//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120" alt="Systems Doing" title="Systems Doing">
+    </a>
 
-          <li><a href="https://www.ionic.com/blog/" target="_blank">Ionic blog</a></li>
-          <li><a href="http://turtle-philosophy.blogspot.com/" target="_blank">My old blog</a></li>
-          <li><a href="https://about.me/turtlemonvh" target="_blank">about.me</a></li>
-        </ul>
-      </nav>
+    <h1>
+      <a href="https://turtlemonvh.github.io/">Systems Doing</a>
+    </h1>
 
-      <ul class="social">
+    <p>Looking for beauty in the complex and the simple.</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/home.html">
+                Home
+              </a>
+            </li>
+            <li>
+              <a target="_self"
+                 href="https://turtlemonvh.github.io/pages/projects.html">
+                Projects
+              </a>
+            </li>
+
           <li>
-            <a  class="sc-twitter" href="https://twitter.com/turtlemonvh" target="_blank">
-            <i class="fab fa-twitter">
-            </i>
-          </a></li>
+            <a target="_self" href="https://about.me/turtlemonvh" >about.me</a>
+          </li>
           <li>
-            <a  class="sc-github" href="https://github.com/turtlemonvh" target="_blank">
-            <i class="fab fa-github">
-            </i>
-          </a></li>
+            <a target="_self" href="https://www.dropbox.com/scl/fi/iqwp08l5mlb0gnv3kq5dm/TVH-Resume-2023-09-09.pdf?rlkey=4ixwskt3m9f4ceqcnnes2hrfn&raw=1" >resume</a>
+          </li>
           <li>
-            <a  class="sc-linkedin" href="https://www.linkedin.com/in/vanheetm" target="_blank">
-            <i class="fab fa-linkedin">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-bitbucket" href="https://bitbucket.org/turtlemonvh/" target="_blank">
-            <i class="fab fa-bitbucket">
-            </i>
-          </a></li>
-          <li>
-            <a  class="sc-stack-overflow" href="http://stackoverflow.com/users/790075/turtlemonvh" target="_blank">
-            <i class="fab fa-stack-overflow">
-            </i>
-          </a></li>
+            <a target="_self" href="http://turtle-philosophy.blogspot.com/" >old blog</a>
+          </li>
       </ul>
-    </div>
+    </nav>
 
+    <ul class="social">
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-github"
+           href="https://github.com/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/vanheetm"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-bitbucket"
+           href="https://bitbucket.org/turtlemonvh/"
+           target="_blank">
+          <i class="fa-brands fa-bitbucket"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-stack-overflow"
+           href="http://stackoverflow.com/users/790075/turtlemonvh"
+           target="_blank">
+          <i class="fa-brands fa-stack-overflow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-  </aside>
+</aside>
   <main>
 
 
@@ -104,8 +151,7 @@
       
     <h1 id="java-cli-tools-with-graalvm-an-experience-report">Java CLI tools with GraalVM: An experience report</h1>
     <p>
-          Posted on Thu 07 May 2020 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
-
+      Posted on Thu 07 May 2020 in <a href="https://turtlemonvh.github.io/category/articles.html">Articles</a>
 
     </p>
   </header>
@@ -115,339 +161,328 @@
     <p>Over the last few years I have used several CLI tools written in java.  Usually these have been utility tools packaged with JVM applications, like kafka. The slow startup time from the JVM (and general bloatiness) of these tools has made me wholly uninterested in the JVM as a tool for CLI applications.</p>
 <p>But a few years ago I heard about <a href="https://www.graalvm.org/">the graalvm project</a> and its efforts to produce native images from JVM bytecode. Since then, I've been looking for an excuse to play around with the project.  This week I finally found one when we were discussing packaging for a java-based CLI tool developed at Ionic: <a href="https://github.com/IonicDev/ionic-cloud-copy-tool">the cloud copy tool</a>.</p>
 <p>To get started, first I downloaded the tarballs for java8 and java11 from <a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.0.0">the graalvm github releases page</a>.</p>
-<div class="highlight"><pre><span></span><span class="c1"># I took a more manual approach, but this may be a simpler approach to install if you are less concerned with homebrew mucking with your Java settings</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># I took a more manual approach, but this may be a simpler approach to install if you are less concerned with homebrew mucking with your Java settings</span>
 <span class="c1"># https://github.com/graalvm/homebrew-tap</span>
 <span class="c1"># https://github.com/graalvm/homebrew-tap/blob/master/Casks/graalvm-ce-java8.rb</span>
 
 <span class="c1"># Installation</span>
-<span class="nb">cd</span> /tmp/
-tar xzvf ~/Downloads/graalvm-ce-java11-20.0.0.tar.gz
-tar xzvf ~/Downloads/graalvm-ce-java8-20.0.0.tar.gz
-sudo mv graalvm-ce-java11-20.0.0 /Library/Java/JavaVirtualMachines/
-sudo mv graalvm-ce-java8-20.0.0 /Library/Java/JavaVirtualMachines/
+<span class="nb">cd</span><span class="w"> </span>/tmp/
+tar<span class="w"> </span>xzvf<span class="w"> </span>~/Downloads/graalvm-ce-java11-20.0.0.tar.gz
+tar<span class="w"> </span>xzvf<span class="w"> </span>~/Downloads/graalvm-ce-java8-20.0.0.tar.gz
+sudo<span class="w"> </span>mv<span class="w"> </span>graalvm-ce-java11-20.0.0<span class="w"> </span>/Library/Java/JavaVirtualMachines/
+sudo<span class="w"> </span>mv<span class="w"> </span>graalvm-ce-java8-20.0.0<span class="w"> </span>/Library/Java/JavaVirtualMachines/
 
 <span class="c1"># Run this to make sure the installation worked</span>
 <span class="c1"># See: https://www.graalvm.org/docs/getting-started/macos</span>
-/usr/libexec/java_home -V
+/usr/libexec/java_home<span class="w"> </span>-V
 
 <span class="c1"># NOTE: Binaries associated with the release can be found in</span>
 <span class="c1"># /Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/</span>
 <span class="c1"># /Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/jre/bin/</span>
 
 <span class="c1"># Install the native-image tool</span>
-/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/gu install native-image
-</pre></div>
-
+/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/gu<span class="w"> </span>install<span class="w"> </span>native-image
+</code></pre></div>
 
 <p>Next I had to set up tools to build this java project (see: https://github.com/IonicDev/ionic-cloud-copy-tool), which is just Java 7+ and Maven 3+. I didn't have to install any Java versions (aside from the GraalVM versions above) since I already had those set up, but I didn't have maven set up.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Install maven</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install maven</span>
 
 <span class="c1"># I was going to use brew (https://formulae.brew.sh/formula/maven), but it seemed to just hang</span>
 <span class="c1"># while trying to download jdk 13 (which was marked as a prerequisite for maven).</span>
 <span class="c1"># Downloaded from here instead: https://maven.apache.org/download.cgi</span>
 
 <span class="c1"># After downloading</span>
-<span class="nb">cd</span> /tmp/
-tar -xzvf ~/Downloads/apache-maven-3.6.3-bin.tar.gz
-rm apache-maven-3.6.3/bin/*.cmd
-mv apache-maven-3.6.3 /usr/local/share/
+<span class="nb">cd</span><span class="w"> </span>/tmp/
+tar<span class="w"> </span>-xzvf<span class="w"> </span>~/Downloads/apache-maven-3.6.3-bin.tar.gz
+rm<span class="w"> </span>apache-maven-3.6.3/bin/*.cmd
+mv<span class="w"> </span>apache-maven-3.6.3<span class="w"> </span>/usr/local/share/
 
 <span class="c1"># Add this to ~/.bashrc</span>
-<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/local/share/apache-maven-3.6.3/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/local/share/apache-maven-3.6.3/bin
 
 <span class="c1"># Then update env</span>
-<span class="nb">source</span> ~/.bashrc
-</pre></div>
-
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+</code></pre></div>
 
 <p>Now we can build and make sure the jar seems to behave.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Build</span>
-$ mvn package
+<div class="highlight"><pre><span></span><code><span class="c1"># Build</span>
+$<span class="w"> </span>mvn<span class="w"> </span>package
 <span class="c1"># Seems to work</span>
-$ java -jar target/IonicCloudCopyTool-* -h
-&lt;source&gt; &lt;destination&gt; <span class="o">[</span>-a <span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
-  Data from the <span class="nb">source</span> is copied to the destination and protected with IDTCS <span class="k">if</span> the destination is remote.
+$<span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-*<span class="w"> </span>-h
+&lt;source&gt;<span class="w"> </span>&lt;destination&gt;<span class="w"> </span><span class="o">[</span>-a<span class="w"> </span><span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
+<span class="w">  </span>Data<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span><span class="nb">source</span><span class="w"> </span>is<span class="w"> </span>copied<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>and<span class="w"> </span>protected<span class="w"> </span>with<span class="w"> </span>IDTCS<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>is<span class="w"> </span>remote.
 Sources:
-  file/system/path
-  string:<span class="s1">&#39;Text of choice.&#39;</span>
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
+<span class="w">  </span>file/system/path
+<span class="w">  </span>string:<span class="s1">&#39;Text of choice.&#39;</span>
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
 Destinations:
-  file/system/path
-  stdout:
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
--a only valid <span class="k">for</span> <span class="nb">local</span> or string sources
-Single Argument Commands:
-  version
-  config
-</pre></div>
-
+<span class="w">  </span>file/system/path
+<span class="w">  </span>stdout:
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
+-a<span class="w"> </span>only<span class="w"> </span>valid<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span>or<span class="w"> </span>string<span class="w"> </span>sources
+Single<span class="w"> </span>Argument<span class="w"> </span>Commands:
+<span class="w">  </span>version
+<span class="w">  </span>config
+</code></pre></div>
 
 <p>That worked just fine. Next, we'll take a naïve attempt with native-image, based off this documentation: https://www.graalvm.org/getting-started/#native-images</p>
-<div class="highlight"><pre><span></span>$ /Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/native-image -jar target/IonicCloudCopyTool-0.4.0.jar
-Build on Server<span class="o">(</span>pid: <span class="m">98134</span>, port: <span class="m">57087</span><span class="o">)</span>*
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    classlist:   <span class="m">8</span>,286.05 ms,  <span class="m">2</span>.37 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:  <span class="m">12</span>,580.93 ms,  <span class="m">2</span>.37 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        setup:  <span class="m">14</span>,451.20 ms,  <span class="m">2</span>.37 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     analysis:  <span class="m">31</span>,406.37 ms,  <span class="m">3</span>.22 GB
-Warning: Aborting stand-alone image build due to unsupported features
-Warning: Use -H:+ReportExceptionStackTraces to print stacktrace of underlying exception
-Build on Server<span class="o">(</span>pid: <span class="m">98134</span>, port: <span class="m">57087</span><span class="o">)</span>
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    classlist:     <span class="m">324</span>.46 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">4</span>,411.47 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        setup:   <span class="m">4</span>,927.63 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:   <span class="m">2</span>,215.90 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:   <span class="m">2</span>,236.84 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:     <span class="m">105</span>.45 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     analysis:   <span class="m">4</span>,638.15 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     <span class="o">(</span>clinit<span class="o">)</span>:     <span class="m">162</span>.38 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     universe:     <span class="m">448</span>.31 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>      <span class="o">(</span>parse<span class="o">)</span>:     <span class="m">741</span>.14 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     <span class="o">(</span>inline<span class="o">)</span>:     <span class="m">845</span>.56 ms,  <span class="m">3</span>.19 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    <span class="o">(</span>compile<span class="o">)</span>:   <span class="m">5</span>,246.06 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>      compile:   <span class="m">7</span>,273.67 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        image:     <span class="m">644</span>.32 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        write:   <span class="m">1</span>,652.36 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>      <span class="o">[</span>total<span class="o">]</span>:  <span class="m">22</span>,116.66 ms,  <span class="m">3</span>.48 GB
-Warning: Image <span class="s1">&#39;IonicCloudCopyTool-0.4.0&#39;</span> is a fallback image that requires a JDK <span class="k">for</span> execution <span class="o">(</span>use --no-fallback to suppress fallback image generation and to print more detailed information why a fallback image was necessary<span class="o">)</span>.
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar
+Build<span class="w"> </span>on<span class="w"> </span>Server<span class="o">(</span>pid:<span class="w"> </span><span class="m">98134</span>,<span class="w"> </span>port:<span class="w"> </span><span class="m">57087</span><span class="o">)</span>*
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">8</span>,286.05<span class="w"> </span>ms,<span class="w">  </span><span class="m">2</span>.37<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">  </span><span class="m">12</span>,580.93<span class="w"> </span>ms,<span class="w">  </span><span class="m">2</span>.37<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span>setup:<span class="w">  </span><span class="m">14</span>,451.20<span class="w"> </span>ms,<span class="w">  </span><span class="m">2</span>.37<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">31</span>,406.37<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.22<span class="w"> </span>GB
+Warning:<span class="w"> </span>Aborting<span class="w"> </span>stand-alone<span class="w"> </span>image<span class="w"> </span>build<span class="w"> </span>due<span class="w"> </span>to<span class="w"> </span>unsupported<span class="w"> </span>features
+Warning:<span class="w"> </span>Use<span class="w"> </span>-H:+ReportExceptionStackTraces<span class="w"> </span>to<span class="w"> </span>print<span class="w"> </span>stacktrace<span class="w"> </span>of<span class="w"> </span>underlying<span class="w"> </span>exception
+Build<span class="w"> </span>on<span class="w"> </span>Server<span class="o">(</span>pid:<span class="w"> </span><span class="m">98134</span>,<span class="w"> </span>port:<span class="w"> </span><span class="m">57087</span><span class="o">)</span>
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span>classlist:<span class="w">     </span><span class="m">324</span>.46<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">4</span>,411.47<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">4</span>,927.63<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">   </span><span class="m">2</span>,215.90<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">   </span><span class="m">2</span>,236.84<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">     </span><span class="m">105</span>.45<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span>analysis:<span class="w">   </span><span class="m">4</span>,638.15<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span><span class="o">(</span>clinit<span class="o">)</span>:<span class="w">     </span><span class="m">162</span>.38<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span>universe:<span class="w">     </span><span class="m">448</span>.31<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">      </span><span class="o">(</span>parse<span class="o">)</span>:<span class="w">     </span><span class="m">741</span>.14<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span><span class="o">(</span>inline<span class="o">)</span>:<span class="w">     </span><span class="m">845</span>.56<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.19<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span><span class="o">(</span>compile<span class="o">)</span>:<span class="w">   </span><span class="m">5</span>,246.06<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">      </span>compile:<span class="w">   </span><span class="m">7</span>,273.67<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span>image:<span class="w">     </span><span class="m">644</span>.32<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span>write:<span class="w">   </span><span class="m">1</span>,652.36<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">      </span><span class="o">[</span>total<span class="o">]</span>:<span class="w">  </span><span class="m">22</span>,116.66<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+Warning:<span class="w"> </span>Image<span class="w"> </span><span class="s1">&#39;IonicCloudCopyTool-0.4.0&#39;</span><span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>fallback<span class="w"> </span>image<span class="w"> </span>that<span class="w"> </span>requires<span class="w"> </span>a<span class="w"> </span>JDK<span class="w"> </span><span class="k">for</span><span class="w"> </span>execution<span class="w"> </span><span class="o">(</span>use<span class="w"> </span>--no-fallback<span class="w"> </span>to<span class="w"> </span>suppress<span class="w"> </span>fallback<span class="w"> </span>image<span class="w"> </span>generation<span class="w"> </span>and<span class="w"> </span>to<span class="w"> </span>print<span class="w"> </span>more<span class="w"> </span>detailed<span class="w"> </span>information<span class="w"> </span>why<span class="w"> </span>a<span class="w"> </span>fallback<span class="w"> </span>image<span class="w"> </span>was<span class="w"> </span>necessary<span class="o">)</span>.
+</code></pre></div>
 
 <p>So that didn't work.  So I tried again, with more flags (being lazy here).</p>
-<div class="highlight"><pre><span></span>is-mbp-timothy4:ionic-cloud-copy-tool timothy$ /Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/native-image -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --enable-http --enable-https
-Build on Server<span class="o">(</span>pid: <span class="m">98134</span>, port: <span class="m">57087</span><span class="o">)</span>
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    classlist:   <span class="m">6</span>,813.34 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">1</span>,862.89 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>        setup:   <span class="m">2</span>,358.20 ms,  <span class="m">3</span>.48 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:  <span class="m">13</span>,434.38 ms,  <span class="m">3</span>.31 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:   <span class="m">9</span>,944.64 ms,  <span class="m">3</span>.31 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:   <span class="m">1</span>,129.41 ms,  <span class="m">3</span>.31 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span>     analysis:  <span class="m">25</span>,899.30 ms,  <span class="m">3</span>.31 GB
-Error: Unsupported features in <span class="m">3</span> methods
-Detailed message:
-Error: com.oracle.graal.pointsto.constraints.UnresolvedElementException: Discovered unresolved method during parsing: com.fasterxml.jackson.dataformat.cbor.CBORGenerator.getOutputContext<span class="o">()</span>. To diagnose the issue you can use the --allow-incomplete-classpath option. The missing method is <span class="k">then</span> reported at run <span class="nb">time</span> when it is accessed the first time.
+<div class="highlight"><pre><span></span><code>is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--enable-http<span class="w"> </span>--enable-https
+Build<span class="w"> </span>on<span class="w"> </span>Server<span class="o">(</span>pid:<span class="w"> </span><span class="m">98134</span>,<span class="w"> </span>port:<span class="w"> </span><span class="m">57087</span><span class="o">)</span>
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">6</span>,813.34<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,862.89<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">2</span>,358.20<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.48<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">  </span><span class="m">13</span>,434.38<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.31<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">   </span><span class="m">9</span>,944.64<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.31<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,129.41<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.31<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98134<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">25</span>,899.30<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.31<span class="w"> </span>GB
+Error:<span class="w"> </span>Unsupported<span class="w"> </span>features<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>methods
+Detailed<span class="w"> </span>message:
+Error:<span class="w"> </span>com.oracle.graal.pointsto.constraints.UnresolvedElementException:<span class="w"> </span>Discovered<span class="w"> </span>unresolved<span class="w"> </span>method<span class="w"> </span>during<span class="w"> </span>parsing:<span class="w"> </span>com.fasterxml.jackson.dataformat.cbor.CBORGenerator.getOutputContext<span class="o">()</span>.<span class="w"> </span>To<span class="w"> </span>diagnose<span class="w"> </span>the<span class="w"> </span>issue<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>use<span class="w"> </span>the<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>option.<span class="w"> </span>The<span class="w"> </span>missing<span class="w"> </span>method<span class="w"> </span>is<span class="w"> </span><span class="k">then</span><span class="w"> </span>reported<span class="w"> </span>at<span class="w"> </span>run<span class="w"> </span><span class="nb">time</span><span class="w"> </span>when<span class="w"> </span>it<span class="w"> </span>is<span class="w"> </span>accessed<span class="w"> </span>the<span class="w"> </span>first<span class="w"> </span>time.
 Trace:
-    at parsing com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">(</span>CBORGenerator.java:903<span class="o">)</span>
-Call path from entry point to com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">()</span>:
-    at com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">(</span>CBORGenerator.java:900<span class="o">)</span>
-    at java.io.FileDescriptor.closeAll<span class="o">(</span>FileDescriptor.java:202<span class="o">)</span>
-    at java.io.FileInputStream.close<span class="o">(</span>FileInputStream.java:334<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>parsing<span class="w"> </span>com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">(</span>CBORGenerator.java:903<span class="o">)</span>
+Call<span class="w"> </span>path<span class="w"> </span>from<span class="w"> </span>entry<span class="w"> </span>point<span class="w"> </span>to<span class="w"> </span>com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">()</span>:
+<span class="w">    </span>at<span class="w"> </span>com.fasterxml.jackson.dataformat.cbor.CBORGenerator.close<span class="o">(</span>CBORGenerator.java:900<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.io.FileDescriptor.closeAll<span class="o">(</span>FileDescriptor.java:202<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.io.FileInputStream.close<span class="o">(</span>FileInputStream.java:334<span class="o">)</span>
 &lt;more&gt;
-Error: com.oracle.graal.pointsto.constraints.UnresolvedElementException: Discovered unresolved <span class="nb">type</span> during parsing: com.google.appengine.api.urlfetch.HTTPMethod. To diagnose the issue you can use the --allow-incomplete-classpath option. The missing <span class="nb">type</span> is <span class="k">then</span> reported at run <span class="nb">time</span> when it is accessed the first time.
+Error:<span class="w"> </span>com.oracle.graal.pointsto.constraints.UnresolvedElementException:<span class="w"> </span>Discovered<span class="w"> </span>unresolved<span class="w"> </span><span class="nb">type</span><span class="w"> </span>during<span class="w"> </span>parsing:<span class="w"> </span>com.google.appengine.api.urlfetch.HTTPMethod.<span class="w"> </span>To<span class="w"> </span>diagnose<span class="w"> </span>the<span class="w"> </span>issue<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>use<span class="w"> </span>the<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>option.<span class="w"> </span>The<span class="w"> </span>missing<span class="w"> </span><span class="nb">type</span><span class="w"> </span>is<span class="w"> </span><span class="k">then</span><span class="w"> </span>reported<span class="w"> </span>at<span class="w"> </span>run<span class="w"> </span><span class="nb">time</span><span class="w"> </span>when<span class="w"> </span>it<span class="w"> </span>is<span class="w"> </span>accessed<span class="w"> </span>the<span class="w"> </span>first<span class="w"> </span>time.
 Trace:
-    at parsing com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:116<span class="o">)</span>
-Call path from entry point to com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>String, String<span class="o">)</span>:
-    at com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:113<span class="o">)</span>
-    at com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:50<span class="o">)</span>
-&lt;more&gt;
-
-Error: com.oracle.graal.pointsto.constraints.UnresolvedElementException: Discovered unresolved <span class="nb">type</span> during parsing: org.slf4j.impl.StaticLoggerBinder. To diagnose the issue you can use the --allow-incomplete-classpath option. The missing <span class="nb">type</span> is <span class="k">then</span> reported at run <span class="nb">time</span> when it is accessed the first time.
-Trace:
-    at parsing org.slf4j.LoggerFactory.getILoggerFactory<span class="o">(</span>LoggerFactory.java:335<span class="o">)</span>
-Call path from entry point to org.slf4j.LoggerFactory.getILoggerFactory<span class="o">()</span>:
-    at org.slf4j.LoggerFactory.getILoggerFactory<span class="o">(</span>LoggerFactory.java:329<span class="o">)</span>
-    at org.slf4j.LoggerFactory.getLogger<span class="o">(</span>LoggerFactory.java:283<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>parsing<span class="w"> </span>com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:116<span class="o">)</span>
+Call<span class="w"> </span>path<span class="w"> </span>from<span class="w"> </span>entry<span class="w"> </span>point<span class="w"> </span>to<span class="w"> </span>com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>String,<span class="w"> </span>String<span class="o">)</span>:
+<span class="w">    </span>at<span class="w"> </span>com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:113<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.google.api.client.extensions.appengine.http.UrlFetchTransport.buildRequest<span class="o">(</span>UrlFetchTransport.java:50<span class="o">)</span>
 &lt;more&gt;
 
-Error: Use -H:+ReportExceptionStackTraces to print stacktrace of underlying exception
-Error: Image build request failed with <span class="nb">exit</span> status <span class="m">1</span>
-</pre></div>
+Error:<span class="w"> </span>com.oracle.graal.pointsto.constraints.UnresolvedElementException:<span class="w"> </span>Discovered<span class="w"> </span>unresolved<span class="w"> </span><span class="nb">type</span><span class="w"> </span>during<span class="w"> </span>parsing:<span class="w"> </span>org.slf4j.impl.StaticLoggerBinder.<span class="w"> </span>To<span class="w"> </span>diagnose<span class="w"> </span>the<span class="w"> </span>issue<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>use<span class="w"> </span>the<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>option.<span class="w"> </span>The<span class="w"> </span>missing<span class="w"> </span><span class="nb">type</span><span class="w"> </span>is<span class="w"> </span><span class="k">then</span><span class="w"> </span>reported<span class="w"> </span>at<span class="w"> </span>run<span class="w"> </span><span class="nb">time</span><span class="w"> </span>when<span class="w"> </span>it<span class="w"> </span>is<span class="w"> </span>accessed<span class="w"> </span>the<span class="w"> </span>first<span class="w"> </span>time.
+Trace:
+<span class="w">    </span>at<span class="w"> </span>parsing<span class="w"> </span>org.slf4j.LoggerFactory.getILoggerFactory<span class="o">(</span>LoggerFactory.java:335<span class="o">)</span>
+Call<span class="w"> </span>path<span class="w"> </span>from<span class="w"> </span>entry<span class="w"> </span>point<span class="w"> </span>to<span class="w"> </span>org.slf4j.LoggerFactory.getILoggerFactory<span class="o">()</span>:
+<span class="w">    </span>at<span class="w"> </span>org.slf4j.LoggerFactory.getILoggerFactory<span class="o">(</span>LoggerFactory.java:329<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>org.slf4j.LoggerFactory.getLogger<span class="o">(</span>LoggerFactory.java:283<span class="o">)</span>
+&lt;more&gt;
 
+Error:<span class="w"> </span>Use<span class="w"> </span>-H:+ReportExceptionStackTraces<span class="w"> </span>to<span class="w"> </span>print<span class="w"> </span>stacktrace<span class="w"> </span>of<span class="w"> </span>underlying<span class="w"> </span>exception
+Error:<span class="w"> </span>Image<span class="w"> </span>build<span class="w"> </span>request<span class="w"> </span>failed<span class="w"> </span>with<span class="w"> </span><span class="nb">exit</span><span class="w"> </span>status<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
 
 <p>So that was helpful, and gave me something to search for. Checking some Github issues, I see some comments about Java 11 behaving better than Java 8. I also saw some recommendations for common flags to add for debugging / fixing missing dependencies. I started by switching over to the java 11 version of <code>native-image</code>.</p>
-<div class="highlight"><pre><span></span>$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/gu install native-image
-Downloading: Component catalog from www.graalvm.org
-Processing Component: Native Image
-Downloading: Component native-image: Native Image  from github.com
-Installing new component: Native Image <span class="o">(</span>org.graalvm.native-image, version <span class="m">20</span>.0.0<span class="o">)</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/gu<span class="w"> </span>install<span class="w"> </span>native-image
+Downloading:<span class="w"> </span>Component<span class="w"> </span>catalog<span class="w"> </span>from<span class="w"> </span>www.graalvm.org
+Processing<span class="w"> </span>Component:<span class="w"> </span>Native<span class="w"> </span>Image
+Downloading:<span class="w"> </span>Component<span class="w"> </span>native-image:<span class="w"> </span>Native<span class="w"> </span>Image<span class="w">  </span>from<span class="w"> </span>github.com
+Installing<span class="w"> </span>new<span class="w"> </span>component:<span class="w"> </span>Native<span class="w"> </span>Image<span class="w"> </span><span class="o">(</span>org.graalvm.native-image,<span class="w"> </span>version<span class="w"> </span><span class="m">20</span>.0.0<span class="o">)</span>
+</code></pre></div>
 
 <p>Then added some of those flags and tried again.</p>
-<div class="highlight"><pre><span></span>is-mbp-timothy4:ionic-cloud-copy-tool timothy$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --enable-http --enable-https --allow-incomplete-classpath
-Build on Server<span class="o">(</span>pid: <span class="m">98406</span>, port: <span class="m">57338</span><span class="o">)</span>
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>    classlist:   <span class="m">3</span>,609.96 ms,  <span class="m">1</span>.00 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">3</span>,678.79 ms,  <span class="m">1</span>.00 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>        setup:   <span class="m">4</span>,003.14 ms,  <span class="m">1</span>.00 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:  <span class="m">17</span>,992.57 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:  <span class="m">17</span>,787.74 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:     <span class="m">984</span>.49 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>     analysis:  <span class="m">38</span>,611.23 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>     <span class="o">(</span>clinit<span class="o">)</span>:   <span class="m">1</span>,090.72 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>     universe:   <span class="m">3</span>,314.59 ms,  <span class="m">5</span>.17 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>      <span class="o">(</span>parse<span class="o">)</span>:   <span class="m">5</span>,419.05 ms,  <span class="m">5</span>.50 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>     <span class="o">(</span>inline<span class="o">)</span>:   <span class="m">6</span>,870.00 ms,  <span class="m">5</span>.76 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>    <span class="o">(</span>compile<span class="o">)</span>:  <span class="m">36</span>,965.23 ms,  <span class="m">5</span>.81 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>      compile:  <span class="m">52</span>,017.83 ms,  <span class="m">5</span>.81 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>        image:   <span class="m">5</span>,420.82 ms,  <span class="m">5</span>.88 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>        write:   <span class="m">4</span>,288.85 ms,  <span class="m">5</span>.88 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span>      <span class="o">[</span>total<span class="o">]</span>: <span class="m">112</span>,588.06 ms,  <span class="m">5</span>.88 GB
+<div class="highlight"><pre><span></span><code>is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-ea<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--enable-http<span class="w"> </span>--enable-https<span class="w"> </span>--allow-incomplete-classpath
+Build<span class="w"> </span>on<span class="w"> </span>Server<span class="o">(</span>pid:<span class="w"> </span><span class="m">98406</span>,<span class="w"> </span>port:<span class="w"> </span><span class="m">57338</span><span class="o">)</span>
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">3</span>,609.96<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.00<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">3</span>,678.79<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.00<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">4</span>,003.14<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.00<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">  </span><span class="m">17</span>,992.57<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">  </span><span class="m">17</span>,787.74<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">     </span><span class="m">984</span>.49<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">38</span>,611.23<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">     </span><span class="o">(</span>clinit<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,090.72<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">     </span>universe:<span class="w">   </span><span class="m">3</span>,314.59<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.17<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">      </span><span class="o">(</span>parse<span class="o">)</span>:<span class="w">   </span><span class="m">5</span>,419.05<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.50<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">     </span><span class="o">(</span>inline<span class="o">)</span>:<span class="w">   </span><span class="m">6</span>,870.00<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.76<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">    </span><span class="o">(</span>compile<span class="o">)</span>:<span class="w">  </span><span class="m">36</span>,965.23<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.81<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">      </span>compile:<span class="w">  </span><span class="m">52</span>,017.83<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.81<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">        </span>image:<span class="w">   </span><span class="m">5</span>,420.82<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.88<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">        </span>write:<span class="w">   </span><span class="m">4</span>,288.85<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.88<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:98406<span class="o">]</span><span class="w">      </span><span class="o">[</span>total<span class="o">]</span>:<span class="w"> </span><span class="m">112</span>,588.06<span class="w"> </span>ms,<span class="w">  </span><span class="m">5</span>.88<span class="w"> </span>GB
 
-is-mbp-timothy4:ionic-cloud-copy-tool timothy$ ll
-total <span class="m">84928</span>
-drwxr-xr-x  <span class="m">13</span> timothy  <span class="m">1145057864</span>   442B May  <span class="m">7</span> <span class="m">23</span>:49 .
-drwxr-xr-x  <span class="m">60</span> timothy  <span class="m">1145057864</span>   <span class="m">2</span>.0K May  <span class="m">7</span> <span class="m">22</span>:56 ..
-drwxr-xr-x  <span class="m">12</span> timothy  <span class="m">1145057864</span>   408B May  <span class="m">7</span> <span class="m">23</span>:38 .git
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>    94B May  <span class="m">7</span> <span class="m">22</span>:56 .gitignore
--rwxr-xr-x   <span class="m">1</span> timothy  <span class="m">1145057864</span>    41M May  <span class="m">7</span> <span class="m">23</span>:49 IonicCloudCopyTool-0.4.0
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>    20K May  <span class="m">7</span> <span class="m">22</span>:56 LICENSE.md
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>   <span class="m">4</span>.2K May  <span class="m">7</span> <span class="m">22</span>:56 README.md
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>   <span class="m">2</span>.5K May  <span class="m">7</span> <span class="m">23</span>:29 dependency-reduced-pom.xml
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>    90B May  <span class="m">7</span> <span class="m">22</span>:56 icct.bat
--rwxr-xr-x   <span class="m">1</span> timothy  <span class="m">1145057864</span>    55B May  <span class="m">7</span> <span class="m">22</span>:56 icct.sh
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>   <span class="m">3</span>.2K May  <span class="m">7</span> <span class="m">22</span>:56 pom.xml
-drwxr-xr-x   <span class="m">3</span> timothy  <span class="m">1145057864</span>   102B May  <span class="m">7</span> <span class="m">22</span>:56 src
-drwxr-xr-x   <span class="m">7</span> timothy  <span class="m">1145057864</span>   238B May  <span class="m">7</span> <span class="m">23</span>:29 target
-is-mbp-timothy4:ionic-cloud-copy-tool timothy$ ./IonicCloudCopyTool-0.4.0 -h
-&lt;source&gt; &lt;destination&gt; <span class="o">[</span>-a <span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
-  Data from the <span class="nb">source</span> is copied to the destination and protected with IDTCS <span class="k">if</span> the destination is remote.
+is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span>ll
+total<span class="w"> </span><span class="m">84928</span>
+drwxr-xr-x<span class="w">  </span><span class="m">13</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span>442B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:49<span class="w"> </span>.
+drwxr-xr-x<span class="w">  </span><span class="m">60</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span><span class="m">2</span>.0K<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>..
+drwxr-xr-x<span class="w">  </span><span class="m">12</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span>408B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:38<span class="w"> </span>.git
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>94B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>.gitignore
+-rwxr-xr-x<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>41M<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:49<span class="w"> </span>IonicCloudCopyTool-0.4.0
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>20K<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>LICENSE.md
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span><span class="m">4</span>.2K<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>README.md
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span><span class="m">2</span>.5K<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:29<span class="w"> </span>dependency-reduced-pom.xml
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>90B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>icct.bat
+-rwxr-xr-x<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>55B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>icct.sh
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span><span class="m">3</span>.2K<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>pom.xml
+drwxr-xr-x<span class="w">   </span><span class="m">3</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span>102B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">22</span>:56<span class="w"> </span>src
+drwxr-xr-x<span class="w">   </span><span class="m">7</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">   </span>238B<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:29<span class="w"> </span>target
+is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>-h
+&lt;source&gt;<span class="w"> </span>&lt;destination&gt;<span class="w"> </span><span class="o">[</span>-a<span class="w"> </span><span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
+<span class="w">  </span>Data<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span><span class="nb">source</span><span class="w"> </span>is<span class="w"> </span>copied<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>and<span class="w"> </span>protected<span class="w"> </span>with<span class="w"> </span>IDTCS<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>is<span class="w"> </span>remote.
 Sources:
-  file/system/path
-  string:<span class="s1">&#39;Text of choice.&#39;</span>
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
+<span class="w">  </span>file/system/path
+<span class="w">  </span>string:<span class="s1">&#39;Text of choice.&#39;</span>
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
 Destinations:
-  file/system/path
-  stdout:
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
--a only valid <span class="k">for</span> <span class="nb">local</span> or string sources
-Single Argument Commands:
-  version
-  config
-</pre></div>
-
+<span class="w">  </span>file/system/path
+<span class="w">  </span>stdout:
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
+-a<span class="w"> </span>only<span class="w"> </span>valid<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span>or<span class="w"> </span>string<span class="w"> </span>sources
+Single<span class="w"> </span>Argument<span class="w"> </span>Commands:
+<span class="w">  </span>version
+<span class="w">  </span>config
+</code></pre></div>
 
 <p>Look at that, a native image! Comparing sizes, the native image process did result in a larger file.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Native image</span>
--rwxr-xr-x   <span class="m">1</span> timothy  <span class="m">1145057864</span>    41M May  <span class="m">7</span> <span class="m">23</span>:49 IonicCloudCopyTool-0.4.0
+<div class="highlight"><pre><span></span><code><span class="c1"># Native image</span>
+-rwxr-xr-x<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>41M<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:49<span class="w"> </span>IonicCloudCopyTool-0.4.0
 <span class="c1"># Uberjar</span>
--rw-r--r--   <span class="m">1</span> timothy  <span class="m">1145057864</span>    21M May  <span class="m">7</span> <span class="m">23</span>:29 IonicCloudCopyTool-0.4.0.jar
-</pre></div>
-
+-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span>21M<span class="w"> </span>May<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">23</span>:29<span class="w"> </span>IonicCloudCopyTool-0.4.0.jar
+</code></pre></div>
 
 <p>But we do get those <em>much</em> snappier response times we're looking for from a CLI application!</p>
-<div class="highlight"><pre><span></span>is-mbp-timothy4:ionic-cloud-copy-tool timothy$ <span class="nb">time</span> <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">10</span><span class="k">)</span><span class="p">;</span> <span class="k">do</span> java -jar target/IonicCloudCopyTool-*.jar -h &gt;/dev/null<span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span><code>is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span><span class="nb">time</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-*.jar<span class="w"> </span>-h<span class="w"> </span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
-real    0m4.167s
-user    0m3.321s
-sys 0m1.474s
+real<span class="w">    </span>0m4.167s
+user<span class="w">    </span>0m3.321s
+sys<span class="w"> </span>0m1.474s
 
-is-mbp-timothy4:ionic-cloud-copy-tool timothy$ <span class="nb">time</span> <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">10</span><span class="k">)</span><span class="p">;</span> <span class="k">do</span> target/IonicCloudCopyTool-0.4.0 -h &gt;/dev/null<span class="p">;</span> <span class="k">done</span>
+is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span><span class="nb">time</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>target/IonicCloudCopyTool-0.4.0<span class="w"> </span>-h<span class="w"> </span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
-real    0m0.172s
-user    0m0.036s
-sys 0m0.065s
-</pre></div>
-
+real<span class="w">    </span>0m0.172s
+user<span class="w">    </span>0m0.036s
+sys<span class="w"> </span>0m0.065s
+</code></pre></div>
 
 <p>For a last step, let's move that binary onto our path and make sure it still looks ok.</p>
-<div class="highlight"><pre><span></span>$ cp target/IonicCloudCopyTool-0.4.0 /usr/local/bin/icct
-$ which icct
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cp<span class="w"> </span>target/IonicCloudCopyTool-0.4.0<span class="w"> </span>/usr/local/bin/icct
+$<span class="w"> </span>which<span class="w"> </span>icct
 /usr/local/bin/icct
-$ icct -h
-&lt;source&gt; &lt;destination&gt; <span class="o">[</span>-a <span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
-  Data from the <span class="nb">source</span> is copied to the destination and protected with IDTCS <span class="k">if</span> the destination is remote.
+$<span class="w"> </span>icct<span class="w"> </span>-h
+&lt;source&gt;<span class="w"> </span>&lt;destination&gt;<span class="w"> </span><span class="o">[</span>-a<span class="w"> </span><span class="s1">&#39;attribute1:val1:val2,attribute2:val3&#39;</span><span class="o">]</span>
+<span class="w">  </span>Data<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span><span class="nb">source</span><span class="w"> </span>is<span class="w"> </span>copied<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>and<span class="w"> </span>protected<span class="w"> </span>with<span class="w"> </span>IDTCS<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>destination<span class="w"> </span>is<span class="w"> </span>remote.
 Sources:
-  file/system/path
-  string:<span class="s1">&#39;Text of choice.&#39;</span>
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
+<span class="w">  </span>file/system/path
+<span class="w">  </span>string:<span class="s1">&#39;Text of choice.&#39;</span>
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
 Destinations:
-  file/system/path
-  stdout:
-  s3://s3bucket/path/to/object
-  gs://gcsbucket/path/to/object
-  az:azureContainer/path/to/blob
--a only valid <span class="k">for</span> <span class="nb">local</span> or string sources
-Single Argument Commands:
-  version
-  config
-</pre></div>
-
+<span class="w">  </span>file/system/path
+<span class="w">  </span>stdout:
+<span class="w">  </span>s3://s3bucket/path/to/object
+<span class="w">  </span>gs://gcsbucket/path/to/object
+<span class="w">  </span>az:azureContainer/path/to/blob
+-a<span class="w"> </span>only<span class="w"> </span>valid<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span>or<span class="w"> </span>string<span class="w"> </span>sources
+Single<span class="w"> </span>Argument<span class="w"> </span>Commands:
+<span class="w">  </span>version
+<span class="w">  </span>config
+</code></pre></div>
 
 <p>Note that I haven't used this binary for anything serious yet, so caveats abound, but if this works out I'll at least consider jvm + native image for CLI tools. Honestly I probably won't consider it too often because I love python and go and go cross compiling is awesome, but if there are JVM packages to do something interesting I'll be less prone to shy away from CLI-based tooling.</p>
 <h2>EDIT: 20200508</h2>
 <p>Right after I published this post I ran some quick function tests on the binary produced by <code>native-image</code>.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Version command is ok</span>
-$ icct version
+<div class="highlight"><pre><span></span><code><span class="c1"># Version command is ok</span>
+$<span class="w"> </span>icct<span class="w"> </span>version
 <span class="m">0</span>.4.0-LOCAL
 
 <span class="c1"># Local copy works fine</span>
-$ icct /tmp/testfile.txt stdout:
-hi there
+$<span class="w"> </span>icct<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>stdout:
+hi<span class="w"> </span>there
 
-$ icct /tmp/testfile.txt /tmp/testfile.txt.2
-$ cat /tmp/testfile.txt.2
-hi there
+$<span class="w"> </span>icct<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>/tmp/testfile.txt.2
+$<span class="w"> </span>cat<span class="w"> </span>/tmp/testfile.txt.2
+hi<span class="w"> </span>there
 
 <span class="c1"># Config output doesn&#39;t look good</span>
-$ icct config
-Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.ExceptionInInitializerError
-    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:290<span class="o">)</span>
-    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
-    at com.ionic.sdk.agent.hfp.Fingerprint.&lt;init&gt;<span class="o">(</span>Fingerprint.java:28<span class="o">)</span>
-    at com.ionic.sdk.agent.Agent.&lt;init&gt;<span class="o">(</span>Agent.java:95<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.checkIonicConfiguration<span class="o">(</span>IonicCloudCopy.java:529<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.configurationCheck<span class="o">(</span>IonicCloudCopy.java:605<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:138<span class="o">)</span>
-Caused by: java.lang.IllegalStateException: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
-    at com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:62<span class="o">)</span>
-    at com.ionic.sdk.core.codec.Transcoder.&lt;clinit&gt;<span class="o">(</span>Transcoder.java:45<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
-    ... <span class="m">6</span> more
-Caused by: java.lang.ClassNotFoundException: com.ionic.sdk.core.codec8.TranscoderFactory8
-    at com.oracle.svm.core.hub.ClassForNameSupport.forName<span class="o">(</span>ClassForNameSupport.java:60<span class="o">)</span>
-    at java.lang.Class.forName<span class="o">(</span>DynamicHub.java:1211<span class="o">)</span>
-    at com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:60<span class="o">)</span>
-    ... <span class="m">9</span> more
+$<span class="w"> </span>icct<span class="w"> </span>config
+Exception<span class="w"> </span><span class="k">in</span><span class="w"> </span>thread<span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="w"> </span>java.lang.ExceptionInInitializerError
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:290<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.sdk.agent.hfp.Fingerprint.&lt;init&gt;<span class="o">(</span>Fingerprint.java:28<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.sdk.agent.Agent.&lt;init&gt;<span class="o">(</span>Agent.java:95<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.checkIonicConfiguration<span class="o">(</span>IonicCloudCopy.java:529<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.configurationCheck<span class="o">(</span>IonicCloudCopy.java:605<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:138<span class="o">)</span>
+Caused<span class="w"> </span>by:<span class="w"> </span>java.lang.IllegalStateException:<span class="w"> </span>java.lang.ClassNotFoundException:<span class="w"> </span>com.ionic.sdk.core.codec8.TranscoderFactory8
+<span class="w">    </span>at<span class="w"> </span>com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:62<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.sdk.core.codec.Transcoder.&lt;clinit&gt;<span class="o">(</span>Transcoder.java:45<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+<span class="w">    </span>...<span class="w"> </span><span class="m">6</span><span class="w"> </span>more
+Caused<span class="w"> </span>by:<span class="w"> </span>java.lang.ClassNotFoundException:<span class="w"> </span>com.ionic.sdk.core.codec8.TranscoderFactory8
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassForNameSupport.forName<span class="o">(</span>ClassForNameSupport.java:60<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.lang.Class.forName<span class="o">(</span>DynamicHub.java:1211<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.sdk.core.codec.Transcoder.getFactory<span class="o">(</span>Transcoder.java:60<span class="o">)</span>
+<span class="w">    </span>...<span class="w"> </span><span class="m">9</span><span class="w"> </span>more
 
 <span class="c1"># Copy to s3 doesn&#39;t look good</span>
-$ icct /tmp/testfile.txt s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt
-Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.NoClassDefFoundError: org.apache.commons.logging.LogFactory
-    at org.apache.commons.logging.LogFactory.class<span class="k">$(</span>LogFactory.java:847<span class="k">)</span>
-    at org.apache.commons.logging.LogFactory.&lt;clinit&gt;<span class="o">(</span>LogFactory.java:1717<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
-    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
-    at com.amazonaws.auth.AWSCredentialsProviderChain.&lt;clinit&gt;<span class="o">(</span>AWSCredentialsProviderChain.java:41<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
-    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
-    at com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:235<span class="o">)</span>
-    at java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.checkAWSCredentialsConfiguration<span class="o">(</span>IonicCloudCopy.java:551<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.S3Location<span class="o">(</span>IonicCloudCopy.java:359<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.destinationFromArg<span class="o">(</span>IonicCloudCopy.java:202<span class="o">)</span>
-    at com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:144<span class="o">)</span>
-</pre></div>
-
+$<span class="w"> </span>icct<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt
+Exception<span class="w"> </span><span class="k">in</span><span class="w"> </span>thread<span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="w"> </span>java.lang.NoClassDefFoundError:<span class="w"> </span>org.apache.commons.logging.LogFactory
+<span class="w">    </span>at<span class="w"> </span>org.apache.commons.logging.LogFactory.class<span class="k">$(</span>LogFactory.java:847<span class="k">)</span>
+<span class="w">    </span>at<span class="w"> </span>org.apache.commons.logging.LogFactory.&lt;clinit&gt;<span class="o">(</span>LogFactory.java:1717<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.amazonaws.auth.AWSCredentialsProviderChain.&lt;clinit&gt;<span class="o">(</span>AWSCredentialsProviderChain.java:41<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer<span class="o">(</span>ClassInitializationInfo.java:350<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:270<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.oracle.svm.core.hub.ClassInitializationInfo.initialize<span class="o">(</span>ClassInitializationInfo.java:235<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>java.lang.Class.ensureInitialized<span class="o">(</span>DynamicHub.java:496<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.checkAWSCredentialsConfiguration<span class="o">(</span>IonicCloudCopy.java:551<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.S3Location<span class="o">(</span>IonicCloudCopy.java:359<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.destinationFromArg<span class="o">(</span>IonicCloudCopy.java:202<span class="o">)</span>
+<span class="w">    </span>at<span class="w"> </span>com.ionic.cloudstorage.icct.IonicCloudCopy.main<span class="o">(</span>IonicCloudCopy.java:144<span class="o">)</span>
+</code></pre></div>
 
 <p>So it looks like I have a bit more to dig into, likely involving <a href="https://github.com/oracle/graal/issues/671#issuecomment-422993966">adding classpaths to the <code>native-image</code> call</a> and fixing <a href="https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md">relection and dynamic resource loading</a>. It looks like <code>--allow-incomplete-classpath</code> was added to handle runtime dependencies that are not loaded, whereas I used it to force <code>native-image</code> to give me something when it was (rightly, it seems) complaining about missing dependencies at build time.</p>
 <p>I'll publish updates on this post. If the work turns out to be significant, I'll move those updates to a new post.</p>
 <h2>EDIT: 20200509</h2>
 <p>Continuing with graalvm, I'm following the recommendations in <a href="https://github.com/oracle/graal/blob/master/substratevm/CONFIGURE.md">the graalvm documentation for working with their java agent</a> to trace the reflective calls (and resource access) from the application and write that to config files for the native image tool to consume.</p>
-<div class="highlight"><pre><span></span><span class="c1"># I&#39;ll be putting these directly into the META-INF directory of this maven project</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># I&#39;ll be putting these directly into the META-INF directory of this maven project</span>
 <span class="c1"># https://github.com/IonicDev/ionic-cloud-copy-tool</span>
 <span class="nv">GRAAL_CONF_DIR</span><span class="o">=</span>./src/main/resources/META-INF/native-image
-mkdir -p <span class="nv">$GRAAL_CONF_DIR</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$GRAAL_CONF_DIR</span>
 
 <span class="c1"># Start collecting details about graalvm operation</span>
 <span class="c1"># All other commands will use the `config-merge-dir` option instead of `config-output-dir`</span>
-/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-output-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar version
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java<span class="w"> </span>-agentlib:native-image-agent<span class="o">=</span>config-output-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span><span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>version
 
 <span class="c1"># The tool only takes a plaintext persisor now, so I need to export to plaintext for testing</span>
 <span class="c1"># Uses the machinacli tool: https://dev.ionic.com/tools/machina</span>
 <span class="c1"># https://github.com/IonicDev/ionic-cloud-copy-tool/blob/master/src/main/java/com/ionic/cloudstorage/icct/IonicCloudCopy.java</span>
-machina profile move -d L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef -t plaintext -f ~/.ionicsecurity/profiles.pt
-machina -t plaintext -f ~/.ionicsecurity/profiles.pt profile <span class="nb">set</span> -d L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef
+machina<span class="w"> </span>profile<span class="w"> </span>move<span class="w"> </span>-d<span class="w"> </span>L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef<span class="w"> </span>-t<span class="w"> </span>plaintext<span class="w"> </span>-f<span class="w"> </span>~/.ionicsecurity/profiles.pt
+machina<span class="w"> </span>-t<span class="w"> </span>plaintext<span class="w"> </span>-f<span class="w"> </span>~/.ionicsecurity/profiles.pt<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>L_qx.H.83d53616-ed4d-474d-74d3-b7ecc6e4e0ef
 
 <span class="c1"># Needed to export AWS_REGION instead AWS_DEFAULT_REGION</span>
 <span class="c1"># https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/providers/DefaultAwsRegionProviderChain.html</span>
@@ -455,22 +490,22 @@ machina -t plaintext -f ~/.ionicsecurity/profiles.pt profile <span class="nb">se
 <span class="c1"># This is AWS_DEFAULT_REGION in boto3</span>
 <span class="c1"># https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#environment-variable-configuration</span>
 <span class="c1"># Also confusing in other tools: https://github.com/aws/aws-sdk-go/issues/2103</span>
-<span class="nb">export</span> <span class="nv">AWS_REGION</span><span class="o">=</span><span class="nv">$AWS_DEFAULT_REGION</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="nv">$AWS_DEFAULT_REGION</span>
 
 <span class="c1"># Run some commands with the tool, merging output for graal</span>
-/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar config
-/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar /tmp/testfile.txt s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt
-/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt /tmp/testfile.txt.decrypted
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java<span class="w"> </span>-agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span><span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>config
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java<span class="w"> </span>-agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span><span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt
+/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java<span class="w"> </span>-agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span><span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt<span class="w"> </span>/tmp/testfile.txt.decrypted
 
 <span class="c1"># Inspect written files</span>
-ls -lah <span class="nv">$GRAAL_CONF_DIR</span>
-<span class="k">for</span> f in <span class="sb">`</span>ls <span class="nv">$GRAAL_CONF_DIR</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span> <span class="nb">echo</span> //<span class="nv">$f</span><span class="p">;</span> cat <span class="nv">$GRAAL_CONF_DIR</span>/<span class="nv">$f</span> <span class="p">|</span> jq .<span class="p">;</span> <span class="k">done</span>
+ls<span class="w"> </span>-lah<span class="w"> </span><span class="nv">$GRAAL_CONF_DIR</span>
+<span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>ls<span class="w"> </span><span class="nv">$GRAAL_CONF_DIR</span><span class="sb">`</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>//<span class="nv">$f</span><span class="p">;</span><span class="w"> </span>cat<span class="w"> </span><span class="nv">$GRAAL_CONF_DIR</span>/<span class="nv">$f</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
 <span class="c1"># Re-build the jar with the native image resources included</span>
-mvn package
+mvn<span class="w"> </span>package
 
 <span class="c1"># Ensure the META-INF files are included (I had originally written them to the wrong place)</span>
-$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/jar tf target/IonicCloudCopyTool-0.4.0.jar <span class="p">|</span> grep META-INF/native
+$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/jar<span class="w"> </span>tf<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>META-INF/native
 META-INF/native-image/
 META-INF/native-image/jni-config.json
 META-INF/native-image/proxy-config.json
@@ -478,121 +513,120 @@ META-INF/native-image/reflect-config.json
 META-INF/native-image/resource-config.json
 
 <span class="c1"># Build the native image from the jar</span>
-$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --enable-http --enable-https --allow-incomplete-classpath --no-server
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span>    classlist:   <span class="m">5</span>,538.37 ms,  <span class="m">1</span>.32 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">3</span>,568.30 ms,  <span class="m">1</span>.32 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span>        setup:   <span class="m">5</span>,479.04 ms,  <span class="m">1</span>.67 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span>     analysis:  <span class="m">24</span>,360.97 ms,  <span class="m">3</span>.91 GB
-Error: Classes that should be initialized at run <span class="nb">time</span> got initialized during image building:
- org.apache.http.pool.ConnPoolControl was unintentionally initialized at build time. To see why org.apache.http.pool.ConnPoolControl got initialized use -H:+TraceClassInitialization
-org.apache.http.HttpClientConnection was unintentionally initialized at build time. To see why org.apache.http.HttpClientConnection got initialized use -H:+TraceClassInitialization
-org.apache.http.conn.routing.HttpRoute was unintentionally initialized at build time. To see why org.apache.http.conn.routing.HttpRoute got initialized use -H:+TraceClassInitialization
-org.apache.http.conn.ConnectionRequest was unintentionally initialized at build time. To see why org.apache.http.conn.ConnectionRequest got initialized use -H:+TraceClassInitialization
-org.apache.http.protocol.HttpContext was unintentionally initialized at build time. To see why org.apache.http.protocol.HttpContext got initialized use -H:+TraceClassInitialization
-org.apache.http.conn.HttpClientConnectionManager was unintentionally initialized at build time. To see why org.apache.http.conn.HttpClientConnectionManager got initialized use -H:+TraceClassInitialization
+$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-ea<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--enable-http<span class="w"> </span>--enable-https<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>--no-server
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">5</span>,538.37<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.32<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">3</span>,568.30<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.32<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">5</span>,479.04<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.67<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:61591<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">24</span>,360.97<span class="w"> </span>ms,<span class="w">  </span><span class="m">3</span>.91<span class="w"> </span>GB
+Error:<span class="w"> </span>Classes<span class="w"> </span>that<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>run<span class="w"> </span><span class="nb">time</span><span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>during<span class="w"> </span>image<span class="w"> </span>building:
+<span class="w"> </span>org.apache.http.pool.ConnPoolControl<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.pool.ConnPoolControl<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
+org.apache.http.HttpClientConnection<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.HttpClientConnection<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
+org.apache.http.conn.routing.HttpRoute<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.conn.routing.HttpRoute<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
+org.apache.http.conn.ConnectionRequest<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.conn.ConnectionRequest<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
+org.apache.http.protocol.HttpContext<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.protocol.HttpContext<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
+org.apache.http.conn.HttpClientConnectionManager<span class="w"> </span>was<span class="w"> </span>unintentionally<span class="w"> </span>initialized<span class="w"> </span>at<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>why<span class="w"> </span>org.apache.http.conn.HttpClientConnectionManager<span class="w"> </span>got<span class="w"> </span>initialized<span class="w"> </span>use<span class="w"> </span>-H:+TraceClassInitialization
 
-Error: Use -H:+ReportExceptionStackTraces to print stacktrace of underlying exception
-Error: Image build request failed with <span class="nb">exit</span> status <span class="m">1</span>
+Error:<span class="w"> </span>Use<span class="w"> </span>-H:+ReportExceptionStackTraces<span class="w"> </span>to<span class="w"> </span>print<span class="w"> </span>stacktrace<span class="w"> </span>of<span class="w"> </span>underlying<span class="w"> </span>exception
+Error:<span class="w"> </span>Image<span class="w"> </span>build<span class="w"> </span>request<span class="w"> </span>failed<span class="w"> </span>with<span class="w"> </span><span class="nb">exit</span><span class="w"> </span>status<span class="w"> </span><span class="m">1</span>
 
 <span class="c1"># Still getting errors.</span>
 <span class="c1"># Trying some additional tricks with initialization hints from: https://spring.io/blog/2020/04/16/spring-tips-the-graalvm-native-image-builder-feature</span>
-$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager -H:+TraceClassInitialization
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>    classlist:   <span class="m">6</span>,351.16 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">2</span>,361.68 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>        setup:   <span class="m">4</span>,093.37 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:  <span class="m">26</span>,550.09 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:  <span class="m">18</span>,375.48 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:   <span class="m">1</span>,496.49 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>     analysis:  <span class="m">48</span>,187.45 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>     <span class="o">(</span>clinit<span class="o">)</span>:     <span class="m">966</span>.15 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>     universe:   <span class="m">2</span>,632.33 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>      <span class="o">(</span>parse<span class="o">)</span>:   <span class="m">5</span>,510.07 ms,  <span class="m">9</span>.21 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>     <span class="o">(</span>inline<span class="o">)</span>:  <span class="m">22</span>,769.90 ms, <span class="m">10</span>.64 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>    <span class="o">(</span>compile<span class="o">)</span>:  <span class="m">50</span>,351.15 ms, <span class="m">11</span>.46 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>      compile:  <span class="m">90</span>,526.27 ms, <span class="m">11</span>.46 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>        image:   <span class="m">8</span>,356.94 ms, <span class="m">11</span>.73 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>        write:   <span class="m">5</span>,285.07 ms, <span class="m">11</span>.73 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span>      <span class="o">[</span>total<span class="o">]</span>: <span class="m">165</span>,849.45 ms, <span class="m">11</span>.73 GB
+$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-ea<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>--no-server<span class="w"> </span>--initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager<span class="w"> </span>-H:+TraceClassInitialization
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">6</span>,351.16<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">2</span>,361.68<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">4</span>,093.37<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">  </span><span class="m">26</span>,550.09<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">  </span><span class="m">18</span>,375.48<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,496.49<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">48</span>,187.45<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">     </span><span class="o">(</span>clinit<span class="o">)</span>:<span class="w">     </span><span class="m">966</span>.15<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">     </span>universe:<span class="w">   </span><span class="m">2</span>,632.33<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">      </span><span class="o">(</span>parse<span class="o">)</span>:<span class="w">   </span><span class="m">5</span>,510.07<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.21<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">     </span><span class="o">(</span>inline<span class="o">)</span>:<span class="w">  </span><span class="m">22</span>,769.90<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.64<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">    </span><span class="o">(</span>compile<span class="o">)</span>:<span class="w">  </span><span class="m">50</span>,351.15<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.46<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">      </span>compile:<span class="w">  </span><span class="m">90</span>,526.27<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.46<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">        </span>image:<span class="w">   </span><span class="m">8</span>,356.94<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.73<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">        </span>write:<span class="w">   </span><span class="m">5</span>,285.07<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.73<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62055<span class="o">]</span><span class="w">      </span><span class="o">[</span>total<span class="o">]</span>:<span class="w"> </span><span class="m">165</span>,849.45<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.73<span class="w"> </span>GB
 
 <span class="c1"># Got a working build! But got a fatal error when running.</span>
 <span class="c1"># Thankfully the recommendation is quite clear.</span>
-$ ./IonicCloudCopyTool-0.4.0 config
-Fatal error: javax.crypto.JceSecurity.getCodeBase<span class="o">(</span>Class<span class="o">)</span> is reached at runtime. This should not happen. The contents of JceSecurity.verificationResults are computed and cached at image build time. Try enabling all security services with --enable-all-security-services.
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>config
+Fatal<span class="w"> </span>error:<span class="w"> </span>javax.crypto.JceSecurity.getCodeBase<span class="o">(</span>Class<span class="o">)</span><span class="w"> </span>is<span class="w"> </span>reached<span class="w"> </span>at<span class="w"> </span>runtime.<span class="w"> </span>This<span class="w"> </span>should<span class="w"> </span>not<span class="w"> </span>happen.<span class="w"> </span>The<span class="w"> </span>contents<span class="w"> </span>of<span class="w"> </span>JceSecurity.verificationResults<span class="w"> </span>are<span class="w"> </span>computed<span class="w"> </span>and<span class="w"> </span>cached<span class="w"> </span>at<span class="w"> </span>image<span class="w"> </span>build<span class="w"> </span>time.<span class="w"> </span>Try<span class="w"> </span>enabling<span class="w"> </span>all<span class="w"> </span>security<span class="w"> </span>services<span class="w"> </span>with<span class="w"> </span>--enable-all-security-services.
 
-JavaFrameAnchor dump:
+JavaFrameAnchor<span class="w"> </span>dump:
 
-  No anchors
-&lt;more dump contents&gt;
+<span class="w">  </span>No<span class="w"> </span>anchors
+&lt;more<span class="w"> </span>dump<span class="w"> </span>contents&gt;
 
 <span class="c1"># Building again</span>
-$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager --enable-all-security-services -H:+TraceClassInitialization
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>    classlist:   <span class="m">6</span>,934.81 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">5</span>,159.98 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>        setup:   <span class="m">6</span>,967.24 ms,  <span class="m">1</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:  <span class="m">31</span>,334.62 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:  <span class="m">25</span>,477.01 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:   <span class="m">2</span>,076.97 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>     analysis:  <span class="m">61</span>,493.13 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>     <span class="o">(</span>clinit<span class="o">)</span>:   <span class="m">1</span>,126.30 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>     universe:   <span class="m">3</span>,392.50 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>      <span class="o">(</span>parse<span class="o">)</span>:   <span class="m">5</span>,999.22 ms,  <span class="m">9</span>.61 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>     <span class="o">(</span>inline<span class="o">)</span>:  <span class="m">15</span>,347.59 ms, <span class="m">11</span>.28 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>    <span class="o">(</span>compile<span class="o">)</span>:  <span class="m">42</span>,364.79 ms, <span class="m">11</span>.58 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>      compile:  <span class="m">68</span>,682.98 ms, <span class="m">11</span>.58 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>        image:   <span class="m">7</span>,207.60 ms, <span class="m">11</span>.83 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>        write:   <span class="m">5</span>,135.07 ms, <span class="m">11</span>.83 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span>      <span class="o">[</span>total<span class="o">]</span>: <span class="m">161</span>,169.69 ms, <span class="m">11</span>.83 GB
+$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-ea<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>--no-server<span class="w"> </span>--initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager<span class="w"> </span>--enable-all-security-services<span class="w"> </span>-H:+TraceClassInitialization
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">6</span>,934.81<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">5</span>,159.98<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">6</span>,967.24<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">  </span><span class="m">31</span>,334.62<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">  </span><span class="m">25</span>,477.01<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">   </span><span class="m">2</span>,076.97<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">61</span>,493.13<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">     </span><span class="o">(</span>clinit<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,126.30<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">     </span>universe:<span class="w">   </span><span class="m">3</span>,392.50<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">      </span><span class="o">(</span>parse<span class="o">)</span>:<span class="w">   </span><span class="m">5</span>,999.22<span class="w"> </span>ms,<span class="w">  </span><span class="m">9</span>.61<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">     </span><span class="o">(</span>inline<span class="o">)</span>:<span class="w">  </span><span class="m">15</span>,347.59<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.28<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">    </span><span class="o">(</span>compile<span class="o">)</span>:<span class="w">  </span><span class="m">42</span>,364.79<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.58<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">      </span>compile:<span class="w">  </span><span class="m">68</span>,682.98<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.58<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">        </span>image:<span class="w">   </span><span class="m">7</span>,207.60<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.83<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">        </span>write:<span class="w">   </span><span class="m">5</span>,135.07<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.83<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62308<span class="o">]</span><span class="w">      </span><span class="o">[</span>total<span class="o">]</span>:<span class="w"> </span><span class="m">161</span>,169.69<span class="w"> </span>ms,<span class="w"> </span><span class="m">11</span>.83<span class="w"> </span>GB
 
 <span class="c1"># Still errors, but getting closer...</span>
-$ ./IonicCloudCopyTool-0.4.0 config
-Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.IllegalArgumentException: java.net.MalformedURLException: Accessing an URL protocol that was not enabled. The URL protocol https is supported but not enabled by default. It must be enabled by adding the -H:EnableURLProtocols<span class="o">=</span>https option to the native-image command.
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>config
+Exception<span class="w"> </span><span class="k">in</span><span class="w"> </span>thread<span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="w"> </span>java.lang.IllegalArgumentException:<span class="w"> </span>java.net.MalformedURLException:<span class="w"> </span>Accessing<span class="w"> </span>an<span class="w"> </span>URL<span class="w"> </span>protocol<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>not<span class="w"> </span>enabled.<span class="w"> </span>The<span class="w"> </span>URL<span class="w"> </span>protocol<span class="w"> </span>https<span class="w"> </span>is<span class="w"> </span>supported<span class="w"> </span>but<span class="w"> </span>not<span class="w"> </span>enabled<span class="w"> </span>by<span class="w"> </span>default.<span class="w"> </span>It<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>enabled<span class="w"> </span>by<span class="w"> </span>adding<span class="w"> </span>the<span class="w"> </span>-H:EnableURLProtocols<span class="o">=</span>https<span class="w"> </span>option<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>native-image<span class="w"> </span>command.
 
 <span class="c1"># Building again</span>
-$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image -ea -jar target/IonicCloudCopyTool-0.4.0.jar --no-fallback --allow-incomplete-classpath --no-server --initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager --enable-all-security-services --enable-http --enable-https -H:+TraceClassInitialization
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>    classlist:   <span class="m">6</span>,262.77 ms,  <span class="m">1</span>.55 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>        <span class="o">(</span>cap<span class="o">)</span>:   <span class="m">4</span>,359.17 ms,  <span class="m">1</span>.55 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>        setup:   <span class="m">6</span>,042.22 ms,  <span class="m">1</span>.55 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>   <span class="o">(</span>typeflow<span class="o">)</span>:  <span class="m">28</span>,935.83 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>    <span class="o">(</span>objects<span class="o">)</span>:  <span class="m">21</span>,362.67 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>   <span class="o">(</span>features<span class="o">)</span>:   <span class="m">2</span>,181.84 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>     analysis:  <span class="m">55</span>,527.36 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>     <span class="o">(</span>clinit<span class="o">)</span>:   <span class="m">1</span>,751.76 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>     universe:   <span class="m">4</span>,590.87 ms,  <span class="m">7</span>.94 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>      <span class="o">(</span>parse<span class="o">)</span>:   <span class="m">8</span>,816.98 ms,  <span class="m">8</span>.29 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>     <span class="o">(</span>inline<span class="o">)</span>:   <span class="m">8</span>,942.87 ms, <span class="m">10</span>.02 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>    <span class="o">(</span>compile<span class="o">)</span>:  <span class="m">43</span>,584.38 ms, <span class="m">10</span>.91 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>      compile:  <span class="m">65</span>,789.12 ms, <span class="m">10</span>.91 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>        image:  <span class="m">11</span>,449.58 ms, <span class="m">10</span>.91 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>        write:   <span class="m">3</span>,868.79 ms, <span class="m">10</span>.91 GB
-<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span>      <span class="o">[</span>total<span class="o">]</span>: <span class="m">153</span>,932.43 ms, <span class="m">10</span>.91 GB
+$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/native-image<span class="w"> </span>-ea<span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>--no-fallback<span class="w"> </span>--allow-incomplete-classpath<span class="w"> </span>--no-server<span class="w"> </span>--initialize-at-build-time<span class="o">=</span>org.apache.http.conn.routing.HttpRoute,org.apache.http.protocol.HttpContext,org.apache.http.HttpClientConnection,org.apache.http.conn.ConnectionRequest,org.apache.http.pool.ConnPoolControl,org.apache.http.conn.HttpClientConnectionManager<span class="w"> </span>--enable-all-security-services<span class="w"> </span>--enable-http<span class="w"> </span>--enable-https<span class="w"> </span>-H:+TraceClassInitialization
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">    </span>classlist:<span class="w">   </span><span class="m">6</span>,262.77<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.55<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">        </span><span class="o">(</span>cap<span class="o">)</span>:<span class="w">   </span><span class="m">4</span>,359.17<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.55<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">        </span>setup:<span class="w">   </span><span class="m">6</span>,042.22<span class="w"> </span>ms,<span class="w">  </span><span class="m">1</span>.55<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">   </span><span class="o">(</span>typeflow<span class="o">)</span>:<span class="w">  </span><span class="m">28</span>,935.83<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">    </span><span class="o">(</span>objects<span class="o">)</span>:<span class="w">  </span><span class="m">21</span>,362.67<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">   </span><span class="o">(</span>features<span class="o">)</span>:<span class="w">   </span><span class="m">2</span>,181.84<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">     </span>analysis:<span class="w">  </span><span class="m">55</span>,527.36<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">     </span><span class="o">(</span>clinit<span class="o">)</span>:<span class="w">   </span><span class="m">1</span>,751.76<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">     </span>universe:<span class="w">   </span><span class="m">4</span>,590.87<span class="w"> </span>ms,<span class="w">  </span><span class="m">7</span>.94<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">      </span><span class="o">(</span>parse<span class="o">)</span>:<span class="w">   </span><span class="m">8</span>,816.98<span class="w"> </span>ms,<span class="w">  </span><span class="m">8</span>.29<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">     </span><span class="o">(</span>inline<span class="o">)</span>:<span class="w">   </span><span class="m">8</span>,942.87<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.02<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">    </span><span class="o">(</span>compile<span class="o">)</span>:<span class="w">  </span><span class="m">43</span>,584.38<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.91<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">      </span>compile:<span class="w">  </span><span class="m">65</span>,789.12<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.91<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">        </span>image:<span class="w">  </span><span class="m">11</span>,449.58<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.91<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">        </span>write:<span class="w">   </span><span class="m">3</span>,868.79<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.91<span class="w"> </span>GB
+<span class="o">[</span>IonicCloudCopyTool-0.4.0:62455<span class="o">]</span><span class="w">      </span><span class="o">[</span>total<span class="o">]</span>:<span class="w"> </span><span class="m">153</span>,932.43<span class="w"> </span>ms,<span class="w"> </span><span class="m">10</span>.91<span class="w"> </span>GB
 
 <span class="c1"># Definitely getting closer, but this one is strange.</span>
 <span class="c1"># The &quot;Failed to parse serialized data&quot; is unexpected. The Ionic SDK swallows the exception details, so we don&#39;t have much to go on here.</span>
-$ ./IonicCloudCopyTool-0.4.0 config
-Ionic Configuration Status: ERROR:
-    <span class="m">40010</span> - Failed to parse serialized data
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>config
+Ionic<span class="w"> </span>Configuration<span class="w"> </span>Status:<span class="w"> </span>ERROR:
+<span class="w">    </span><span class="m">40010</span><span class="w"> </span>-<span class="w"> </span>Failed<span class="w"> </span>to<span class="w"> </span>parse<span class="w"> </span>serialized<span class="w"> </span>data
 
-AWS Credential Configuration: CONFIGURED
-AWS Region Configuration: CONFIGURED
-Google Credential Configuration: ERROR:
-    Error reading credential file from location /Users/timothy/.config/gcloud/application_default_credentials.json: <span class="m">400</span> Bad Request
+AWS<span class="w"> </span>Credential<span class="w"> </span>Configuration:<span class="w"> </span>CONFIGURED
+AWS<span class="w"> </span>Region<span class="w"> </span>Configuration:<span class="w"> </span>CONFIGURED
+Google<span class="w"> </span>Credential<span class="w"> </span>Configuration:<span class="w"> </span>ERROR:
+<span class="w">    </span>Error<span class="w"> </span>reading<span class="w"> </span>credential<span class="w"> </span>file<span class="w"> </span>from<span class="w"> </span>location<span class="w"> </span>/Users/timothy/.config/gcloud/application_default_credentials.json:<span class="w"> </span><span class="m">400</span><span class="w"> </span>Bad<span class="w"> </span>Request
 <span class="o">{</span>
-  <span class="s2">&quot;error&quot;</span> : <span class="s2">&quot;invalid_grant&quot;</span>,
-  <span class="s2">&quot;error_description&quot;</span> : <span class="s2">&quot;Bad Request&quot;</span>
+<span class="w">  </span><span class="s2">&quot;error&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;invalid_grant&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;error_description&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;Bad Request&quot;</span>
 <span class="o">}</span>
 
-Azure Credential Configuration: ERROR:
-    AZURE_STORAGE_ACCOUNT is not present in environment.
+Azure<span class="w"> </span>Credential<span class="w"> </span>Configuration:<span class="w"> </span>ERROR:
+<span class="w">    </span>AZURE_STORAGE_ACCOUNT<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>present<span class="w"> </span><span class="k">in</span><span class="w"> </span>environment.
 
 <span class="c1"># Likely related to the `config` error.</span>
-$ ./IonicCloudCopyTool-0.4.0 s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt /tmp/testfile.txt.decrypted
-Ionic Persistor not found at: /Users/timothy/.ionicsecurity/profiles.pt
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>s3://<span class="nv">$BUCKET_NAME</span>/testfile.txt<span class="w"> </span>/tmp/testfile.txt.decrypted
+Ionic<span class="w"> </span>Persistor<span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span>at:<span class="w"> </span>/Users/timothy/.ionicsecurity/profiles.pt
 
 <span class="c1"># OK, but these worked before too.</span>
-$ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt /tmp/testfile.txt.2
-$ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt stdout:
-</pre></div>
-
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>/tmp/testfile.txt.2
+$<span class="w"> </span>./IonicCloudCopyTool-0.4.0<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>stdout:
+</code></pre></div>
 
 <p>So it looks like the error is getting swallowed into an unknown exception and returned as an error. I'll dig into this one later and post another update.</p>
 <p>Since this is supposed to be an experience report, here are my thoughts at this point:</p>
@@ -622,38 +656,37 @@ $ ./IonicCloudCopyTool-0.4.0 /tmp/testfile.txt stdout:
 <p>In summary: this is really neat technology, but it does have some leaky abstractions associated with it. I can't just toss an uberjar over the wall at <code>native-image</code> and expect success. If the technology and solution continues to advance to resolve the complexities associated with reflection and build time I can see this becoming a tool useful for more general problems, but as it stands, I would be most likely to recommend Graal's <code>native-image</code> if I know someone really needed fast boot for an existing Java code base, or needed to wrap mature Java libraries for a CLI application. For many other scenarios (like greenfield development) I'd still be more likely to recommend a non-JVM language for these problems, most likely Go or Rust (I haven't played with Rust yet but I hear great things from people I respect).</p>
 <h2>EDIT: 20200510</h2>
 <p>I wanted to make sure the agent has captured any changes from the <code>config</code> command, so I ran that again to merge changes with the existing set of config files.</p>
-<div class="highlight"><pre><span></span><span class="c1"># Checking for updates</span>
-$ md5 src/main/resources/META-INF/native-image/*
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span> <span class="o">=</span> f17c6890ce3e5d805aad7ee46da00fd7
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span> <span class="o">=</span> 12828ec64929f92bbf3e0325b40937a8
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span> <span class="o">=</span> 3b8dc1c1d460ddc8440f2c13bef85288
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span> <span class="o">=</span> e17d413784ceb49b51579047cb4bbd58
-$ ls -latr src/main/resources/META-INF/native-image/*
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">543</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/resource-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>  <span class="m">14147</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/reflect-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">212</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/proxy-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>      <span class="m">4</span> May  <span class="m">9</span> <span class="m">23</span>:19 src/main/resources/META-INF/native-image/jni-config.json
+<div class="highlight"><pre><span></span><code><span class="c1"># Checking for updates</span>
+$<span class="w"> </span>md5<span class="w"> </span>src/main/resources/META-INF/native-image/*
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>f17c6890ce3e5d805aad7ee46da00fd7
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>12828ec64929f92bbf3e0325b40937a8
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>3b8dc1c1d460ddc8440f2c13bef85288
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>e17d413784ceb49b51579047cb4bbd58
+$<span class="w"> </span>ls<span class="w"> </span>-latr<span class="w"> </span>src/main/resources/META-INF/native-image/*
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span><span class="m">543</span><span class="w"> </span>May<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">23</span>:19<span class="w"> </span>src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">  </span><span class="m">14147</span><span class="w"> </span>May<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">23</span>:19<span class="w"> </span>src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span><span class="m">212</span><span class="w"> </span>May<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">23</span>:19<span class="w"> </span>src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">      </span><span class="m">4</span><span class="w"> </span>May<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">23</span>:19<span class="w"> </span>src/main/resources/META-INF/native-image/jni-config.json
 
 <span class="c1"># Run to add new resources</span>
-is-mbp-timothy4:ionic-cloud-copy-tool timothy$ /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java -agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span> -jar target/IonicCloudCopyTool-0.4.0.jar config
-Ionic Configuration Status: CONFIGURED
-AWS Credential Configuration: CONFIGURED
-AWS Region Configuration: CONFIGURED
+is-mbp-timothy4:ionic-cloud-copy-tool<span class="w"> </span>timothy$<span class="w"> </span>/Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.0.0/Contents/Home/bin/java<span class="w"> </span>-agentlib:native-image-agent<span class="o">=</span>config-merge-dir<span class="o">=</span><span class="nv">$GRAAL_CONF_DIR</span><span class="w"> </span>-jar<span class="w"> </span>target/IonicCloudCopyTool-0.4.0.jar<span class="w"> </span>config
+Ionic<span class="w"> </span>Configuration<span class="w"> </span>Status:<span class="w"> </span>CONFIGURED
+AWS<span class="w"> </span>Credential<span class="w"> </span>Configuration:<span class="w"> </span>CONFIGURED
+AWS<span class="w"> </span>Region<span class="w"> </span>Configuration:<span class="w"> </span>CONFIGURED
 &lt;...&gt;
 
 <span class="c1"># Check again; nothing changed except the timestamps</span>
-$ md5 src/main/resources/META-INF/native-image/*
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span> <span class="o">=</span> f17c6890ce3e5d805aad7ee46da00fd7
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span> <span class="o">=</span> 12828ec64929f92bbf3e0325b40937a8
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span> <span class="o">=</span> 3b8dc1c1d460ddc8440f2c13bef85288
-MD5 <span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span> <span class="o">=</span> e17d413784ceb49b51579047cb4bbd58
-$ ls -latr src/main/resources/META-INF/native-image/*
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">543</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/resource-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>  <span class="m">14147</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/reflect-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>    <span class="m">212</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/proxy-config.json
--rw-r--r--  <span class="m">1</span> timothy  <span class="m">1145057864</span>      <span class="m">4</span> May <span class="m">10</span> <span class="m">00</span>:42 src/main/resources/META-INF/native-image/jni-config.json
-</pre></div>
-
+$<span class="w"> </span>md5<span class="w"> </span>src/main/resources/META-INF/native-image/*
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/jni-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>f17c6890ce3e5d805aad7ee46da00fd7
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/proxy-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>12828ec64929f92bbf3e0325b40937a8
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/reflect-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>3b8dc1c1d460ddc8440f2c13bef85288
+MD5<span class="w"> </span><span class="o">(</span>src/main/resources/META-INF/native-image/resource-config.json<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>e17d413784ceb49b51579047cb4bbd58
+$<span class="w"> </span>ls<span class="w"> </span>-latr<span class="w"> </span>src/main/resources/META-INF/native-image/*
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span><span class="m">543</span><span class="w"> </span>May<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">00</span>:42<span class="w"> </span>src/main/resources/META-INF/native-image/resource-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">  </span><span class="m">14147</span><span class="w"> </span>May<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">00</span>:42<span class="w"> </span>src/main/resources/META-INF/native-image/reflect-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">    </span><span class="m">212</span><span class="w"> </span>May<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">00</span>:42<span class="w"> </span>src/main/resources/META-INF/native-image/proxy-config.json
+-rw-r--r--<span class="w">  </span><span class="m">1</span><span class="w"> </span>timothy<span class="w">  </span><span class="m">1145057864</span><span class="w">      </span><span class="m">4</span><span class="w"> </span>May<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">00</span>:42<span class="w"> </span>src/main/resources/META-INF/native-image/jni-config.json
+</code></pre></div>
 
 <p>Since the timestamps of the output files changes but the contents did not, we can be pretty confident that the agent is running and updating the files - it just didn't find anything new. So whatever is going on in the <code>config</code> command, it isn't being captured by the java agent.</p>
 <p>So I need a new approach to get the details of what I'm assuming is an exception thrown inside the Ionic SDK which is getting swallowed into the <a href="https://dev.ionic.com/sdk_docs/ionic_platform_sdk/java/latest/sdk/index.html?constant-values.html">40010 error ("Failed to parse serialized data")</a>.</p>
@@ -670,6 +703,7 @@ $ ls -latr src/main/resources/META-INF/native-image/*
 
 
 
+
 <!-- Disqus -->
 <div id="disqus_thread"></div>
 <script type="text/javascript">
@@ -681,20 +715,16 @@ $ ls -latr src/main/resources/META-INF/native-image/*
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
-    <footer>
+<footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
-</p>    </footer>
-  </main>
-
-
-
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p></footer>  </main>
 
 <script type="application/ld+json">
 {
@@ -706,6 +736,5 @@ $ ls -latr src/main/resources/META-INF/native-image/*
   "description": "Thoughts and writings"
 }
 </script>
-
 </body>
 </html>
