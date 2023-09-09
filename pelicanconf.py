@@ -11,7 +11,9 @@ SITETITLE = SITENAME
 SITESUBTITLE = 'Looking for beauty in the complex and the simple.'
 SITEDESCRIPTION = 'Thoughts and writings'
 SITEURL = 'https://turtlemonvh.github.io/'
-#SITEURL = 'http://localhost:8081/'
+#SITEURL = 'http://localhost:8000/'
+
+# FIXME: Change to favicon: https://stackoverflow.com/questions/31270373/how-to-add-a-favicon-to-a-pelican-blog
 SITELOGO = '//s.gravatar.com/avatar/fdb8ce54c398b1aa794833a601507361?s=120'
 
 # https://github.com/getpelican/pelican-themes
@@ -39,9 +41,9 @@ AUTHOR_FEED_RSS = None
 
 # Blogroll
 LINKS = (
-    ('Ionic blog', 'https://www.ionic.com/blog/'),
-    ('My old blog', 'http://turtle-philosophy.blogspot.com/'),
     ('about.me', 'https://about.me/turtlemonvh'),
+    ('resume', 'https://www.dropbox.com/scl/fi/iqwp08l5mlb0gnv3kq5dm/TVH-Resume-2023-09-09.pdf?rlkey=4ixwskt3m9f4ceqcnnes2hrfn&raw=1'),
+    ('old blog', 'http://turtle-philosophy.blogspot.com/'),
 )
 
 # Social widget
@@ -53,14 +55,17 @@ SOCIAL = (
     ('stack-overflow', 'http://stackoverflow.com/users/790075/turtlemonvh'),
 )
 
+GITHUB_URL = 'https://github.com/turtlemonvh'
 TWITTER_USERNAME = 'turtlemonvh'
 
 DEFAULT_PAGINATION = 10
 
 # http://docs.getpelican.com/en/stable/settings.html#reading-only-modified-content
-LOAD_CONTENT_CACHE = True
+#LOAD_CONTENT_CACHE = True
 CHECK_MODIFIED_METHOD = 'mtime'
 
+#THEME_COLOR_AUTO_DETECT_BROWSER_PREFERENCE = True
+#THEME_COLOR_ENABLE_USER_OVERRIDE = True
 
 ## Load credentials from json file that is NOT checked in
 with open("credentials.json") as f:
@@ -69,7 +74,6 @@ with open("credentials.json") as f:
 ## Plugins
 
 PLUGIN_PATHS = ["pelican-plugins"]
-PLUGINS = [u"disqus_static"]
 #PLUGINS += [u"thumbnailer"]
 
 # https://disqus.com/admin/
