@@ -51,18 +51,17 @@ cat > credentials.json <<EOF
 EOF
 
 # Create isolated env
-conda create -n blog python==3.10
+conda create -n blog python
 conda activate blog
 
 # Install python deps
-pip install pelican
-pip install ghp-import
-pip install disqus
-pip install disqus-python
-pip install markdown
+pip -r requirements.txt
 
 ## Update theme
-( cd pelican-themes/Flex && git checkout master && git pull )
+# https://github.com/alexandrevicenzi/Flex
+# Originally : git submodule add git@github.com:alexandrevicenzi/Flex.git pelican-themes/Flex
+git submodule update --init
+git checkout source
 
 # Startup dev server
 pelican --listen
