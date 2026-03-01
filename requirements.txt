@@ -1,0 +1,5 @@
+pelican
+ghp-import
+disqus
+disqus-python
+markdown
