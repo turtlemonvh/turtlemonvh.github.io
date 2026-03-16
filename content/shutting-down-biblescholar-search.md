@@ -105,3 +105,23 @@ A few lessons learned
     * I am thankful I didn't run into any issues (like deprecated python dependencies) and I am thankful I left good breadcrumbs for myself (i.e., documentation on how to set up the blog!)
 
 I hope to have some good excuses to fiddle more with AWS tech going forward as I recently started a new role at Visa leading Product for some of our next generation ML Platforms. So the next blog may be a build report vs a tear down report.
+
+## UPDATE 2026/03/15 : Domain name
+
+I saw a notification from AWS in my inbox today:
+
+<img src="/images/biblescholar_aws_domain_notice_2026-03.png" alt="biblescholar aws domain notice" style="height: 750px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+This prompted me to go and clear out my domain name.
+
+<img src="/images/biblescholar_aws_domain_2026-03.png" alt="biblescholar aws domain delete" style="height: 150px; display: block; margin: 0 auto; border: 1px solid; padding: 3px;"/>
+
+I clicked the "Download billing report" button and after selecting "Last 12 months" got a CSV that looked like this. I reformattted it below for readability.
+
+```text
+InvoiceId   Operation       DomainName	            Price	Date
+            RENEW_DOMAIN	biblescholarsearch.net	17	    2025-11-27T02:02:28.338Z
+            RENEW_DOMAIN	vhtech.net	            17	    2026-01-16T17:15:26.882Z
+```
+
+From that I see that I have avoided another $17 charge next November by deleting now.
